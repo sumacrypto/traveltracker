@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+/* Los dos temas comparten el mismo naranja de acento en el mapa. Lo que cambia es
+   `--accent-ink`: sobre fondo claro el naranja puro no llega al contraste AA para
+   texto, así que el texto usa una versión más oscura. */
+:root {
+  color-scheme: light;
+
+  --ink: #f6f8fb; /* fondo base */
+  --ink-raised: #ffffff; /* paneles */
+  --ink-line: #e2e7ee; /* hairlines */
+
+  --sea: #e6edf7; /* océano, separado del fondo para que el mapa lea como pieza */
+  --land: #c2cdde; /* país no visitado */
+  --land-inert: #d6dee9; /* territorios sin ISO, no clickeables */
+
+  --accent: #ff5b2e; /* único acento de toda la app */
+  --accent-ink: #c8400f; /* el mismo acento, para texto sobre superficie */
+
+  --text: #11161e;
+  --text-dim: #4f5a68;
+  --text-faint: #6c7683;
+
+  --shimmer: rgb(0 0 0 / 0.05);
+}
+
+/* El atributo gana sobre la preferencia del sistema para que el toggle mande. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --ink: #0a0d12;
+    --ink-raised: #11151c;
+    --ink-line: #1d2430;
+
+    --sea: #101a28;
+    --land: #2c3746;
+    --land-inert: #1c2432;
+
+    --accent-ink: #ff5b2e;
+
+    --text: #eef1f5;
+    --text-dim: #98a2b1;
+    --text-faint: #7a8492;
+
+    --shimmer: rgb(255 255 255 / 0.05);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --ink: #0a0d12;
+  --ink-raised: #11151c;
+  --ink-line: #1d2430;
+
+  --sea: #101a28;
+  --land: #2c3746;
+  --land-inert: #1c2432;
+
+  --accent-ink: #ff5b2e;
+
+  --text: #eef1f5;
+  --text-dim: #98a2b1;
+  --text-faint: #7a8492;
+
+  --shimmer: rgb(255 255 255 / 0.05);
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink-raised: var(--ink-raised);
+  --color-ink-line: var(--ink-line);
+  --color-sea: var(--sea);
+  --color-land: var(--land);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-text: var(--text);
+  --color-text-dim: var(--text-dim);
+  --color-text-faint: var(--text-faint);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* El tooltip del mapa solo tiene sentido donde hay un cursor de verdad. */
+@custom-variant pointer-fine (@media (hover: hover) and (pointer: fine));
+
+/* Mismas condiciones que los bloques de tokens de arriba. Sirven para que el
+   icono del toggle lo elija el CSS y no JavaScript: así no hay ni un frame con
+   el icono equivocado ni desajuste de hidratación. */
+@custom-variant theme-dark {
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) & {
+      @slot;
+    }
+  }
+  :root[data-theme="dark"] & {
+    @slot;
+  }
+}
+
+@custom-variant theme-light {
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) & {
+      @slot;
+    }
+  }
+  :root[data-theme="light"] & {
+    @slot;
+  }
+}
+
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Un solo sistema de radios en toda la app: 14px en superficies, pill en lo
+   interactivo. */
+@utility surface {
+  border-radius: 14px;
+  background: var(--ink-raised);
+  border: 1px solid var(--ink-line);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@utility skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--ink-raised);
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, var(--shimmer), transparent);
+    animation: shimmer 1.6s infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
