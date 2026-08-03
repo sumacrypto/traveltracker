@@ -10,9 +10,12 @@ import {
   acceptRequest,
   fetchLeaderboard,
   fetchPendingRequests,
+  rankLeaderboard,
+  LEADERBOARD_TABS,
   type PendingRequest,
 } from "@/lib/peers";
 import { track } from "@/lib/analytics";
+import type { Continent } from "@/data/countries";
 import type { LeaderboardRow, Profile } from "@/lib/supabase/types";
 
 interface AccountDialogProps {
@@ -52,6 +55,7 @@ function AccountDialogBody({ onClose }: { onClose: () => void }) {
 
   const [leaderboard, setLeaderboard] = useState<LeaderboardRow[]>([]);
   const [requests, setRequests] = useState<PendingRequest[]>([]);
+  const [tab, setTab] = useState<Continent | "general">("general");
 
   const loadSocial = useCallback(() => {
     if (!user) return;
@@ -271,30 +275,56 @@ function AccountDialogBody({ onClose }: { onClose: () => void }) {
         </section>
       )}
 
-      {/* --- Ranking ---------------------------------------------------------- */}
+      {/* --- Amigos y ranking --------------------------------------------------
+          El ranking se recalcula en el cliente a partir de country_codes: así
+          "por continente" no depende de que el servidor conozca los continentes,
+          y agregar una pestaña nueva no toca la base. */}
       {leaderboard.length > 1 && (
         <section className="mt-7 border-t border-ink-line pt-6">
           <h3 className="flex items-center gap-2 text-[15px] font-semibold">
             <Trophy size={16} weight="fill" className="text-accent" />
-            Ranking entre amigos
+            Amigos
           </h3>
-          <ol className="mt-3 flex flex-col gap-2.5">
-            {leaderboard.map((row, index) => {
-              const isMe = row.user_id === user?.id;
-              return (
-                <li key={row.user_id} className="flex items-baseline gap-3">
-                  <span className="w-5 font-mono text-xs tabular-nums text-text-faint">
-                    {index + 1}
-                  </span>
-                  <span className={`flex-1 truncate text-sm ${isMe ? "font-semibold" : ""}`}>
-                    {isMe ? "Vos" : (row.display_name ?? row.username ?? "Sin nombre")}
-                  </span>
-                  <span className="font-mono text-xs tabular-nums text-text-dim">
-                    {row.countries}
-                  </span>
-                </li>
-              );
-            })}
+
+          <div
+            role="tablist"
+            aria-label="Ranking por"
+            className="mt-3 flex gap-1 overflow-x-auto pb-1"
+          >
+            {LEADERBOARD_TABS.map((option) => (
+              <button
+                key={option}
+                type="button"
+                role="tab"
+                aria-selected={tab === option}
+                onClick={() => setTab(option)}
+                className={`shrink-0 rounded-full px-3 py-1.5 text-[12px] font-medium whitespace-nowrap transition-colors ${
+                  tab === option
+                    ? "bg-accent text-white"
+                    : "border border-ink-line text-text-dim hover:border-accent"
+                }`}
+              >
+                {option === "general" ? "General" : option}
+              </button>
+            ))}
+          </div>
+
+          <ol className="mt-3.5 flex flex-col gap-2.5">
+            {rankLeaderboard(leaderboard, tab, user?.id).map((row, index) => (
+              <li key={row.userId} className="flex items-baseline gap-3">
+                <span className="w-5 font-mono text-xs tabular-nums text-text-faint">
+                  {index + 1}
+                </span>
+                <span
+                  className={`flex-1 truncate text-sm ${row.label === "Vos" ? "font-semibold" : ""}`}
+                >
+                  {row.label}
+                </span>
+                <span className="font-mono text-xs tabular-nums text-text-dim">
+                  {row.countries}
+                </span>
+              </li>
+            ))}
           </ol>
         </section>
       )}

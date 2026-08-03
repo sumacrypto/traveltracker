@@ -9,6 +9,7 @@ import ThemeToggle from "./ThemeToggle";
 import ShareCardDialog from "./ShareCardDialog";
 import AccountButton from "./AccountButton";
 import AccountSync from "./AccountSync";
+import ReferralWelcome from "./ReferralWelcome";
 import AuthDialog from "./AuthDialog";
 import AccountDialog from "./AccountDialog";
 import SubdivisionDialog from "./SubdivisionDialog";
@@ -127,6 +128,8 @@ export default function Explorer() {
       </div>
 
       <AccountSync />
+
+      <ReferralWelcome onSignIn={() => setAuthOpen(true)} />
 
       <ShareCardDialog
         open={shareOpen}

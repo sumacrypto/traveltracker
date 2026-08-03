@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { getSupabase, SUPABASE_ENABLED } from "@/lib/supabase/client";
 import { setRemoteSink, subdivisionKey, useTrip } from "@/lib/store";
-import { rememberReferral, takePendingReferral, useAccount } from "@/lib/account";
+import { takePendingReferral, useAccount } from "@/lib/account";
 import { codesToGeometryIds, toCountryCode } from "@/lib/countryCodes";
 import { track } from "@/lib/analytics";
 import type { Profile, VisitedCountry, VisitedSubdivision } from "@/lib/supabase/types";
@@ -15,22 +15,13 @@ import type { Profile, VisitedCountry, VisitedSubdivision } from "@/lib/supabase
  * pise al otro: alguien puede haber marcado países sin cuenta en este dispositivo
  * y tener otros guardados desde antes, y perder cualquiera de los dos sería peor
  * que quedarse con un país de más.
+ *
+ * El `?ref=` de la URL lo lee y lo guarda `ReferralWelcome`, no acá: ese
+ * componente le muestra a la persona quién la invitó antes de canjear nada.
+ * Acá solo se retira el código guardado (`takePendingReferral`) una vez que hay
+ * sesión, para completar el canje que `ReferralWelcome` dejó pendiente.
  */
 export default function AccountSync() {
-  useEffect(() => {
-    // Guardar el referido antes de cualquier redirect de OAuth, que se lleva
-    // puestos los parámetros de la URL.
-    const params = new URLSearchParams(window.location.search);
-    const ref = params.get("ref");
-    if (ref) {
-      rememberReferral(ref);
-      track("referral_visited", { code: ref });
-      params.delete("ref");
-      const query = params.toString();
-      window.history.replaceState({}, "", `${window.location.pathname}${query ? `?${query}` : ""}`);
-    }
-  }, []);
-
   useEffect(() => {
     if (!SUPABASE_ENABLED) return;
     const supabase = getSupabase();

@@ -58,6 +58,8 @@ export interface LeaderboardRow {
   display_name: string | null;
   avatar_url: string | null;
   countries: number;
+  /** ISO alpha-2 de cada país visitado, para desglosar por continente en el cliente. */
+  country_codes: string[];
 }
 
 export interface HomeCountryAverage {

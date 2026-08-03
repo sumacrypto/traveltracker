@@ -1,16 +1,23 @@
 import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import type { EmailOtpType } from "@supabase/supabase-js";
 
 /**
- * Vuelta del OAuth. Cambia el código por sesión y manda a la home, donde el
- * cliente detecta que hay usuario y sincroniza el progreso local.
+ * Vuelta de la autenticación. Atiende los dos caminos, que llegan distinto:
+ *
+ *  - OAuth (Google) manda `?code=` y se cambia por sesión.
+ *  - La confirmación de mail manda `?token_hash=` y `?type=`, y se verifica con
+ *    verifyOtp. Atender solo el primero deja al que se registra por mail sin
+ *    sesión después de hacer click en el link.
  */
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
+  const tokenHash = searchParams.get("token_hash");
+  const type = searchParams.get("type") as EmailOtpType | null;
   const next = searchParams.get("next") ?? "/";
 
-  if (!code) {
+  if (!code && !(tokenHash && type)) {
     return NextResponse.redirect(`${origin}/?auth=missing_code`);
   }
 
@@ -19,7 +26,10 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/?auth=not_configured`);
   }
 
-  const { error } = await supabase.auth.exchangeCodeForSession(code);
+  const { error } = code
+    ? await supabase.auth.exchangeCodeForSession(code)
+    : await supabase.auth.verifyOtp({ token_hash: tokenHash!, type: type! });
+
   if (error) {
     return NextResponse.redirect(`${origin}/?auth=failed`);
   }

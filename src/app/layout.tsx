@@ -44,7 +44,10 @@ export default function RootLayout({
         {/* La topología del mapa es lo primero que el usuario necesita ver. */}
         <link rel="preload" href="/geo/countries-50m.json" as="fetch" crossOrigin="anonymous" />
       </head>
-      <body className="min-h-full">
+      {/* Grammarly y otras extensiones inyectan atributos data-* en el body
+          antes de que React hidrate. No cambia nada del render, pero React lo
+          reporta como desajuste. */}
+      <body className="min-h-full" suppressHydrationWarning>
         {/* `beforeInteractive` lo saca del árbol de React y lo inyecta en el HTML,
             que es lo que necesita para correr antes del primer paint. Un <script>
             suelto acá adentro haría lo mismo, pero React 19 lo marca como error. */}
