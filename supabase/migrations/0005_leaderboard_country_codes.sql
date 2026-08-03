@@ -3,7 +3,13 @@
 -- están mapeados en src/data/countries.ts, así que no hace falta duplicar esa
 -- tabla en SQL, alcanza con mandar los códigos y que el cliente los agrupe.
 
-create or replace function public.friend_leaderboard()
+-- Agregar una columna al `returns table` cambia el tipo de retorno, y eso
+-- `create or replace` no lo permite: hay que borrarla y recrearla. Nadie más
+-- depende de esta función (el cliente la llama por RPC, ninguna policy la usa),
+-- así que el drop es seguro.
+drop function if exists public.friend_leaderboard();
+
+create function public.friend_leaderboard()
 returns table (
   user_id uuid,
   username text,
