@@ -49,8 +49,8 @@ drop policy "perfiles visibles" on public.profiles;
 create policy "perfiles visibles" on public.profiles
   for select using (private.profile_is_visible(id, auth.uid()));
 
-drop policy "paises visibles" on public.visited_countries;
-create policy "paises visibles" on public.visited_countries
+drop policy "países visibles" on public.visited_countries;
+create policy "países visibles" on public.visited_countries
   for select using (private.profile_is_visible(user_id, auth.uid()));
 
 drop policy "subdivisiones visibles" on public.visited_subdivisions;
