@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, useEffect, useState } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { ArrowsOut, MagnifyingGlassMinus, MagnifyingGlassPlus } from "@phosphor-icons/react";
 import Dialog from "./Dialog";
 import AnimatedNumber from "./AnimatedNumber";
@@ -14,6 +14,7 @@ import {
   type SubdivisionShape,
 } from "@/lib/subdivisionGeo";
 import { useMapZoom } from "@/lib/useMapZoom";
+import { subdivisionLabel } from "@/lib/subdivisionLabel";
 
 /** Mismo margen invisible que el mapa mundial: ver WorldMap.tsx. */
 const HIT_BUFFER_PX = 11;
@@ -30,13 +31,14 @@ export default function SubdivisionDialog({
   countryName,
   onClose,
 }: SubdivisionDialogProps) {
+  const locale = useLocale();
   const set = countryCode ? getSubdivisionSet(countryCode) : null;
 
   return (
     <Dialog
       open={Boolean(set)}
       onClose={onClose}
-      title={set ? `${countryName}: ${set.label}` : ""}
+      title={set ? `${countryName}: ${subdivisionLabel(set, locale)}` : ""}
     >
       {set && <SubdivisionBody countryCode={set.countryCode} />}
     </Dialog>
@@ -45,6 +47,7 @@ export default function SubdivisionDialog({
 
 function SubdivisionBody({ countryCode }: { countryCode: string }) {
   const locale = useLocale();
+  const t = useTranslations("subdivisionDialog");
   const set = getSubdivisionSet(countryCode)!;
   const subdivisions = useTrip((state) => state.subdivisions);
   const toggleSubdivision = useTrip((state) => state.toggleSubdivision);
@@ -101,7 +104,7 @@ function SubdivisionBody({ countryCode }: { countryCode: string }) {
           className="font-mono text-4xl leading-none font-semibold tracking-tighter tabular-nums"
         />
         <span className="text-lg leading-none font-semibold text-accent-ink">
-          de <span className="font-mono tabular-nums">{set.total}</span>
+          {t("of")} <span className="font-mono tabular-nums">{set.total}</span>
         </span>
         <span className="ml-auto font-mono text-sm tabular-nums text-text-dim">
           {percent.toLocaleString(locale, { maximumFractionDigits: 0 })}%
@@ -110,7 +113,7 @@ function SubdivisionBody({ countryCode }: { countryCode: string }) {
 
       {failed ? (
         <p className="py-10 text-center text-sm text-text-dim">
-          No pudimos cargar el mapa de {set.label}.
+          {t("loadFailed", { label: subdivisionLabel(set, locale) })}
         </p>
       ) : !map ? (
         <div className="skeleton mx-auto h-[42vh] max-w-full rounded-[10px]" />
@@ -125,7 +128,7 @@ function SubdivisionBody({ countryCode }: { countryCode: string }) {
             className="mx-auto max-h-[46vh] w-auto max-w-full touch-none rounded-[10px] bg-sea select-none"
             onMouseLeave={() => setHovered(null)}
             role="group"
-            aria-label={`Mapa de ${set.label}. Tocá uno para marcarlo.`}
+            aria-label={t("mapAriaLabel", { label: subdivisionLabel(set, locale) })}
           >
             <g ref={groupRef}>
               {map.shapes.map((shape) => (
@@ -143,13 +146,13 @@ function SubdivisionBody({ countryCode }: { countryCode: string }) {
           </svg>
 
           <div className="absolute right-2 bottom-2 flex flex-col gap-2">
-            <ZoomButton label="Acercar" onClick={() => zoomBy(1.7)}>
+            <ZoomButton label={t("zoomIn")} onClick={() => zoomBy(1.7)}>
               <MagnifyingGlassPlus size={18} weight="bold" />
             </ZoomButton>
-            <ZoomButton label="Alejar" onClick={() => zoomBy(1 / 1.7)}>
+            <ZoomButton label={t("zoomOut")} onClick={() => zoomBy(1 / 1.7)}>
               <MagnifyingGlassMinus size={18} weight="bold" />
             </ZoomButton>
-            <ZoomButton label="Ver el país entero" onClick={resetZoom}>
+            <ZoomButton label={t("zoomReset")} onClick={resetZoom}>
               <ArrowsOut size={18} weight="bold" />
             </ZoomButton>
           </div>
@@ -167,7 +170,7 @@ function SubdivisionBody({ countryCode }: { countryCode: string }) {
       )}
 
       <p className="mt-4 text-[12px] leading-relaxed text-text-faint">
-        {set.article} {set.label} no suman al total de 195 países: son su propio recuento.
+        {t("notCountedNote", { article: set.article, label: subdivisionLabel(set, locale) })}
       </p>
     </>
   );

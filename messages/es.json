@@ -91,5 +91,28 @@
       "detail": "En el mundo, {neverTraveled}% nunca salió de su país y solo {tenOrMore}% llegó a diez o más. {supabaseNote}",
       "supabaseNote": "Cuando haya suficiente gente registrada ahí, lo reemplazamos por el promedio real."
     }
+  },
+  "subdivisionDialog": {
+    "of": "de",
+    "loadFailed": "No pudimos cargar el mapa de {label}.",
+    "mapAriaLabel": "Mapa de {label}. Toca uno para marcarlo.",
+    "zoomIn": "Acercar",
+    "zoomOut": "Alejar",
+    "zoomReset": "Ver el país entero",
+    "notCountedNote": "{article} {label} no suman al total de 195 países: son su propio recuento."
+  },
+  "subdivisionEntries": {
+    "heading": "En detalle",
+    "whatIsThis": "Qué es esta sección",
+    "help": "Marca también las provincias, estados o regiones dentro de un país. Llevan su propio recuento y no suman al total de 195: sirven para los países que conoces en serio y no solo de paso.",
+    "empty": "Todavía no agregaste ninguno.",
+    "removeWithData": "Quitar {country} y lo marcado adentro",
+    "remove": "Quitar {country}",
+    "confirmRemove": "Toca de nuevo para confirmar",
+    "removeShort": "Quitar",
+    "addLabel": "País para ver en detalle",
+    "addPlaceholder": "Buscar un país",
+    "cancel": "Cancelar",
+    "add": "Agregar un país"
   }
 }

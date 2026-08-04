@@ -91,5 +91,28 @@
       "detail": "Worldwide, {neverTraveled}% never left their country and only {tenOrMore}% reached ten or more. {supabaseNote}",
       "supabaseNote": "Once enough people there are registered, we'll swap this for the real average."
     }
+  },
+  "subdivisionDialog": {
+    "of": "of",
+    "loadFailed": "We couldn't load the map for {label}.",
+    "mapAriaLabel": "Map of {label}. Tap one to mark it.",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "zoomReset": "View the whole country",
+    "notCountedNote": "{label} don't count toward the 195-country total — they're their own tally."
+  },
+  "subdivisionEntries": {
+    "heading": "In detail",
+    "whatIsThis": "What is this section",
+    "help": "Mark provinces, states, or regions inside a country too. They have their own tally and don't count toward the 195 total — they're for the countries you really know, not just passed through.",
+    "empty": "You haven't added any yet.",
+    "removeWithData": "Remove {country} and everything marked inside it",
+    "remove": "Remove {country}",
+    "confirmRemove": "Tap again to confirm",
+    "removeShort": "Remove",
+    "addLabel": "Country to see in detail",
+    "addPlaceholder": "Search for a country",
+    "cancel": "Cancel",
+    "add": "Add a country"
   }
 }

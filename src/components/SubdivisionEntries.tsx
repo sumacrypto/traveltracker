@@ -1,18 +1,21 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { CaretRight, Plus, Question, X } from "@phosphor-icons/react";
 import { COUNTRIES, GEOMETRY_ID_BY_CODE } from "@/data/countries";
 import { SUBDIVISION_SETS, getSubdivisionSet } from "@/data/subdivisions";
 import { useTrip } from "@/lib/store";
+import { countryLabel } from "@/lib/countryLabel";
 import CountryPicker from "./CountryPicker";
 
 interface SubdivisionEntriesProps {
   onOpen: (countryCode: string, countryName: string) => void;
 }
 
-function countryName(code: string) {
-  return COUNTRIES[GEOMETRY_ID_BY_CODE[code]]?.name ?? code;
+function resolveCountryName(code: string, locale: string) {
+  const meta = COUNTRIES[GEOMETRY_ID_BY_CODE[code]];
+  return meta ? countryLabel(meta, locale) : code;
 }
 
 /**
@@ -20,6 +23,8 @@ function countryName(code: string) {
  * que quiera de los 214 que tienen divisiones, no solo los que ya marcó.
  */
 export default function SubdivisionEntries({ onOpen }: SubdivisionEntriesProps) {
+  const locale = useLocale();
+  const t = useTranslations("subdivisionEntries");
   const detailCountries = useTrip((state) => state.detailCountries);
   const subdivisions = useTrip((state) => state.subdivisions);
   const addDetailCountry = useTrip((state) => state.addDetailCountry);
@@ -48,12 +53,12 @@ export default function SubdivisionEntries({ onOpen }: SubdivisionEntriesProps) 
     <section>
       <div className="flex items-center gap-2">
         <h2 className="text-xs font-semibold tracking-[0.14em] text-text-faint uppercase">
-          En detalle
+          {t("heading")}
         </h2>
         <button
           type="button"
           onClick={() => setHelpOpen((open) => !open)}
-          aria-label="Qué es esta sección"
+          aria-label={t("whatIsThis")}
           aria-expanded={helpOpen}
           className={`grid size-4 place-items-center rounded-full border transition-colors ${
             helpOpen
@@ -67,16 +72,12 @@ export default function SubdivisionEntries({ onOpen }: SubdivisionEntriesProps) 
 
       {helpOpen && (
         <p className="mt-2.5 rounded-[10px] border border-ink-line bg-ink p-3 text-[12px] leading-relaxed text-text-dim">
-          Marcá también las provincias, estados o regiones dentro de un país. Llevan su propio
-          recuento y no suman al total de 195: sirven para los países que conocés en serio y no
-          solo de paso.
+          {t("help")}
         </p>
       )}
 
       {rows.length === 0 && !adding && (
-        <p className="mt-3 text-[13px] leading-relaxed text-text-dim">
-          Todavía no agregaste ninguno.
-        </p>
+        <p className="mt-3 text-[13px] leading-relaxed text-text-dim">{t("empty")}</p>
       )}
 
       {rows.length > 0 && (
@@ -85,10 +86,12 @@ export default function SubdivisionEntries({ onOpen }: SubdivisionEntriesProps) 
             <li key={code} className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => onOpen(code, countryName(code))}
+                onClick={() => onOpen(code, resolveCountryName(code, locale))}
                 className="flex flex-1 items-center gap-3 rounded-[10px] border border-ink-line px-3.5 py-3 text-left transition-colors hover:border-accent"
               >
-                <span className="flex-1 truncate text-sm">{countryName(code)}</span>
+                <span className="flex-1 truncate text-sm">
+                  {resolveCountryName(code, locale)}
+                </span>
                 <span className="font-mono text-xs tabular-nums text-text-dim">
                   <span className={counts[code] ? "text-text" : undefined}>
                     {counts[code] ?? 0}
@@ -106,10 +109,10 @@ export default function SubdivisionEntries({ onOpen }: SubdivisionEntriesProps) 
                 onBlur={() => setConfirmRemove(null)}
                 aria-label={
                   confirmRemove === code
-                    ? `Quitar ${countryName(code)} y lo marcado adentro`
-                    : `Quitar ${countryName(code)}`
+                    ? t("removeWithData", { country: resolveCountryName(code, locale) })
+                    : t("remove", { country: resolveCountryName(code, locale) })
                 }
-                title={confirmRemove === code ? "Tocá de nuevo para confirmar" : "Quitar"}
+                title={confirmRemove === code ? t("confirmRemove") : t("removeShort")}
                 className={`grid size-8 shrink-0 place-items-center rounded-full border transition-colors ${
                   confirmRemove === code
                     ? "border-accent text-accent-ink"
@@ -132,8 +135,8 @@ export default function SubdivisionEntries({ onOpen }: SubdivisionEntriesProps) 
               setAdding(false);
             }}
             onlyCodes={SUBDIVISION_COUNTRY_SET}
-            label="País para ver en detalle"
-            placeholder="Buscar un país"
+            label={t("addLabel")}
+            placeholder={t("addPlaceholder")}
             autoOpen
           />
           <button
@@ -141,7 +144,7 @@ export default function SubdivisionEntries({ onOpen }: SubdivisionEntriesProps) 
             onClick={() => setAdding(false)}
             className="mt-2 text-[12px] text-text-faint transition-colors hover:text-text"
           >
-            Cancelar
+            {t("cancel")}
           </button>
         </div>
       ) : (
@@ -151,7 +154,7 @@ export default function SubdivisionEntries({ onOpen }: SubdivisionEntriesProps) 
           className="mt-3 flex w-full items-center justify-center gap-2 rounded-[10px] border border-dashed border-ink-line px-3.5 py-2.5 text-[13px] font-medium text-text-dim transition-colors hover:border-accent hover:text-accent-ink"
         >
           <Plus size={13} weight="bold" />
-          Agregar un país
+          {t("add")}
         </button>
       )}
     </section>
