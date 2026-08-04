@@ -196,5 +196,14 @@
       "passwordTooShort": "La contraseña tiene que tener al menos 8 caracteres.",
       "generic": "No pudimos completar el paso. Prueba de nuevo."
     }
+  },
+  "referralWelcome": {
+    "title": "Te invitaron",
+    "invitedByName": "<name>{inviterName}</name> te invitó a comparar tu mapa",
+    "invitedByUnknown": "Alguien te invitó a comparar tu mapa",
+    "detail": "Si te conectas, van a poder ver cuántos países lleva cada uno y aparecer juntos en el ranking de amigos. Si prefieres, sigue explorando sin conectar: tu mapa sigue siendo tuyo igual.",
+    "connect": "Conectar y comparar",
+    "signInAndConnect": "Entrar y conectar",
+    "keepPrivate": "Prefiero mantenerlo privado"
   }
 }

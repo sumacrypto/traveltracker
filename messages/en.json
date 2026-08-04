@@ -196,5 +196,14 @@
       "passwordTooShort": "The password has to be at least 8 characters.",
       "generic": "We couldn't complete that step. Try again."
     }
+  },
+  "referralWelcome": {
+    "title": "You were invited",
+    "invitedByName": "<name>{inviterName}</name> invited you to compare your map",
+    "invitedByUnknown": "Someone invited you to compare your map",
+    "detail": "If you connect, you'll both be able to see how many countries each of you has and show up together on the friends leaderboard. If you'd rather not, keep exploring without connecting — your map stays yours either way.",
+    "connect": "Connect and compare",
+    "signInAndConnect": "Sign in and connect",
+    "keepPrivate": "I'd rather keep it private"
   }
 }

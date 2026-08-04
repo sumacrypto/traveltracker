@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { UsersThree } from "@phosphor-icons/react";
 import Dialog from "./Dialog";
 import { SUPABASE_ENABLED } from "@/lib/supabase/client";
@@ -32,6 +33,7 @@ function readReferralCode(): string | null {
  * registrarse, y la persona nunca se enteraba de que había una invitación.
  */
 export default function ReferralWelcome({ onSignIn }: ReferralWelcomeProps) {
+  const t = useTranslations("referralWelcome");
   const user = useAccount((state) => state.user);
   const [state, setState] = useState<State>(() => {
     const code = readReferralCode();
@@ -91,7 +93,7 @@ export default function ReferralWelcome({ onSignIn }: ReferralWelcomeProps) {
     state.kind === "ready" ? (state.inviter?.display_name ?? state.inviter?.username) : null;
 
   return (
-    <Dialog open onClose={() => dismiss()} title="Te invitaron">
+    <Dialog open onClose={() => dismiss()} title={t("title")}>
       <div className="flex flex-col items-center gap-4 py-2 text-center">
         <div className="grid size-14 place-items-center rounded-full bg-accent/15 text-accent-ink">
           <UsersThree size={26} weight="fill" />
@@ -101,22 +103,16 @@ export default function ReferralWelcome({ onSignIn }: ReferralWelcomeProps) {
           <div className="skeleton h-5 w-48 rounded-full" />
         ) : (
           <p className="text-[15px] leading-snug font-semibold">
-            {inviterName ? (
-              <>
-                <span className="text-accent-ink">{inviterName}</span> te invitó a comparar tu
-                mapa
-              </>
-            ) : (
-              "Alguien te invitó a comparar tu mapa"
-            )}
+            {inviterName
+              ? t.rich("invitedByName", {
+                  inviterName,
+                  name: (chunks) => <span className="text-accent-ink">{chunks}</span>,
+                })
+              : t("invitedByUnknown")}
           </p>
         )}
 
-        <p className="text-[13px] leading-relaxed text-text-dim">
-          Si te conectás, van a poder ver cuántos países lleva cada uno y aparecer juntos en el
-          ranking de amigos. Si preferís, seguí explorando sin conectar: tu mapa sigue siendo tuyo
-          igual.
-        </p>
+        <p className="text-[13px] leading-relaxed text-text-dim">{t("detail")}</p>
       </div>
 
       <div className="mt-2 flex flex-col gap-2">
@@ -126,14 +122,14 @@ export default function ReferralWelcome({ onSignIn }: ReferralWelcomeProps) {
           disabled={state.kind === "loading"}
           className="rounded-full bg-accent px-4 py-3 text-sm font-semibold text-white transition-opacity active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
         >
-          {user ? "Conectar y comparar" : "Entrar y conectar"}
+          {user ? t("connect") : t("signInAndConnect")}
         </button>
         <button
           type="button"
           onClick={() => dismiss()}
           className="rounded-full border border-ink-line px-4 py-3 text-sm font-medium text-text-dim transition-colors hover:border-accent hover:text-accent-ink"
         >
-          Prefiero mantenerlo privado
+          {t("keepPrivate")}
         </button>
       </div>
     </Dialog>
