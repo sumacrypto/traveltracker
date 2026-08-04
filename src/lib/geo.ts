@@ -34,13 +34,13 @@ const HABITABLE_FRAME: Polygon = {
 
 const PADDING = 4;
 
-/** [oeste, sur, este, norte] de cada continente, en grados. */
+/** [oeste, sur, este, norte] de cada continente, en grados. Clave = id de Region. */
 const CONTINENT_FRAMES: Record<string, [number, number, number, number]> = {
-  "África": [-19, -36, 53, 38],
-  "América": [-170, -56, -33, 73],
-  Asia: [25, -11, 150, 62],
-  Europa: [-26, 34, 46, 71],
-  "Oceanía": [110, -48, 180, -5],
+  africa: [-19, -36, 53, 38],
+  america: [-170, -56, -33, 73],
+  asia: [25, -11, 150, 62],
+  europe: [-26, 34, 46, 71],
+  oceania: [110, -48, 180, -5],
 };
 
 /**

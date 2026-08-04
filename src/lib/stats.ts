@@ -123,10 +123,11 @@ export function computeStats(visitedIds: Iterable<string>): TripStats {
   }).sort(
     (a, b) =>
       // De más explorado a menos. Los empates se resuelven por cobertura y
-      // después alfabéticamente, así el orden no baila entre renders.
+      // después por el orden fijo de CONTINENTS (los ids no son texto para
+      // mostrar, así que no tiene sentido compararlos alfabéticamente).
       b.visited - a.visited ||
       b.percent - a.percent ||
-      a.continent.localeCompare(b.continent, "es"),
+      CONTINENTS.indexOf(a.continent) - CONTINENTS.indexOf(b.continent),
   );
 
   const strongest = continents.reduce<ContinentStat | null>(

@@ -2,10 +2,10 @@
 // Fuentes: world-atlas (Natural Earth 1:50m) + world-countries (ISO 3166).
 
 /** Continentes que entran en el recuento de 195 países. */
-export type Continent = "América" | "Asia" | "Europa" | "Oceanía" | "África";
+export type Continent = "africa" | "america" | "asia" | "europe" | "oceania";
 
 /** Incluye además regiones sin países contables (territorios antárticos). */
-export type Region = "América" | "Antártida" | "Asia" | "Europa" | "Oceanía" | "África";
+export type Region = "africa" | "america" | "antarctica" | "asia" | "europe" | "oceania";
 
 export interface CountryMeta {
   /** ISO 3166-1 alpha-2 */
@@ -26,7 +26,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BG",
     "name": "Bulgaria",
     "nameEn": "Bulgaria",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Southeast Europe",
     "countable": true,
     "flag": "🇧🇬"
@@ -35,7 +35,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MM",
     "name": "Myanmar",
     "nameEn": "Myanmar",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "South-Eastern Asia",
     "countable": true,
     "flag": "🇲🇲"
@@ -44,7 +44,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BI",
     "name": "Burundi",
     "nameEn": "Burundi",
-    "region": "África",
+    "region": "africa",
     "subregion": "Eastern Africa",
     "countable": true,
     "flag": "🇧🇮"
@@ -53,7 +53,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BY",
     "name": "Bielorrusia",
     "nameEn": "Belarus",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Eastern Europe",
     "countable": true,
     "flag": "🇧🇾"
@@ -62,7 +62,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "KH",
     "name": "Camboya",
     "nameEn": "Cambodia",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "South-Eastern Asia",
     "countable": true,
     "flag": "🇰🇭"
@@ -71,7 +71,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "CM",
     "name": "Camerún",
     "nameEn": "Cameroon",
-    "region": "África",
+    "region": "africa",
     "subregion": "Middle Africa",
     "countable": true,
     "flag": "🇨🇲"
@@ -80,7 +80,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "CA",
     "name": "Canadá",
     "nameEn": "Canada",
-    "region": "América",
+    "region": "america",
     "subregion": "North America",
     "countable": true,
     "flag": "🇨🇦"
@@ -89,7 +89,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "CV",
     "name": "Cabo Verde",
     "nameEn": "Cape Verde",
-    "region": "África",
+    "region": "africa",
     "subregion": "Western Africa",
     "countable": true,
     "flag": "🇨🇻"
@@ -98,7 +98,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "KY",
     "name": "Islas Caimán",
     "nameEn": "Cayman Islands",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": false,
     "flag": "🇰🇾"
@@ -107,7 +107,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "CF",
     "name": "República Centroafricana",
     "nameEn": "Central African Republic",
-    "region": "África",
+    "region": "africa",
     "subregion": "Middle Africa",
     "countable": true,
     "flag": "🇨🇫"
@@ -116,7 +116,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "LK",
     "name": "Sri Lanka",
     "nameEn": "Sri Lanka",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Southern Asia",
     "countable": true,
     "flag": "🇱🇰"
@@ -125,7 +125,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "TD",
     "name": "Chad",
     "nameEn": "Chad",
-    "region": "África",
+    "region": "africa",
     "subregion": "Middle Africa",
     "countable": true,
     "flag": "🇹🇩"
@@ -134,7 +134,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "CL",
     "name": "Chile",
     "nameEn": "Chile",
-    "region": "América",
+    "region": "america",
     "subregion": "South America",
     "countable": true,
     "flag": "🇨🇱"
@@ -143,7 +143,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "CN",
     "name": "China",
     "nameEn": "China",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Eastern Asia",
     "countable": true,
     "flag": "🇨🇳"
@@ -152,7 +152,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "TW",
     "name": "Taiwán",
     "nameEn": "Taiwan",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Eastern Asia",
     "countable": false,
     "flag": "🇹🇼"
@@ -161,7 +161,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "CO",
     "name": "Colombia",
     "nameEn": "Colombia",
-    "region": "América",
+    "region": "america",
     "subregion": "South America",
     "countable": true,
     "flag": "🇨🇴"
@@ -170,7 +170,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "KM",
     "name": "Comoras",
     "nameEn": "Comoros",
-    "region": "África",
+    "region": "africa",
     "subregion": "Eastern Africa",
     "countable": true,
     "flag": "🇰🇲"
@@ -179,7 +179,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "CG",
     "name": "Congo",
     "nameEn": "Republic of the Congo",
-    "region": "África",
+    "region": "africa",
     "subregion": "Middle Africa",
     "countable": true,
     "flag": "🇨🇬"
@@ -188,7 +188,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "CD",
     "name": "Congo (Rep. Dem.)",
     "nameEn": "DR Congo",
-    "region": "África",
+    "region": "africa",
     "subregion": "Middle Africa",
     "countable": true,
     "flag": "🇨🇩"
@@ -197,7 +197,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "CK",
     "name": "Islas Cook",
     "nameEn": "Cook Islands",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Polynesia",
     "countable": false,
     "flag": "🇨🇰"
@@ -206,7 +206,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "CR",
     "name": "Costa Rica",
     "nameEn": "Costa Rica",
-    "region": "América",
+    "region": "america",
     "subregion": "Central America",
     "countable": true,
     "flag": "🇨🇷"
@@ -215,7 +215,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "HR",
     "name": "Croacia",
     "nameEn": "Croatia",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Southeast Europe",
     "countable": true,
     "flag": "🇭🇷"
@@ -224,7 +224,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "CU",
     "name": "Cuba",
     "nameEn": "Cuba",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": true,
     "flag": "🇨🇺"
@@ -233,7 +233,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "CY",
     "name": "Chipre",
     "nameEn": "Cyprus",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Southern Europe",
     "countable": true,
     "flag": "🇨🇾"
@@ -242,7 +242,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "CZ",
     "name": "Chequia",
     "nameEn": "Czechia",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Central Europe",
     "countable": true,
     "flag": "🇨🇿"
@@ -251,7 +251,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BJ",
     "name": "Benín",
     "nameEn": "Benin",
-    "region": "África",
+    "region": "africa",
     "subregion": "Western Africa",
     "countable": true,
     "flag": "🇧🇯"
@@ -260,7 +260,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "DK",
     "name": "Dinamarca",
     "nameEn": "Denmark",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Northern Europe",
     "countable": true,
     "flag": "🇩🇰"
@@ -269,7 +269,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "DM",
     "name": "Dominica",
     "nameEn": "Dominica",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": true,
     "flag": "🇩🇲"
@@ -278,7 +278,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "DO",
     "name": "República Dominicana",
     "nameEn": "Dominican Republic",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": true,
     "flag": "🇩🇴"
@@ -287,7 +287,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "EC",
     "name": "Ecuador",
     "nameEn": "Ecuador",
-    "region": "América",
+    "region": "america",
     "subregion": "South America",
     "countable": true,
     "flag": "🇪🇨"
@@ -296,7 +296,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SV",
     "name": "El Salvador",
     "nameEn": "El Salvador",
-    "region": "América",
+    "region": "america",
     "subregion": "Central America",
     "countable": true,
     "flag": "🇸🇻"
@@ -305,7 +305,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "GQ",
     "name": "Guinea Ecuatorial",
     "nameEn": "Equatorial Guinea",
-    "region": "África",
+    "region": "africa",
     "subregion": "Middle Africa",
     "countable": true,
     "flag": "🇬🇶"
@@ -314,7 +314,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "ET",
     "name": "Etiopía",
     "nameEn": "Ethiopia",
-    "region": "África",
+    "region": "africa",
     "subregion": "Eastern Africa",
     "countable": true,
     "flag": "🇪🇹"
@@ -323,7 +323,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "ER",
     "name": "Eritrea",
     "nameEn": "Eritrea",
-    "region": "África",
+    "region": "africa",
     "subregion": "Eastern Africa",
     "countable": true,
     "flag": "🇪🇷"
@@ -332,7 +332,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "EE",
     "name": "Estonia",
     "nameEn": "Estonia",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Northern Europe",
     "countable": true,
     "flag": "🇪🇪"
@@ -341,7 +341,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "FO",
     "name": "Islas Faroe",
     "nameEn": "Faroe Islands",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Northern Europe",
     "countable": false,
     "flag": "🇫🇴"
@@ -350,7 +350,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "FK",
     "name": "Islas Malvinas",
     "nameEn": "Falkland Islands",
-    "region": "América",
+    "region": "america",
     "subregion": "South America",
     "countable": false,
     "flag": "🇫🇰"
@@ -359,7 +359,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "GS",
     "name": "Islas Georgias del Sur y Sandwich del Sur",
     "nameEn": "South Georgia",
-    "region": "Antártida",
+    "region": "antarctica",
     "subregion": null,
     "countable": false,
     "flag": "🇬🇸"
@@ -368,7 +368,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "FJ",
     "name": "Fiyi",
     "nameEn": "Fiji",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Melanesia",
     "countable": true,
     "flag": "🇫🇯"
@@ -377,7 +377,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "FI",
     "name": "Finlandia",
     "nameEn": "Finland",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Northern Europe",
     "countable": true,
     "flag": "🇫🇮"
@@ -386,7 +386,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "AX",
     "name": "Alandia",
     "nameEn": "Åland Islands",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Northern Europe",
     "countable": false,
     "flag": "🇦🇽"
@@ -395,7 +395,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "FR",
     "name": "Francia",
     "nameEn": "France",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Western Europe",
     "countable": true,
     "flag": "🇫🇷"
@@ -404,7 +404,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "PF",
     "name": "Polinesia Francesa",
     "nameEn": "French Polynesia",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Polynesia",
     "countable": false,
     "flag": "🇵🇫"
@@ -413,7 +413,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "TF",
     "name": "Tierras Australes y Antárticas Francesas",
     "nameEn": "French Southern and Antarctic Lands",
-    "region": "Antártida",
+    "region": "antarctica",
     "subregion": null,
     "countable": false,
     "flag": "🇹🇫"
@@ -422,7 +422,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "DJ",
     "name": "Djibouti",
     "nameEn": "Djibouti",
-    "region": "África",
+    "region": "africa",
     "subregion": "Eastern Africa",
     "countable": true,
     "flag": "🇩🇯"
@@ -431,7 +431,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "GA",
     "name": "Gabón",
     "nameEn": "Gabon",
-    "region": "África",
+    "region": "africa",
     "subregion": "Middle Africa",
     "countable": true,
     "flag": "🇬🇦"
@@ -440,7 +440,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "GE",
     "name": "Georgia",
     "nameEn": "Georgia",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Western Asia",
     "countable": true,
     "flag": "🇬🇪"
@@ -449,7 +449,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "GM",
     "name": "Gambia",
     "nameEn": "Gambia",
-    "region": "África",
+    "region": "africa",
     "subregion": "Western Africa",
     "countable": true,
     "flag": "🇬🇲"
@@ -458,7 +458,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "PS",
     "name": "Palestina",
     "nameEn": "Palestine",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Western Asia",
     "countable": true,
     "flag": "🇵🇸"
@@ -467,7 +467,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "DE",
     "name": "Alemania",
     "nameEn": "Germany",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Western Europe",
     "countable": true,
     "flag": "🇩🇪"
@@ -476,7 +476,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "GH",
     "name": "Ghana",
     "nameEn": "Ghana",
-    "region": "África",
+    "region": "africa",
     "subregion": "Western Africa",
     "countable": true,
     "flag": "🇬🇭"
@@ -485,7 +485,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "KI",
     "name": "Kiribati",
     "nameEn": "Kiribati",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Micronesia",
     "countable": true,
     "flag": "🇰🇮"
@@ -494,7 +494,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "GR",
     "name": "Grecia",
     "nameEn": "Greece",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Southern Europe",
     "countable": true,
     "flag": "🇬🇷"
@@ -503,7 +503,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "GL",
     "name": "Groenlandia",
     "nameEn": "Greenland",
-    "region": "América",
+    "region": "america",
     "subregion": "North America",
     "countable": false,
     "flag": "🇬🇱"
@@ -512,7 +512,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "GD",
     "name": "Grenada",
     "nameEn": "Grenada",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": true,
     "flag": "🇬🇩"
@@ -521,7 +521,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "GU",
     "name": "Guam",
     "nameEn": "Guam",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Micronesia",
     "countable": false,
     "flag": "🇬🇺"
@@ -530,7 +530,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "GT",
     "name": "Guatemala",
     "nameEn": "Guatemala",
-    "region": "América",
+    "region": "america",
     "subregion": "Central America",
     "countable": true,
     "flag": "🇬🇹"
@@ -539,7 +539,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "GN",
     "name": "Guinea",
     "nameEn": "Guinea",
-    "region": "África",
+    "region": "africa",
     "subregion": "Western Africa",
     "countable": true,
     "flag": "🇬🇳"
@@ -548,7 +548,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "GY",
     "name": "Guyana",
     "nameEn": "Guyana",
-    "region": "América",
+    "region": "america",
     "subregion": "South America",
     "countable": true,
     "flag": "🇬🇾"
@@ -557,7 +557,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "HT",
     "name": "Haití",
     "nameEn": "Haiti",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": true,
     "flag": "🇭🇹"
@@ -566,7 +566,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "HM",
     "name": "Islas Heard y McDonald",
     "nameEn": "Heard Island and McDonald Islands",
-    "region": "Antártida",
+    "region": "antarctica",
     "subregion": null,
     "countable": false,
     "flag": "🇭🇲"
@@ -575,7 +575,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "VA",
     "name": "Ciudad del Vaticano",
     "nameEn": "Vatican City",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Southern Europe",
     "countable": true,
     "flag": "🇻🇦"
@@ -584,7 +584,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "HN",
     "name": "Honduras",
     "nameEn": "Honduras",
-    "region": "América",
+    "region": "america",
     "subregion": "Central America",
     "countable": true,
     "flag": "🇭🇳"
@@ -593,7 +593,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "HK",
     "name": "Hong Kong",
     "nameEn": "Hong Kong",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Eastern Asia",
     "countable": false,
     "flag": "🇭🇰"
@@ -602,7 +602,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "HU",
     "name": "Hungría",
     "nameEn": "Hungary",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Central Europe",
     "countable": true,
     "flag": "🇭🇺"
@@ -611,7 +611,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "IS",
     "name": "Islandia",
     "nameEn": "Iceland",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Northern Europe",
     "countable": true,
     "flag": "🇮🇸"
@@ -620,7 +620,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "IN",
     "name": "India",
     "nameEn": "India",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Southern Asia",
     "countable": true,
     "flag": "🇮🇳"
@@ -629,7 +629,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "ID",
     "name": "Indonesia",
     "nameEn": "Indonesia",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "South-Eastern Asia",
     "countable": true,
     "flag": "🇮🇩"
@@ -638,7 +638,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "IR",
     "name": "Iran",
     "nameEn": "Iran",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Southern Asia",
     "countable": true,
     "flag": "🇮🇷"
@@ -647,7 +647,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "IQ",
     "name": "Irak",
     "nameEn": "Iraq",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Western Asia",
     "countable": true,
     "flag": "🇮🇶"
@@ -656,7 +656,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "IE",
     "name": "Irlanda",
     "nameEn": "Ireland",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Northern Europe",
     "countable": true,
     "flag": "🇮🇪"
@@ -665,7 +665,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "IL",
     "name": "Israel",
     "nameEn": "Israel",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Western Asia",
     "countable": true,
     "flag": "🇮🇱"
@@ -674,7 +674,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "IT",
     "name": "Italia",
     "nameEn": "Italy",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Southern Europe",
     "countable": true,
     "flag": "🇮🇹"
@@ -683,7 +683,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "CI",
     "name": "Costa de Marfil",
     "nameEn": "Ivory Coast",
-    "region": "África",
+    "region": "africa",
     "subregion": "Western Africa",
     "countable": true,
     "flag": "🇨🇮"
@@ -692,7 +692,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "JM",
     "name": "Jamaica",
     "nameEn": "Jamaica",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": true,
     "flag": "🇯🇲"
@@ -701,7 +701,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "JP",
     "name": "Japón",
     "nameEn": "Japan",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Eastern Asia",
     "countable": true,
     "flag": "🇯🇵"
@@ -710,7 +710,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "KZ",
     "name": "Kazajistán",
     "nameEn": "Kazakhstan",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Central Asia",
     "countable": true,
     "flag": "🇰🇿"
@@ -719,7 +719,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "JO",
     "name": "Jordania",
     "nameEn": "Jordan",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Western Asia",
     "countable": true,
     "flag": "🇯🇴"
@@ -728,7 +728,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "KE",
     "name": "Kenia",
     "nameEn": "Kenya",
-    "region": "África",
+    "region": "africa",
     "subregion": "Eastern Africa",
     "countable": true,
     "flag": "🇰🇪"
@@ -737,7 +737,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "KP",
     "name": "Corea del Norte",
     "nameEn": "North Korea",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Eastern Asia",
     "countable": true,
     "flag": "🇰🇵"
@@ -746,7 +746,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "KR",
     "name": "Corea del Sur",
     "nameEn": "South Korea",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Eastern Asia",
     "countable": true,
     "flag": "🇰🇷"
@@ -755,7 +755,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "KW",
     "name": "Kuwait",
     "nameEn": "Kuwait",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Western Asia",
     "countable": true,
     "flag": "🇰🇼"
@@ -764,7 +764,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "KG",
     "name": "Kirguizistán",
     "nameEn": "Kyrgyzstan",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Central Asia",
     "countable": true,
     "flag": "🇰🇬"
@@ -773,7 +773,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "LA",
     "name": "Laos",
     "nameEn": "Laos",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "South-Eastern Asia",
     "countable": true,
     "flag": "🇱🇦"
@@ -782,7 +782,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "LB",
     "name": "Líbano",
     "nameEn": "Lebanon",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Western Asia",
     "countable": true,
     "flag": "🇱🇧"
@@ -791,7 +791,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "LS",
     "name": "Lesotho",
     "nameEn": "Lesotho",
-    "region": "África",
+    "region": "africa",
     "subregion": "Southern Africa",
     "countable": true,
     "flag": "🇱🇸"
@@ -800,7 +800,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "LV",
     "name": "Letonia",
     "nameEn": "Latvia",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Northern Europe",
     "countable": true,
     "flag": "🇱🇻"
@@ -809,7 +809,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "LR",
     "name": "Liberia",
     "nameEn": "Liberia",
-    "region": "África",
+    "region": "africa",
     "subregion": "Western Africa",
     "countable": true,
     "flag": "🇱🇷"
@@ -818,7 +818,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "LY",
     "name": "Libia",
     "nameEn": "Libya",
-    "region": "África",
+    "region": "africa",
     "subregion": "Northern Africa",
     "countable": true,
     "flag": "🇱🇾"
@@ -827,7 +827,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "LI",
     "name": "Liechtenstein",
     "nameEn": "Liechtenstein",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Western Europe",
     "countable": true,
     "flag": "🇱🇮"
@@ -836,7 +836,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "LT",
     "name": "Lituania",
     "nameEn": "Lithuania",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Northern Europe",
     "countable": true,
     "flag": "🇱🇹"
@@ -845,7 +845,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "LU",
     "name": "Luxemburgo",
     "nameEn": "Luxembourg",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Western Europe",
     "countable": true,
     "flag": "🇱🇺"
@@ -854,7 +854,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MO",
     "name": "Macao",
     "nameEn": "Macau",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Eastern Asia",
     "countable": false,
     "flag": "🇲🇴"
@@ -863,7 +863,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MG",
     "name": "Madagascar",
     "nameEn": "Madagascar",
-    "region": "África",
+    "region": "africa",
     "subregion": "Eastern Africa",
     "countable": true,
     "flag": "🇲🇬"
@@ -872,7 +872,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MW",
     "name": "Malawi",
     "nameEn": "Malawi",
-    "region": "África",
+    "region": "africa",
     "subregion": "Eastern Africa",
     "countable": true,
     "flag": "🇲🇼"
@@ -881,7 +881,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MY",
     "name": "Malasia",
     "nameEn": "Malaysia",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "South-Eastern Asia",
     "countable": true,
     "flag": "🇲🇾"
@@ -890,7 +890,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MV",
     "name": "Maldivas",
     "nameEn": "Maldives",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Southern Asia",
     "countable": true,
     "flag": "🇲🇻"
@@ -899,7 +899,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "ML",
     "name": "Mali",
     "nameEn": "Mali",
-    "region": "África",
+    "region": "africa",
     "subregion": "Western Africa",
     "countable": true,
     "flag": "🇲🇱"
@@ -908,7 +908,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MT",
     "name": "Malta",
     "nameEn": "Malta",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Southern Europe",
     "countable": true,
     "flag": "🇲🇹"
@@ -917,7 +917,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MR",
     "name": "Mauritania",
     "nameEn": "Mauritania",
-    "region": "África",
+    "region": "africa",
     "subregion": "Western Africa",
     "countable": true,
     "flag": "🇲🇷"
@@ -926,7 +926,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MU",
     "name": "Mauricio",
     "nameEn": "Mauritius",
-    "region": "África",
+    "region": "africa",
     "subregion": "Eastern Africa",
     "countable": true,
     "flag": "🇲🇺"
@@ -935,7 +935,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MX",
     "name": "México",
     "nameEn": "Mexico",
-    "region": "América",
+    "region": "america",
     "subregion": "North America",
     "countable": true,
     "flag": "🇲🇽"
@@ -944,7 +944,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MC",
     "name": "Mónaco",
     "nameEn": "Monaco",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Western Europe",
     "countable": true,
     "flag": "🇲🇨"
@@ -953,7 +953,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MN",
     "name": "Mongolia",
     "nameEn": "Mongolia",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Eastern Asia",
     "countable": true,
     "flag": "🇲🇳"
@@ -962,7 +962,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MD",
     "name": "Moldavia",
     "nameEn": "Moldova",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Eastern Europe",
     "countable": true,
     "flag": "🇲🇩"
@@ -971,7 +971,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "ME",
     "name": "Montenegro",
     "nameEn": "Montenegro",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Southeast Europe",
     "countable": true,
     "flag": "🇲🇪"
@@ -980,7 +980,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MS",
     "name": "Montserrat",
     "nameEn": "Montserrat",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": false,
     "flag": "🇲🇸"
@@ -989,7 +989,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MA",
     "name": "Marruecos",
     "nameEn": "Morocco",
-    "region": "África",
+    "region": "africa",
     "subregion": "Northern Africa",
     "countable": true,
     "flag": "🇲🇦"
@@ -998,7 +998,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MZ",
     "name": "Mozambique",
     "nameEn": "Mozambique",
-    "region": "África",
+    "region": "africa",
     "subregion": "Eastern Africa",
     "countable": true,
     "flag": "🇲🇿"
@@ -1007,7 +1007,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "OM",
     "name": "Omán",
     "nameEn": "Oman",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Western Asia",
     "countable": true,
     "flag": "🇴🇲"
@@ -1016,7 +1016,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "NA",
     "name": "Namibia",
     "nameEn": "Namibia",
-    "region": "África",
+    "region": "africa",
     "subregion": "Southern Africa",
     "countable": true,
     "flag": "🇳🇦"
@@ -1025,7 +1025,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "NR",
     "name": "Nauru",
     "nameEn": "Nauru",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Micronesia",
     "countable": true,
     "flag": "🇳🇷"
@@ -1034,7 +1034,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "NP",
     "name": "Nepal",
     "nameEn": "Nepal",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Southern Asia",
     "countable": true,
     "flag": "🇳🇵"
@@ -1043,7 +1043,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "NL",
     "name": "Países Bajos",
     "nameEn": "Netherlands",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Western Europe",
     "countable": true,
     "flag": "🇳🇱"
@@ -1052,7 +1052,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "CW",
     "name": "Curazao",
     "nameEn": "Curaçao",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": false,
     "flag": "🇨🇼"
@@ -1061,7 +1061,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "AW",
     "name": "Aruba",
     "nameEn": "Aruba",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": false,
     "flag": "🇦🇼"
@@ -1070,7 +1070,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SX",
     "name": "Sint Maarten",
     "nameEn": "Sint Maarten",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": false,
     "flag": "🇸🇽"
@@ -1079,7 +1079,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "NC",
     "name": "Nueva Caledonia",
     "nameEn": "New Caledonia",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Melanesia",
     "countable": false,
     "flag": "🇳🇨"
@@ -1088,7 +1088,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "VU",
     "name": "Vanuatu",
     "nameEn": "Vanuatu",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Melanesia",
     "countable": true,
     "flag": "🇻🇺"
@@ -1097,7 +1097,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "NZ",
     "name": "Nueva Zelanda",
     "nameEn": "New Zealand",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Australia and New Zealand",
     "countable": true,
     "flag": "🇳🇿"
@@ -1106,7 +1106,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "NI",
     "name": "Nicaragua",
     "nameEn": "Nicaragua",
-    "region": "América",
+    "region": "america",
     "subregion": "Central America",
     "countable": true,
     "flag": "🇳🇮"
@@ -1115,7 +1115,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "NE",
     "name": "Níger",
     "nameEn": "Niger",
-    "region": "África",
+    "region": "africa",
     "subregion": "Western Africa",
     "countable": true,
     "flag": "🇳🇪"
@@ -1124,7 +1124,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "NG",
     "name": "Nigeria",
     "nameEn": "Nigeria",
-    "region": "África",
+    "region": "africa",
     "subregion": "Western Africa",
     "countable": true,
     "flag": "🇳🇬"
@@ -1133,7 +1133,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "NU",
     "name": "Niue",
     "nameEn": "Niue",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Polynesia",
     "countable": false,
     "flag": "🇳🇺"
@@ -1142,7 +1142,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "NF",
     "name": "Isla de Norfolk",
     "nameEn": "Norfolk Island",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Australia and New Zealand",
     "countable": false,
     "flag": "🇳🇫"
@@ -1151,7 +1151,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "NO",
     "name": "Noruega",
     "nameEn": "Norway",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Northern Europe",
     "countable": true,
     "flag": "🇳🇴"
@@ -1160,7 +1160,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MP",
     "name": "Islas Marianas del Norte",
     "nameEn": "Northern Mariana Islands",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Micronesia",
     "countable": false,
     "flag": "🇲🇵"
@@ -1169,7 +1169,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "FM",
     "name": "Micronesia",
     "nameEn": "Micronesia",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Micronesia",
     "countable": true,
     "flag": "🇫🇲"
@@ -1178,7 +1178,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MH",
     "name": "Islas Marshall",
     "nameEn": "Marshall Islands",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Micronesia",
     "countable": true,
     "flag": "🇲🇭"
@@ -1187,7 +1187,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "PW",
     "name": "Palau",
     "nameEn": "Palau",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Micronesia",
     "countable": true,
     "flag": "🇵🇼"
@@ -1196,7 +1196,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "PK",
     "name": "Pakistán",
     "nameEn": "Pakistan",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Southern Asia",
     "countable": true,
     "flag": "🇵🇰"
@@ -1205,7 +1205,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "PA",
     "name": "Panamá",
     "nameEn": "Panama",
-    "region": "América",
+    "region": "america",
     "subregion": "Central America",
     "countable": true,
     "flag": "🇵🇦"
@@ -1214,7 +1214,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "PG",
     "name": "Papúa Nueva Guinea",
     "nameEn": "Papua New Guinea",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Melanesia",
     "countable": true,
     "flag": "🇵🇬"
@@ -1223,7 +1223,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "PY",
     "name": "Paraguay",
     "nameEn": "Paraguay",
-    "region": "América",
+    "region": "america",
     "subregion": "South America",
     "countable": true,
     "flag": "🇵🇾"
@@ -1232,7 +1232,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "PE",
     "name": "Perú",
     "nameEn": "Peru",
-    "region": "América",
+    "region": "america",
     "subregion": "South America",
     "countable": true,
     "flag": "🇵🇪"
@@ -1241,7 +1241,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "PH",
     "name": "Filipinas",
     "nameEn": "Philippines",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "South-Eastern Asia",
     "countable": true,
     "flag": "🇵🇭"
@@ -1250,7 +1250,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "PN",
     "name": "Islas Pitcairn",
     "nameEn": "Pitcairn Islands",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Polynesia",
     "countable": false,
     "flag": "🇵🇳"
@@ -1259,7 +1259,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "PL",
     "name": "Polonia",
     "nameEn": "Poland",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Central Europe",
     "countable": true,
     "flag": "🇵🇱"
@@ -1268,7 +1268,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "PT",
     "name": "Portugal",
     "nameEn": "Portugal",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Southern Europe",
     "countable": true,
     "flag": "🇵🇹"
@@ -1277,7 +1277,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "GW",
     "name": "Guinea-Bisáu",
     "nameEn": "Guinea-Bissau",
-    "region": "África",
+    "region": "africa",
     "subregion": "Western Africa",
     "countable": true,
     "flag": "🇬🇼"
@@ -1286,7 +1286,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "TL",
     "name": "Timor Oriental",
     "nameEn": "Timor-Leste",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "South-Eastern Asia",
     "countable": true,
     "flag": "🇹🇱"
@@ -1295,7 +1295,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "PR",
     "name": "Puerto Rico",
     "nameEn": "Puerto Rico",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": false,
     "flag": "🇵🇷"
@@ -1304,7 +1304,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "QA",
     "name": "Catar",
     "nameEn": "Qatar",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Western Asia",
     "countable": true,
     "flag": "🇶🇦"
@@ -1313,7 +1313,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "RO",
     "name": "Rumania",
     "nameEn": "Romania",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Southeast Europe",
     "countable": true,
     "flag": "🇷🇴"
@@ -1322,7 +1322,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "RU",
     "name": "Rusia",
     "nameEn": "Russia",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Eastern Europe",
     "countable": true,
     "flag": "🇷🇺"
@@ -1331,7 +1331,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "RW",
     "name": "Ruanda",
     "nameEn": "Rwanda",
-    "region": "África",
+    "region": "africa",
     "subregion": "Eastern Africa",
     "countable": true,
     "flag": "🇷🇼"
@@ -1340,7 +1340,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BL",
     "name": "San Bartolomé",
     "nameEn": "Saint Barthélemy",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": false,
     "flag": "🇧🇱"
@@ -1349,7 +1349,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SH",
     "name": "Santa Elena, Ascensión y Tristán de Acuña",
     "nameEn": "Saint Helena, Ascension and Tristan da Cunha",
-    "region": "África",
+    "region": "africa",
     "subregion": "Western Africa",
     "countable": false,
     "flag": "🇸🇭"
@@ -1358,7 +1358,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "KN",
     "name": "San Cristóbal y Nieves",
     "nameEn": "Saint Kitts and Nevis",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": true,
     "flag": "🇰🇳"
@@ -1367,7 +1367,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "AI",
     "name": "Anguilla",
     "nameEn": "Anguilla",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": false,
     "flag": "🇦🇮"
@@ -1376,7 +1376,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "LC",
     "name": "Santa Lucía",
     "nameEn": "Saint Lucia",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": true,
     "flag": "🇱🇨"
@@ -1385,7 +1385,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MF",
     "name": "Saint Martin",
     "nameEn": "Saint Martin",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": false,
     "flag": "🇲🇫"
@@ -1394,7 +1394,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "PM",
     "name": "San Pedro y Miquelón",
     "nameEn": "Saint Pierre and Miquelon",
-    "region": "América",
+    "region": "america",
     "subregion": "North America",
     "countable": false,
     "flag": "🇵🇲"
@@ -1403,7 +1403,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "VC",
     "name": "San Vicente y Granadinas",
     "nameEn": "Saint Vincent and the Grenadines",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": true,
     "flag": "🇻🇨"
@@ -1412,7 +1412,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SM",
     "name": "San Marino",
     "nameEn": "San Marino",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Southern Europe",
     "countable": true,
     "flag": "🇸🇲"
@@ -1421,7 +1421,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "ST",
     "name": "Santo Tomé y Príncipe",
     "nameEn": "São Tomé and Príncipe",
-    "region": "África",
+    "region": "africa",
     "subregion": "Middle Africa",
     "countable": true,
     "flag": "🇸🇹"
@@ -1430,7 +1430,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SA",
     "name": "Arabia Saudí",
     "nameEn": "Saudi Arabia",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Western Asia",
     "countable": true,
     "flag": "🇸🇦"
@@ -1439,7 +1439,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SN",
     "name": "Senegal",
     "nameEn": "Senegal",
-    "region": "África",
+    "region": "africa",
     "subregion": "Western Africa",
     "countable": true,
     "flag": "🇸🇳"
@@ -1448,7 +1448,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "RS",
     "name": "Serbia",
     "nameEn": "Serbia",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Southeast Europe",
     "countable": true,
     "flag": "🇷🇸"
@@ -1457,7 +1457,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SC",
     "name": "Seychelles",
     "nameEn": "Seychelles",
-    "region": "África",
+    "region": "africa",
     "subregion": "Eastern Africa",
     "countable": true,
     "flag": "🇸🇨"
@@ -1466,7 +1466,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SL",
     "name": "Sierra Leone",
     "nameEn": "Sierra Leone",
-    "region": "África",
+    "region": "africa",
     "subregion": "Western Africa",
     "countable": true,
     "flag": "🇸🇱"
@@ -1475,7 +1475,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SG",
     "name": "Singapur",
     "nameEn": "Singapore",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "South-Eastern Asia",
     "countable": true,
     "flag": "🇸🇬"
@@ -1484,7 +1484,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SK",
     "name": "Eslovaquia",
     "nameEn": "Slovakia",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Central Europe",
     "countable": true,
     "flag": "🇸🇰"
@@ -1493,7 +1493,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "VN",
     "name": "Vietnam",
     "nameEn": "Vietnam",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "South-Eastern Asia",
     "countable": true,
     "flag": "🇻🇳"
@@ -1502,7 +1502,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SI",
     "name": "Eslovenia",
     "nameEn": "Slovenia",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Central Europe",
     "countable": true,
     "flag": "🇸🇮"
@@ -1511,7 +1511,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SO",
     "name": "Somalia",
     "nameEn": "Somalia",
-    "region": "África",
+    "region": "africa",
     "subregion": "Eastern Africa",
     "countable": true,
     "flag": "🇸🇴"
@@ -1520,7 +1520,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "ZA",
     "name": "Sudáfrica",
     "nameEn": "South Africa",
-    "region": "África",
+    "region": "africa",
     "subregion": "Southern Africa",
     "countable": true,
     "flag": "🇿🇦"
@@ -1529,7 +1529,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "ZW",
     "name": "Zimbabue",
     "nameEn": "Zimbabwe",
-    "region": "África",
+    "region": "africa",
     "subregion": "Eastern Africa",
     "countable": true,
     "flag": "🇿🇼"
@@ -1538,7 +1538,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "ES",
     "name": "España",
     "nameEn": "Spain",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Southern Europe",
     "countable": true,
     "flag": "🇪🇸"
@@ -1547,7 +1547,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SS",
     "name": "Sudán del Sur",
     "nameEn": "South Sudan",
-    "region": "África",
+    "region": "africa",
     "subregion": "Middle Africa",
     "countable": true,
     "flag": "🇸🇸"
@@ -1556,7 +1556,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SD",
     "name": "Sudán",
     "nameEn": "Sudan",
-    "region": "África",
+    "region": "africa",
     "subregion": "Northern Africa",
     "countable": true,
     "flag": "🇸🇩"
@@ -1565,7 +1565,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "EH",
     "name": "Sahara Occidental",
     "nameEn": "Western Sahara",
-    "region": "África",
+    "region": "africa",
     "subregion": "Northern Africa",
     "countable": false,
     "flag": "🇪🇭"
@@ -1574,7 +1574,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SR",
     "name": "Surinam",
     "nameEn": "Suriname",
-    "region": "América",
+    "region": "america",
     "subregion": "South America",
     "countable": true,
     "flag": "🇸🇷"
@@ -1583,7 +1583,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SZ",
     "name": "Suazilandia",
     "nameEn": "Eswatini",
-    "region": "África",
+    "region": "africa",
     "subregion": "Southern Africa",
     "countable": true,
     "flag": "🇸🇿"
@@ -1592,7 +1592,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SE",
     "name": "Suecia",
     "nameEn": "Sweden",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Northern Europe",
     "countable": true,
     "flag": "🇸🇪"
@@ -1601,7 +1601,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "CH",
     "name": "Suiza",
     "nameEn": "Switzerland",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Western Europe",
     "countable": true,
     "flag": "🇨🇭"
@@ -1610,7 +1610,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SY",
     "name": "Siria",
     "nameEn": "Syria",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Western Asia",
     "countable": true,
     "flag": "🇸🇾"
@@ -1619,7 +1619,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "TJ",
     "name": "Tayikistán",
     "nameEn": "Tajikistan",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Central Asia",
     "countable": true,
     "flag": "🇹🇯"
@@ -1628,7 +1628,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "TH",
     "name": "Tailandia",
     "nameEn": "Thailand",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "South-Eastern Asia",
     "countable": true,
     "flag": "🇹🇭"
@@ -1637,7 +1637,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "TG",
     "name": "Togo",
     "nameEn": "Togo",
-    "region": "África",
+    "region": "africa",
     "subregion": "Western Africa",
     "countable": true,
     "flag": "🇹🇬"
@@ -1646,7 +1646,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "TO",
     "name": "Tonga",
     "nameEn": "Tonga",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Polynesia",
     "countable": true,
     "flag": "🇹🇴"
@@ -1655,7 +1655,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "TT",
     "name": "Trinidad y Tobago",
     "nameEn": "Trinidad and Tobago",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": true,
     "flag": "🇹🇹"
@@ -1664,7 +1664,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "AE",
     "name": "Emiratos Árabes Unidos",
     "nameEn": "United Arab Emirates",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Western Asia",
     "countable": true,
     "flag": "🇦🇪"
@@ -1673,7 +1673,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "TN",
     "name": "Túnez",
     "nameEn": "Tunisia",
-    "region": "África",
+    "region": "africa",
     "subregion": "Northern Africa",
     "countable": true,
     "flag": "🇹🇳"
@@ -1682,7 +1682,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "TR",
     "name": "Turquía",
     "nameEn": "Türkiye",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Western Asia",
     "countable": true,
     "flag": "🇹🇷"
@@ -1691,7 +1691,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "TM",
     "name": "Turkmenistán",
     "nameEn": "Turkmenistan",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Central Asia",
     "countable": true,
     "flag": "🇹🇲"
@@ -1700,7 +1700,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "TC",
     "name": "Islas Turks y Caicos",
     "nameEn": "Turks and Caicos Islands",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": false,
     "flag": "🇹🇨"
@@ -1709,7 +1709,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "UG",
     "name": "Uganda",
     "nameEn": "Uganda",
-    "region": "África",
+    "region": "africa",
     "subregion": "Eastern Africa",
     "countable": true,
     "flag": "🇺🇬"
@@ -1718,7 +1718,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "UA",
     "name": "Ucrania",
     "nameEn": "Ukraine",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Eastern Europe",
     "countable": true,
     "flag": "🇺🇦"
@@ -1727,7 +1727,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "MK",
     "name": "Macedonia del Norte",
     "nameEn": "North Macedonia",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Southeast Europe",
     "countable": true,
     "flag": "🇲🇰"
@@ -1736,7 +1736,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "EG",
     "name": "Egipto",
     "nameEn": "Egypt",
-    "region": "África",
+    "region": "africa",
     "subregion": "Northern Africa",
     "countable": true,
     "flag": "🇪🇬"
@@ -1745,7 +1745,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "GB",
     "name": "Reino Unido",
     "nameEn": "United Kingdom",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Northern Europe",
     "countable": true,
     "flag": "🇬🇧"
@@ -1754,7 +1754,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "GG",
     "name": "Guernsey",
     "nameEn": "Guernsey",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Northern Europe",
     "countable": false,
     "flag": "🇬🇬"
@@ -1763,7 +1763,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "JE",
     "name": "Jersey",
     "nameEn": "Jersey",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Northern Europe",
     "countable": false,
     "flag": "🇯🇪"
@@ -1772,7 +1772,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "IM",
     "name": "Isla de Man",
     "nameEn": "Isle of Man",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Northern Europe",
     "countable": false,
     "flag": "🇮🇲"
@@ -1781,7 +1781,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "TZ",
     "name": "Tanzania",
     "nameEn": "Tanzania",
-    "region": "África",
+    "region": "africa",
     "subregion": "Eastern Africa",
     "countable": true,
     "flag": "🇹🇿"
@@ -1790,7 +1790,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "US",
     "name": "Estados Unidos",
     "nameEn": "United States",
-    "region": "América",
+    "region": "america",
     "subregion": "North America",
     "countable": true,
     "flag": "🇺🇸"
@@ -1799,7 +1799,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "VI",
     "name": "Islas Vírgenes de los Estados Unidos",
     "nameEn": "United States Virgin Islands",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": false,
     "flag": "🇻🇮"
@@ -1808,7 +1808,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BF",
     "name": "Burkina Faso",
     "nameEn": "Burkina Faso",
-    "region": "África",
+    "region": "africa",
     "subregion": "Western Africa",
     "countable": true,
     "flag": "🇧🇫"
@@ -1817,7 +1817,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "UY",
     "name": "Uruguay",
     "nameEn": "Uruguay",
-    "region": "América",
+    "region": "america",
     "subregion": "South America",
     "countable": true,
     "flag": "🇺🇾"
@@ -1826,7 +1826,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "UZ",
     "name": "Uzbekistán",
     "nameEn": "Uzbekistan",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Central Asia",
     "countable": true,
     "flag": "🇺🇿"
@@ -1835,7 +1835,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "VE",
     "name": "Venezuela",
     "nameEn": "Venezuela",
-    "region": "América",
+    "region": "america",
     "subregion": "South America",
     "countable": true,
     "flag": "🇻🇪"
@@ -1844,7 +1844,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "WF",
     "name": "Wallis y Futuna",
     "nameEn": "Wallis and Futuna",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Polynesia",
     "countable": false,
     "flag": "🇼🇫"
@@ -1853,7 +1853,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "WS",
     "name": "Samoa",
     "nameEn": "Samoa",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Polynesia",
     "countable": true,
     "flag": "🇼🇸"
@@ -1862,7 +1862,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "YE",
     "name": "Yemen",
     "nameEn": "Yemen",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Western Asia",
     "countable": true,
     "flag": "🇾🇪"
@@ -1871,7 +1871,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "ZM",
     "name": "Zambia",
     "nameEn": "Zambia",
-    "region": "África",
+    "region": "africa",
     "subregion": "Eastern Africa",
     "countable": true,
     "flag": "🇿🇲"
@@ -1880,7 +1880,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "AS",
     "name": "Samoa Americana",
     "nameEn": "American Samoa",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Polynesia",
     "countable": false,
     "flag": "🇦🇸"
@@ -1889,7 +1889,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "IO",
     "name": "Territorio Británico del Océano Índico",
     "nameEn": "British Indian Ocean Territory",
-    "region": "África",
+    "region": "africa",
     "subregion": "Eastern Africa",
     "countable": false,
     "flag": "🇮🇴"
@@ -1898,7 +1898,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BM",
     "name": "Bermudas",
     "nameEn": "Bermuda",
-    "region": "América",
+    "region": "america",
     "subregion": "North America",
     "countable": false,
     "flag": "🇧🇲"
@@ -1907,7 +1907,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "VG",
     "name": "Islas Vírgenes del Reino Unido",
     "nameEn": "British Virgin Islands",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": false,
     "flag": "🇻🇬"
@@ -1916,7 +1916,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "SB",
     "name": "Islas Salomón",
     "nameEn": "Solomon Islands",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Melanesia",
     "countable": true,
     "flag": "🇸🇧"
@@ -1925,7 +1925,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "XK",
     "name": "Kosovo",
     "nameEn": "Kosovo",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Southeast Europe",
     "countable": false,
     "flag": "🇽🇰"
@@ -1934,7 +1934,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BN",
     "name": "Brunei",
     "nameEn": "Brunei",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "South-Eastern Asia",
     "countable": true,
     "flag": "🇧🇳"
@@ -1943,7 +1943,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BR",
     "name": "Brasil",
     "nameEn": "Brazil",
-    "region": "América",
+    "region": "america",
     "subregion": "South America",
     "countable": true,
     "flag": "🇧🇷"
@@ -1952,7 +1952,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BW",
     "name": "Botswana",
     "nameEn": "Botswana",
-    "region": "África",
+    "region": "africa",
     "subregion": "Southern Africa",
     "countable": true,
     "flag": "🇧🇼"
@@ -1961,7 +1961,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BA",
     "name": "Bosnia y Herzegovina",
     "nameEn": "Bosnia and Herzegovina",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Southeast Europe",
     "countable": true,
     "flag": "🇧🇦"
@@ -1970,7 +1970,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BO",
     "name": "Bolivia",
     "nameEn": "Bolivia",
-    "region": "América",
+    "region": "america",
     "subregion": "South America",
     "countable": true,
     "flag": "🇧🇴"
@@ -1979,7 +1979,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BT",
     "name": "Bután",
     "nameEn": "Bhutan",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Southern Asia",
     "countable": true,
     "flag": "🇧🇹"
@@ -1988,7 +1988,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BZ",
     "name": "Belice",
     "nameEn": "Belize",
-    "region": "América",
+    "region": "america",
     "subregion": "Central America",
     "countable": true,
     "flag": "🇧🇿"
@@ -1997,7 +1997,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BE",
     "name": "Bélgica",
     "nameEn": "Belgium",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Western Europe",
     "countable": true,
     "flag": "🇧🇪"
@@ -2006,7 +2006,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BB",
     "name": "Barbados",
     "nameEn": "Barbados",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": true,
     "flag": "🇧🇧"
@@ -2015,7 +2015,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BD",
     "name": "Bangladesh",
     "nameEn": "Bangladesh",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Southern Asia",
     "countable": true,
     "flag": "🇧🇩"
@@ -2024,7 +2024,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BH",
     "name": "Bahrein",
     "nameEn": "Bahrain",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Western Asia",
     "countable": true,
     "flag": "🇧🇭"
@@ -2033,7 +2033,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "BS",
     "name": "Bahamas",
     "nameEn": "Bahamas",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": true,
     "flag": "🇧🇸"
@@ -2042,7 +2042,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "AZ",
     "name": "Azerbaiyán",
     "nameEn": "Azerbaijan",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Western Asia",
     "countable": true,
     "flag": "🇦🇿"
@@ -2051,7 +2051,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "AT",
     "name": "Austria",
     "nameEn": "Austria",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Central Europe",
     "countable": true,
     "flag": "🇦🇹"
@@ -2060,7 +2060,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "AU",
     "name": "Australia",
     "nameEn": "Australia",
-    "region": "Oceanía",
+    "region": "oceania",
     "subregion": "Australia and New Zealand",
     "countable": true,
     "flag": "🇦🇺"
@@ -2069,7 +2069,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "AM",
     "name": "Armenia",
     "nameEn": "Armenia",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Western Asia",
     "countable": true,
     "flag": "🇦🇲"
@@ -2078,7 +2078,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "AR",
     "name": "Argentina",
     "nameEn": "Argentina",
-    "region": "América",
+    "region": "america",
     "subregion": "South America",
     "countable": true,
     "flag": "🇦🇷"
@@ -2087,7 +2087,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "AG",
     "name": "Antigua y Barbuda",
     "nameEn": "Antigua and Barbuda",
-    "region": "América",
+    "region": "america",
     "subregion": "Caribbean",
     "countable": true,
     "flag": "🇦🇬"
@@ -2096,7 +2096,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "AO",
     "name": "Angola",
     "nameEn": "Angola",
-    "region": "África",
+    "region": "africa",
     "subregion": "Middle Africa",
     "countable": true,
     "flag": "🇦🇴"
@@ -2105,7 +2105,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "AD",
     "name": "Andorra",
     "nameEn": "Andorra",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Southern Europe",
     "countable": true,
     "flag": "🇦🇩"
@@ -2114,7 +2114,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "DZ",
     "name": "Argelia",
     "nameEn": "Algeria",
-    "region": "África",
+    "region": "africa",
     "subregion": "Northern Africa",
     "countable": true,
     "flag": "🇩🇿"
@@ -2123,7 +2123,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "AL",
     "name": "Albania",
     "nameEn": "Albania",
-    "region": "Europa",
+    "region": "europe",
     "subregion": "Southeast Europe",
     "countable": true,
     "flag": "🇦🇱"
@@ -2132,7 +2132,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "AF",
     "name": "Afganistán",
     "nameEn": "Afghanistan",
-    "region": "Asia",
+    "region": "asia",
     "subregion": "Southern Asia",
     "countable": true,
     "flag": "🇦🇫"
@@ -2141,7 +2141,7 @@ export const COUNTRIES: Record<string, CountryMeta> = {
     "code": "AQ",
     "name": "Antártida",
     "nameEn": "Antarctica",
-    "region": "Antártida",
+    "region": "antarctica",
     "subregion": null,
     "countable": false,
     "flag": "🇦🇶"
@@ -2390,21 +2390,21 @@ export const GEOMETRY_ID_BY_CODE: Record<string, string> = {
 
 /** Países del recuento oficial por continente. */
 export const COUNTRIES_PER_CONTINENT: Record<Continent, number> = {
-  "Asia": 47,
-  "África": 54,
-  "Europa": 45,
-  "América": 35,
-  "Oceanía": 14
+  "asia": 47,
+  "africa": 54,
+  "europe": 45,
+  "america": 35,
+  "oceania": 14
 };
 
 export const WORLD_TOTAL = 195;
 
 export const CONTINENTS = [
-  "África",
-  "América",
-  "Asia",
-  "Europa",
-  "Oceanía"
+  "africa",
+  "america",
+  "asia",
+  "europe",
+  "oceania"
 ] as const;
 
 export function isContinent(region: Region): region is Continent {

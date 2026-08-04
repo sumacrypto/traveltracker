@@ -12,14 +12,20 @@ const require = createRequire(import.meta.url);
 const worldCountries = require("world-countries");
 const topology = require("world-atlas/countries-50m.json");
 
-const REGION_ES = {
-  Africa: "África",
-  Americas: "América",
-  Asia: "Asia",
-  Europe: "Europa",
-  Oceania: "Oceanía",
-  Antarctic: "Antártida",
+// Id interno, sin idioma: se usa como clave de lógica (orden, agrupación) y
+// como clave de mensaje en los catálogos de i18n (common.continents.<id>). El
+// nombre que ve la gente sale siempre del catálogo, nunca de acá.
+const REGION_ID = {
+  Africa: "africa",
+  Americas: "america",
+  Asia: "asia",
+  Europe: "europe",
+  Oceania: "oceania",
+  Antarctic: "antarctica",
 };
+
+/** Orden fijo de despliegue: no depende del idioma activo. */
+const CONTINENT_ORDER = ["africa", "america", "asia", "europe", "oceania"];
 
 // Geometrías de Natural Earth sin código ISO numérico: territorios disputados o
 // de facto. Kosovo se marca como territorio clickeable pero no cuenta para el
@@ -47,7 +53,7 @@ for (const geometry of geometries) {
       code: match.cca2,
       name: match.translations?.spa?.common ?? match.name.common,
       nameEn: match.name.common,
-      region: REGION_ES[match.region] ?? match.region,
+      region: REGION_ID[match.region] ?? match.region,
       subregion: match.subregion || null,
       countable,
       flag: match.flag,
@@ -61,7 +67,7 @@ for (const geometry of geometries) {
       code: fallback.code,
       name: fallback.name,
       nameEn: fallback.name,
-      region: REGION_ES[fallback.region],
+      region: REGION_ID[fallback.region],
       subregion: fallback.subregion,
       countable: false,
       flag: "🇽🇰",
@@ -77,7 +83,7 @@ for (const geometry of geometries) {
 const canonical = worldCountries.filter((c) => c.unMember || c.cca2 === "PS");
 const totalsByRegion = {};
 for (const country of canonical) {
-  const region = REGION_ES[country.region] ?? country.region;
+  const region = REGION_ID[country.region] ?? country.region;
   totalsByRegion[region] = (totalsByRegion[region] ?? 0) + 1;
 }
 const WORLD_TOTAL = canonical.length;
@@ -131,7 +137,13 @@ export const COUNTRIES_PER_CONTINENT: Record<Continent, number> = ${JSON.stringi
 
 export const WORLD_TOTAL = ${WORLD_TOTAL};
 
-export const CONTINENTS = ${JSON.stringify(Object.keys(totalsByRegion).sort((a, b) => a.localeCompare(b, "es")), null, 2)} as const;
+export const CONTINENTS = ${JSON.stringify(
+  Object.keys(totalsByRegion).sort(
+    (a, b) => CONTINENT_ORDER.indexOf(a) - CONTINENT_ORDER.indexOf(b),
+  ),
+  null,
+  2,
+)} as const;
 
 export function isContinent(region: Region): region is Continent {
   return region in COUNTRIES_PER_CONTINENT;
