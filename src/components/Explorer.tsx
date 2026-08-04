@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import { useTranslations } from "next-intl";
 import { GlobeHemisphereWest } from "@phosphor-icons/react";
 import CountrySearch from "./CountrySearch";
 import StatsRail from "./StatsRail";
@@ -15,7 +16,7 @@ import AccountDialog from "./AccountDialog";
 import SubdivisionDialog from "./SubdivisionDialog";
 import ImportDialog from "./ImportDialog";
 import { useTrip } from "@/lib/store";
-import { buildHook, computeStats } from "@/lib/stats";
+import { buildHook, computeStats, type Hook } from "@/lib/stats";
 import { track } from "@/lib/analytics";
 import { getCountry } from "@/lib/stats";
 import type { MapFocus, MapView } from "./WorldMap";
@@ -32,6 +33,10 @@ const WorldMap = dynamic(() => import("./WorldMap"), {
 });
 
 export default function Explorer() {
+  const t = useTranslations("explorer");
+  const th = useTranslations("statsRail.hook");
+  const tc = useTranslations("common.continents");
+
   const visited = useTrip((state) => state.visited);
   const toggle = useTrip((state) => state.toggle);
   const clear = useTrip((state) => state.clear);
@@ -46,7 +51,36 @@ export default function Explorer() {
   const focusNonce = useRef(0);
 
   const stats = useMemo(() => computeStats(Object.keys(visited)), [visited]);
-  const hook = useMemo(() => buildHook(stats), [stats]);
+  const hookData = useMemo(() => buildHook(stats), [stats]);
+
+  // buildHook() no tiene locale (no es un componente), así que devuelve datos
+  // crudos y acá se arma el texto final. "aboveAverage" es el único tramo con
+  // dos mensajes de detalle posibles (con o sin continente destacado), el
+  // resto interpola directo.
+  const hook = useMemo<Hook | null>(() => {
+    if (!hookData) return null;
+    const { tier, values } = hookData;
+
+    if (tier === "aboveAverage") {
+      const detail = values.continentId
+        ? th("aboveAverage.detailWithContinent", {
+            continent: tc(values.continentId),
+            coveragePercent: values.coveragePercent ?? 0,
+          })
+        : th("aboveAverage.detailWithoutContinent");
+      return {
+        id: tier,
+        headline: th("aboveAverage.headline", { topPercent: values.topPercent ?? 0 }),
+        detail,
+      };
+    }
+
+    return {
+      id: tier,
+      headline: th(`${tier}.headline`, values),
+      detail: th(`${tier}.detail`, values),
+    };
+  }, [hookData, th, tc]);
 
   const handleToggle = useCallback(
     (key: string) => {
@@ -87,7 +121,7 @@ export default function Explorer() {
       <header className="flex h-16 shrink-0 items-center gap-3 border-b border-ink-line px-4 lg:gap-6 lg:px-6">
         <div className="flex shrink-0 items-center gap-2">
           <GlobeHemisphereWest size={22} weight="fill" className="text-accent" />
-          <span className="text-[15px] font-semibold tracking-tight">Dónde estuve</span>
+          <span className="text-[15px] font-semibold tracking-tight">{t("appName")}</span>
         </div>
 
         <div className="ml-auto w-full max-w-64 min-w-0 lg:max-w-80">
@@ -149,11 +183,7 @@ export default function Explorer() {
       <AuthDialog
         open={authOpen}
         onClose={() => setAuthOpen(false)}
-        reason={
-          stats.visited > 0
-            ? `Guardá los ${stats.visited} países que marcaste y compará con tus amigos.`
-            : undefined
-        }
+        reason={stats.visited > 0 ? t("authReason", { count: stats.visited }) : undefined}
       />
 
       <AccountDialog open={accountOpen} onClose={() => setAccountOpen(false)} />

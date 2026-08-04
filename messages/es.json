@@ -2,5 +2,47 @@
   "metadata": {
     "title": "Dónde estuve · tu mapa del mundo",
     "description": "Marca los países que visitaste y descubre qué porcentaje del mundo llevas explorado, y cómo te comparas con el resto de la gente."
+  },
+  "common": {
+    "continents": {
+      "africa": "África",
+      "america": "América",
+      "asia": "Asia",
+      "europe": "Europa",
+      "oceania": "Oceanía"
+    }
+  },
+  "explorer": {
+    "appName": "Dónde estuve",
+    "authReason": "{count, plural, one {Guarda el país que marcaste y compáralo con tus amigos.} other {Guarda los # países que marcaste y compáralos con tus amigos.}}"
+  },
+  "statsRail": {
+    "hook": {
+      "start": {
+        "headline": "{count, plural, one {# país marcado} other {# países marcados}}",
+        "detail": "Sigue marcando. A los 3 países te decimos cómo te comparas con el resto."
+      },
+      "firstPercentile": {
+        "headline": "Ya visitaste más países que el {beats}% del mundo",
+        "detail": "Con {count} países estás arriba del promedio global, que ronda los 5."
+      },
+      "aboveAverage": {
+        "headline": "Estás en el {topPercent}% más viajado del planeta",
+        "detailWithContinent": "Tu continente más explorado es {continent}, con {coveragePercent}% cubierto.",
+        "detailWithoutContinent": "Un tercio de la gente no salió nunca de su país."
+      },
+      "top5": {
+        "headline": "{count} países te ponen en el top {topPercent}% mundial",
+        "detail": "El percentil 95 en países ricos arranca cerca de los 25 países. Ya lo pasaste."
+      },
+      "top1": {
+        "headline": "Top 1% del planeta",
+        "detail": "Pasar los 50 países te deja arriba del 99% de la gente. Vas {count}."
+      },
+      "legend": {
+        "headline": "{count} países. {remaining, plural, one {Te falta #} other {Te faltan #}}",
+        "detail": "A esta altura eres más fácil de encontrar por escala que por país."
+      }
+    }
   }
 }

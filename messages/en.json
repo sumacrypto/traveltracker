@@ -2,5 +2,47 @@
   "metadata": {
     "title": "Where I've been · your world map",
     "description": "Mark the countries you've visited and see what percentage of the world you've explored, and how you compare to everyone else."
+  },
+  "common": {
+    "continents": {
+      "africa": "Africa",
+      "america": "Americas",
+      "asia": "Asia",
+      "europe": "Europe",
+      "oceania": "Oceania"
+    }
+  },
+  "explorer": {
+    "appName": "Where I've been",
+    "authReason": "{count, plural, one {Save the country you marked and compare it with your friends.} other {Save the # countries you marked and compare them with your friends.}}"
+  },
+  "statsRail": {
+    "hook": {
+      "start": {
+        "headline": "{count, plural, one {# country marked} other {# countries marked}}",
+        "detail": "Keep marking. At 3 countries we'll show you how you compare with everyone else."
+      },
+      "firstPercentile": {
+        "headline": "You've already visited more countries than {beats}% of the world",
+        "detail": "With {count} countries you're above the global average, which is around 5."
+      },
+      "aboveAverage": {
+        "headline": "You're in the top {topPercent}% most traveled on the planet",
+        "detailWithContinent": "Your most explored continent is {continent}, {coveragePercent}% covered.",
+        "detailWithoutContinent": "A third of people have never left their own country."
+      },
+      "top5": {
+        "headline": "{count} countries put you in the top {topPercent}% worldwide",
+        "detail": "The 95th percentile in wealthy countries starts around 25 countries. You've already passed it."
+      },
+      "top1": {
+        "headline": "Top 1% of the planet",
+        "detail": "Passing 50 countries puts you above 99% of people. You're at {count}."
+      },
+      "legend": {
+        "headline": "{count} countries. {remaining} to go",
+        "detail": "At this point you're easier to find by scale than by country."
+      }
+    }
   }
 }

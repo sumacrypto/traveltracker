@@ -146,6 +146,11 @@ export function computeStats(visitedIds: Iterable<string>): TripStats {
   };
 }
 
+/**
+ * Forma final, ya traducida, que consume StatsRail.tsx. buildHook() ya no
+ * arma esto directo (no tiene locale); Explorer.tsx lo arma con
+ * useTranslations() a partir de HookData.
+ */
 export interface Hook {
   /** Cambia cuando cambia el mensaje, para animar solo en ese momento */
   id: string;
@@ -153,64 +158,68 @@ export interface Hook {
   detail: string;
 }
 
+export type HookTier = "start" | "firstPercentile" | "aboveAverage" | "top5" | "top1" | "legend";
+
+export interface HookData {
+  /** Cambia cuando cambia el mensaje, para animar solo en ese momento */
+  tier: HookTier;
+  /**
+   * Valores crudos para interpolar en el mensaje traducido. Nunca texto
+   * armado: eso lo resuelve quien tenga useTranslations() (Explorer.tsx), acá
+   * no hay locale disponible.
+   */
+  values: {
+    count?: number;
+    beats?: number;
+    topPercent?: number;
+    coveragePercent?: number;
+    continentId?: string;
+    remaining?: number;
+  };
+}
+
 /**
  * El gancho de ego que aparece a medida que el usuario marca países. Escala en
  * intensidad y recién arriba de cierto umbral empieza a hablar de guardar.
  */
-export function buildHook(stats: TripStats): Hook | null {
+export function buildHook(stats: TripStats): HookData | null {
   const { visited, beatsPercent: beats, strongest } = stats;
 
   if (visited === 0) return null;
 
   if (visited < 3) {
-    return {
-      id: "arranque",
-      headline: `${visited} ${visited === 1 ? "país marcado" : "países marcados"}`,
-      detail: "Seguí marcando. A los 3 países te decimos cómo te comparás con el resto.",
-    };
+    return { tier: "start", values: { count: visited } };
   }
 
   if (visited < 10) {
-    return {
-      id: "primer-percentil",
-      headline: `Ya visitaste más países que el ${beats}% del mundo`,
-      detail: `Con ${visited} países estás arriba del promedio global, que ronda los 5.`,
-    };
+    return { tier: "firstPercentile", values: { count: visited, beats } };
   }
 
   if (visited < 25) {
+    // `beats` es a cuánta gente le ganás, así que el tramo de arriba es el
+    // complemento: ganarle al 80% te deja en el 20% más viajado.
     return {
-      id: "arriba-del-promedio",
-      // `beats` es a cuánta gente le ganás, así que el tramo de arriba es el
-      // complemento: ganarle al 80% te deja en el 20% más viajado.
-      headline: `Estás en el ${Math.max(1, 100 - beats)}% más viajado del planeta`,
-      detail: strongest
-        ? `Tu continente más explorado es ${strongest.continent}, con ${strongest.percent.toFixed(0)}% cubierto.`
-        : "Un tercio de la gente no salió nunca de su país.",
+      tier: "aboveAverage",
+      values: {
+        topPercent: Math.max(1, 100 - beats),
+        continentId: strongest?.continent,
+        coveragePercent: strongest ? Math.round(strongest.percent) : undefined,
+      },
     };
   }
 
   if (visited < 50) {
     return {
-      id: "top-5",
-      headline: `${visited} países te ponen en el top ${Math.max(1, 100 - beats)}% mundial`,
-      detail: "El percentil 95 en países ricos arranca cerca de los 25 países. Ya lo pasaste.",
+      tier: "top5",
+      values: { count: visited, topPercent: Math.max(1, 100 - beats) },
     };
   }
 
   if (visited < 100) {
-    return {
-      id: "top-1",
-      headline: `Top 1% del planeta`,
-      detail: `Pasar los 50 países te deja arriba del 99% de la gente. Vas ${visited}.`,
-    };
+    return { tier: "top1", values: { count: visited } };
   }
 
-  return {
-    id: "leyenda",
-    headline: `${visited} países. Te faltan ${stats.total - visited}`,
-    detail: "A esta altura sos más fácil de encontrar por escala que por país.",
-  };
+  return { tier: "legend", values: { count: visited, remaining: stats.total - visited } };
 }
 
 /** Umbral a partir del cual conviene ofrecer guardar el progreso (fase 2). */
