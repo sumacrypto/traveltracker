@@ -15,8 +15,13 @@
     }
   },
   "explorer": {
-    "appName": "Dónde estuve",
     "authReason": "{count, plural, one {Guarda el país que marcaste y compáralo con tus amigos.} other {Guarda los # países que marcaste y compáralos con tus amigos.}}"
+  },
+  "appHeader": {
+    "appName": "Dónde estuve",
+    "navAriaLabel": "Secciones",
+    "map": "Mapa",
+    "stats": "Estadísticas"
   },
   "statsRail": {
     "of": "de",

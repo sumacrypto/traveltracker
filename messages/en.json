@@ -15,8 +15,13 @@
     }
   },
   "explorer": {
-    "appName": "Where I've been",
     "authReason": "{count, plural, one {Save the country you marked and compare it with your friends.} other {Save the # countries you marked and compare them with your friends.}}"
+  },
+  "appHeader": {
+    "appName": "Where I've been",
+    "navAriaLabel": "Sections",
+    "map": "Map",
+    "stats": "Statistics"
   },
   "statsRail": {
     "of": "of",

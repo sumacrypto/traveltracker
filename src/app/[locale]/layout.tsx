@@ -6,6 +6,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import { routing } from "@/i18n/routing";
+import AppChrome from "@/components/AppChrome";
 import "../globals.css";
 
 const geistSans = Geist({
@@ -72,7 +73,9 @@ export default async function LocaleLayout({
         <Script id="theme-init" strategy="beforeInteractive">
           {THEME_INIT_SCRIPT}
         </Script>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <AppChrome>{children}</AppChrome>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
