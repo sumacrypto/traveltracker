@@ -231,3 +231,15 @@ export function buildHook(stats: TripStats): HookData | null {
 
 /** Umbral a partir del cual conviene ofrecer guardar el progreso (fase 2). */
 export const SAVE_PROMPT_THRESHOLD = 8;
+
+/**
+ * Percentil dentro de un ranking finito ya conocido entero (amigos, grupos) —
+ * a diferencia de beatsPercent(), que interpola una curva mundial estimada,
+ * acá la población total ya está bajada completa, así que es aritmética
+ * directa sobre la posición. Devuelve el "top X%" en el que cae ese puesto
+ * (puesto 1 de 10 → top 10%; último puesto → 100%, nunca "top 0%").
+ */
+export function rankPercentile(rank: number, total: number): number {
+  if (total <= 0) return 100;
+  return Math.max(1, Math.round((rank / total) * 100));
+}

@@ -15,6 +15,7 @@ import {
   LEADERBOARD_TABS,
   type PendingRequest,
 } from "@/lib/peers";
+import { describeTail, rankPercentile, type TailDescriptor } from "@/lib/stats";
 import { track } from "@/lib/analytics";
 import type { Continent } from "@/data/countries";
 import type { LeaderboardRow, Profile } from "@/lib/supabase/types";
@@ -275,63 +276,82 @@ function AccountDialogBody({ onClose }: { onClose: () => void }) {
           El ranking se recalcula en el cliente a partir de country_codes: así
           "por continente" no depende de que el servidor conozca los continentes,
           y agregar una pestaña nueva no toca la base. */}
-      {leaderboard.length > 1 && (
-        <section className="mt-7 border-t border-ink-line pt-6">
-          <h3 className="flex items-center gap-2 text-[15px] font-semibold">
-            <Trophy size={16} weight="fill" className="text-accent" />
-            {t("friendsHeading")}
-          </h3>
+      {leaderboard.length > 1 &&
+        (() => {
+          const ranked = rankLeaderboard(
+            leaderboard,
+            tab,
+            (row) =>
+              row.user_id === user?.id
+                ? t("you")
+                : (row.display_name ?? row.username ?? t("noName")),
+            locale,
+          );
+          const ownIndex = ranked.findIndex((row) => row.userId === user?.id);
 
-          <div
-            role="tablist"
-            aria-label={t("rankingByAriaLabel")}
-            className="mt-3 flex gap-1 overflow-x-auto pb-1"
-          >
-            {LEADERBOARD_TABS.map((option) => (
-              <button
-                key={option}
-                type="button"
-                role="tab"
-                aria-selected={tab === option}
-                onClick={() => setTab(option)}
-                className={`shrink-0 rounded-full px-3 py-1.5 text-[12px] font-medium whitespace-nowrap transition-colors ${
-                  tab === option
-                    ? "bg-accent text-white"
-                    : "border border-ink-line text-text-dim hover:border-accent"
-                }`}
+          // "en el X%" es una frase entera armada por idioma (ver
+          // PeerComparison.tsx), no un fragmento pegado a mano.
+          const tailPhrase = (tail: TailDescriptor) =>
+            tail.tier === "underTenth" ? t("tail.underTenth") : t("tail.top", { value: tail.value ?? 0 });
+
+          return (
+            <section className="mt-7 border-t border-ink-line pt-6">
+              <h3 className="flex items-center gap-2 text-[15px] font-semibold">
+                <Trophy size={16} weight="fill" className="text-accent" />
+                {t("friendsHeading")}
+              </h3>
+
+              {ownIndex >= 0 && (
+                <p className="mt-1 text-[13px] text-accent-ink">
+                  {t("friendsPercentile", {
+                    tail: tailPhrase(describeTail(rankPercentile(ownIndex + 1, ranked.length))),
+                  })}
+                </p>
+              )}
+
+              <div
+                role="tablist"
+                aria-label={t("rankingByAriaLabel")}
+                className="mt-3 flex gap-1 overflow-x-auto pb-1"
               >
-                {option === "general" ? t("general") : tc(option)}
-              </button>
-            ))}
-          </div>
+                {LEADERBOARD_TABS.map((option) => (
+                  <button
+                    key={option}
+                    type="button"
+                    role="tab"
+                    aria-selected={tab === option}
+                    onClick={() => setTab(option)}
+                    className={`shrink-0 rounded-full px-3 py-1.5 text-[12px] font-medium whitespace-nowrap transition-colors ${
+                      tab === option
+                        ? "bg-accent text-white"
+                        : "border border-ink-line text-text-dim hover:border-accent"
+                    }`}
+                  >
+                    {option === "general" ? t("general") : tc(option)}
+                  </button>
+                ))}
+              </div>
 
-          <ol className="mt-3.5 flex flex-col gap-2.5">
-            {rankLeaderboard(
-              leaderboard,
-              tab,
-              (row) =>
-                row.user_id === user?.id
-                  ? t("you")
-                  : (row.display_name ?? row.username ?? t("noName")),
-              locale,
-            ).map((row, index) => (
-              <li key={row.userId} className="flex items-baseline gap-3">
-                <span className="w-5 font-mono text-xs tabular-nums text-text-faint">
-                  {index + 1}
-                </span>
-                <span
-                  className={`flex-1 truncate text-sm ${row.userId === user?.id ? "font-semibold" : ""}`}
-                >
-                  {row.label}
-                </span>
-                <span className="font-mono text-xs tabular-nums text-text-dim">
-                  {row.countries}
-                </span>
-              </li>
-            ))}
-          </ol>
-        </section>
-      )}
+              <ol className="mt-3.5 flex flex-col gap-2.5">
+                {ranked.map((row, index) => (
+                  <li key={row.userId} className="flex items-baseline gap-3">
+                    <span className="w-5 font-mono text-xs tabular-nums text-text-faint">
+                      {index + 1}
+                    </span>
+                    <span
+                      className={`flex-1 truncate text-sm ${row.userId === user?.id ? "font-semibold" : ""}`}
+                    >
+                      {row.label}
+                    </span>
+                    <span className="font-mono text-xs tabular-nums text-text-dim">
+                      {row.countries}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          );
+        })()}
 
       <button
         type="button"

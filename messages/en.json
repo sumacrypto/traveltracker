@@ -167,6 +167,11 @@
     "someone": "Someone",
     "accept": "Accept",
     "friendsHeading": "Friends",
+    "friendsPercentile": "You're {tail} of this group",
+    "tail": {
+      "underTenth": "within the top 0.1%",
+      "top": "in the top {value}%"
+    },
     "rankingByAriaLabel": "Rank by",
     "general": "Overall",
     "you": "You",
