@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { geoContains, geoOrthographic, geoPath, type GeoPermissibleObjects } from "d3-geo";
 import { ArrowsOut } from "@phosphor-icons/react";
 import type { CountryShape, WorldMapData } from "@/lib/geo";
@@ -28,6 +29,7 @@ interface GlobeMapProps {
  * invirtiendo la proyección y preguntando qué geometría contiene ese punto.
  */
 export default function GlobeMap({ map, visited, onToggle, onHover }: GlobeMapProps) {
+  const t = useTranslations("globeMap");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
 
@@ -211,14 +213,14 @@ export default function GlobeMap({ map, visited, onToggle, onHover }: GlobeMapPr
         onWheel={handleWheel}
         className="h-full w-full cursor-grab touch-none select-none active:cursor-grabbing"
         role="img"
-        aria-label="Globo terráqueo. Arrastrá para girarlo y tocá un país para marcarlo."
+        aria-label={t("ariaLabel")}
       />
 
       <button
         type="button"
         onClick={reset}
-        aria-label="Centrar el globo"
-        title="Centrar el globo"
+        aria-label={t("recenter")}
+        title={t("recenter")}
         className="absolute right-3 bottom-3 grid size-9 place-items-center rounded-full border border-ink-line bg-ink-raised/90 text-text-dim backdrop-blur transition-colors hover:border-accent hover:text-accent-ink active:scale-[0.94]"
       >
         <ArrowsOut size={18} weight="bold" />

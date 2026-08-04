@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { UserCircle } from "@phosphor-icons/react";
 import { useAccount } from "@/lib/account";
 import { SUPABASE_ENABLED } from "@/lib/supabase/client";
@@ -10,6 +11,8 @@ interface AccountButtonProps {
 }
 
 export default function AccountButton({ onSignIn, onOpenAccount }: AccountButtonProps) {
+  const tAuth = useTranslations("authDialog");
+  const t = useTranslations("accountButton");
   const user = useAccount((state) => state.user);
   const profile = useAccount((state) => state.profile);
 
@@ -23,18 +26,18 @@ export default function AccountButton({ onSignIn, onOpenAccount }: AccountButton
         onClick={onSignIn}
         className="shrink-0 rounded-full border border-ink-line px-3.5 py-2 text-[13px] font-medium text-text-dim transition-colors hover:border-accent hover:text-accent-ink active:scale-[0.98]"
       >
-        Entrar
+        {tAuth("signIn")}
       </button>
     );
   }
 
-  const label = profile?.display_name ?? profile?.username ?? user.email ?? "Tu cuenta";
+  const label = profile?.display_name ?? profile?.username ?? user.email ?? t("yourAccount");
 
   return (
     <button
       type="button"
       onClick={onOpenAccount}
-      aria-label="Tu cuenta"
+      aria-label={t("yourAccount")}
       title={label}
       className="grid size-9 shrink-0 place-items-center overflow-hidden rounded-full border border-ink-line text-text-dim transition-colors hover:border-accent hover:text-accent-ink active:scale-[0.94]"
     >

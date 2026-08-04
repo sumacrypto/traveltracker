@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { X } from "@phosphor-icons/react";
 
 interface DialogProps {
@@ -17,6 +18,7 @@ interface DialogProps {
  * desde abajo, que es donde llega el pulgar.
  */
 export default function Dialog({ open, onClose, title, children, footer }: DialogProps) {
+  const t = useTranslations("common");
   const closeRef = useRef<HTMLButtonElement>(null);
   const returnFocusTo = useRef<Element | null>(null);
 
@@ -61,7 +63,7 @@ export default function Dialog({ open, onClose, title, children, footer }: Dialo
             ref={closeRef}
             type="button"
             onClick={onClose}
-            aria-label="Cerrar"
+            aria-label={t("close")}
             className="grid size-8 place-items-center rounded-full text-text-dim transition-colors hover:text-text"
           >
             <X size={16} weight="bold" />

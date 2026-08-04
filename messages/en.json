@@ -4,6 +4,8 @@
     "description": "Mark the countries you've visited and see what percentage of the world you've explored, and how you compare to everyone else."
   },
   "common": {
+    "close": "Close",
+    "toggleTheme": "Switch between light and dark mode",
     "continents": {
       "africa": "Africa",
       "america": "Americas",
@@ -222,5 +224,45 @@
     "countriesVisitedLabel": "countries visited",
     "percentOfWorld": "% of the world",
     "inviteQuestion": "How many have you got? "
+  },
+  "countryPicker": {
+    "choosePlaceholder": "Choose a country",
+    "filterPlaceholder": "Type to filter",
+    "noMatch": "No country matches.",
+    "chosen": "chosen"
+  },
+  "countrySearch": {
+    "placeholder": "Search for a country",
+    "ariaLabel": "Search for a country by name",
+    "clear": "Clear search",
+    "noMatch": "No country matches “{query}”.",
+    "unmark": "unmark",
+    "mark": "mark"
+  },
+  "accountButton": {
+    "yourAccount": "Your account"
+  },
+  "savePromptCard": {
+    "notNow": "Not now",
+    "headline": "{count, plural, one {You've got # country marked} other {You've got # countries marked}}",
+    "detail": "If you close without an account, this only lives in this browser. Save it and compare with your friends.",
+    "save": "Save my progress"
+  },
+  "worldMap": {
+    "loadFailed": "We couldn't load the map.",
+    "retry": "Retry",
+    "loading": "Loading the map",
+    "mapAriaLabel": "World map. Tap a country to mark it as visited.",
+    "viewFlatMap": "View the flat map",
+    "viewGlobe": "View the globe",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "zoomReset": "View the whole map",
+    "visited": "visited",
+    "notMarked": "not marked"
+  },
+  "globeMap": {
+    "ariaLabel": "Globe. Drag to rotate it and tap a country to mark it.",
+    "recenter": "Recenter the globe"
   }
 }

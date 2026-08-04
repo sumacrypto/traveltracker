@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { CaretDown, MagnifyingGlass } from "@phosphor-icons/react";
 import { COUNTRIES, GEOMETRY_ID_BY_CODE } from "@/data/countries";
 import { searchCountries } from "@/lib/countrySearch";
@@ -29,7 +29,7 @@ interface CountryPickerProps {
 export default function CountryPicker({
   value,
   onChange,
-  placeholder = "Elegir país",
+  placeholder,
   clearLabel,
   onlyCodes,
   autoOpen = false,
@@ -37,6 +37,8 @@ export default function CountryPicker({
   className = "",
 }: CountryPickerProps) {
   const locale = useLocale();
+  const t = useTranslations("countryPicker");
+  const resolvedPlaceholder = placeholder ?? t("choosePlaceholder");
   const [open, setOpen] = useState(autoOpen);
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
@@ -121,7 +123,7 @@ export default function CountryPicker({
             </span>
           </>
         ) : (
-          <span className="flex-1 truncate text-left text-text-faint">{placeholder}</span>
+          <span className="flex-1 truncate text-left text-text-faint">{resolvedPlaceholder}</span>
         )}
         <CaretDown size={12} weight="bold" className="shrink-0 text-text-faint" />
       </button>
@@ -139,7 +141,7 @@ export default function CountryPicker({
                 setActiveIndex(0);
               }}
               onKeyDown={handleKeyDown}
-              placeholder="Escribí para filtrar"
+              placeholder={t("filterPlaceholder")}
               role="combobox"
               aria-controls={listId}
               aria-expanded
@@ -166,7 +168,7 @@ export default function CountryPicker({
 
             {results.length === 0 && (
               <li className="px-3 py-4 text-center text-[13px] text-text-faint">
-                Ningún país coincide.
+                {t("noMatch")}
               </li>
             )}
 
@@ -186,7 +188,7 @@ export default function CountryPicker({
                   <span aria-hidden>{entry.meta.flag}</span>
                   <span className="flex-1 truncate">{countryLabel(entry.meta, locale)}</span>
                   {entry.meta.code === value && (
-                    <span className="shrink-0 text-[11px] text-accent-ink">elegido</span>
+                    <span className="shrink-0 text-[11px] text-accent-ink">{t("chosen")}</span>
                   )}
                 </button>
               </li>

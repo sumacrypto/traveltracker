@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Moon, Sun } from "@phosphor-icons/react";
 import { applyTheme, getEffectiveTheme } from "@/lib/theme";
 
@@ -12,12 +13,13 @@ import { applyTheme, getEffectiveTheme } from "@/lib/theme";
  * Así no hay flash del icono equivocado ni desajuste de hidratación.
  */
 export default function ThemeToggle() {
+  const t = useTranslations("common");
   return (
     <button
       type="button"
       onClick={() => applyTheme(getEffectiveTheme() === "dark" ? "light" : "dark")}
-      aria-label="Cambiar entre modo claro y oscuro"
-      title="Cambiar entre modo claro y oscuro"
+      aria-label={t("toggleTheme")}
+      title={t("toggleTheme")}
       className="grid size-9 shrink-0 place-items-center rounded-full border border-ink-line text-text-dim transition-colors hover:border-accent hover:text-accent-ink active:scale-[0.94]"
     >
       <Sun size={17} weight="bold" className="hidden theme-dark:block" />

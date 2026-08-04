@@ -1,7 +1,7 @@
 "use client";
 
 import { useDeferredValue, useId, useMemo, useRef, useState } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { MagnifyingGlass, X } from "@phosphor-icons/react";
 import { COUNTRIES, type CountryMeta } from "@/data/countries";
 import { countryLabel } from "@/lib/countryLabel";
@@ -44,6 +44,7 @@ interface CountrySearchProps {
  */
 export default function CountrySearch({ visited, onPick }: CountrySearchProps) {
   const locale = useLocale();
+  const t = useTranslations("countrySearch");
   const [query, setQuery] = useState("");
   const deferred = useDeferredValue(query);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -76,8 +77,8 @@ export default function CountrySearch({ visited, onPick }: CountrySearchProps) {
           type="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Buscar un país"
-          aria-label="Buscar un país por nombre"
+          placeholder={t("placeholder")}
+          aria-label={t("ariaLabel")}
           aria-controls={listId}
           aria-expanded={results.length > 0}
           role="combobox"
@@ -91,7 +92,7 @@ export default function CountrySearch({ visited, onPick }: CountrySearchProps) {
               setQuery("");
               inputRef.current?.focus();
             }}
-            aria-label="Borrar búsqueda"
+            aria-label={t("clear")}
             className="shrink-0 text-text-faint transition-colors hover:text-text"
           >
             <X size={15} weight="bold" />
@@ -107,7 +108,7 @@ export default function CountrySearch({ visited, onPick }: CountrySearchProps) {
         >
           {showEmpty && (
             <li className="px-3 py-4 text-center text-sm text-text-faint">
-              Ningún país coincide con “{deferred.trim()}”.
+              {t("noMatch", { query: deferred.trim() })}
             </li>
           )}
           {results.map((entry) => {
@@ -131,7 +132,7 @@ export default function CountrySearch({ visited, onPick }: CountrySearchProps) {
                   <span
                     className={`text-xs ${isVisited ? "text-accent-ink" : "text-text-faint"}`}
                   >
-                    {isVisited ? "quitar" : "marcar"}
+                    {isVisited ? t("unmark") : t("mark")}
                   </span>
                 </button>
               </li>

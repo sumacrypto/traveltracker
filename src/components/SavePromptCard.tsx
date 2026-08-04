@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { motion, useReducedMotion } from "motion/react";
 import { CloudArrowUp, X } from "@phosphor-icons/react";
 import { useAccount } from "@/lib/account";
@@ -21,6 +22,7 @@ interface SavePromptCardProps {
  * marcar países es la forma más rápida de que cierre la pestaña.
  */
 export default function SavePromptCard({ visited, onSignIn }: SavePromptCardProps) {
+  const t = useTranslations("savePromptCard");
   const user = useAccount((state) => state.user);
   const reduce = useReducedMotion();
   // En el servidor arranca descartado. No genera desajuste de hidratación porque
@@ -66,18 +68,16 @@ export default function SavePromptCard({ visited, onSignIn }: SavePromptCardProp
       <button
         type="button"
         onClick={dismiss}
-        aria-label="Ahora no"
+        aria-label={t("notNow")}
         className="absolute top-3 right-3 grid size-7 place-items-center rounded-full text-text-faint transition-colors hover:text-text"
       >
         <X size={13} weight="bold" />
       </button>
 
       <p className="pr-8 text-[15px] leading-snug font-semibold">
-        Llevás {visited} países marcados
+        {t("headline", { count: visited })}
       </p>
-      <p className="mt-1.5 text-[13px] leading-relaxed text-text-dim">
-        Si cerrás sin cuenta, esto vive solo en este navegador. Guardalo y compará con tus amigos.
-      </p>
+      <p className="mt-1.5 text-[13px] leading-relaxed text-text-dim">{t("detail")}</p>
 
       <button
         type="button"
@@ -85,7 +85,7 @@ export default function SavePromptCard({ visited, onSignIn }: SavePromptCardProp
         className="mt-3.5 flex w-full items-center justify-center gap-2 rounded-full bg-accent px-4 py-2.5 text-sm font-semibold text-white transition-opacity active:scale-[0.98]"
       >
         <CloudArrowUp size={16} weight="bold" />
-        Guardar mi progreso
+        {t("save")}
       </button>
     </motion.section>
   );

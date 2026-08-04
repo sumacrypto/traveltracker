@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { select } from "d3-selection";
 import { zoom as d3Zoom, zoomIdentity, type ZoomBehavior, type ZoomTransform } from "d3-zoom";
 import "d3-transition";
@@ -8,6 +9,7 @@ import { MagnifyingGlassPlus, MagnifyingGlassMinus, ArrowsOut, Globe, MapTrifold
 import GlobeMap from "./GlobeMap";
 import { type CountryShape } from "@/lib/geo";
 import { useWorldShapes } from "@/lib/worldShapes";
+import { countryLabel } from "@/lib/countryLabel";
 
 const MIN_SCALE = 1;
 const MAX_SCALE = 14;
@@ -68,6 +70,7 @@ function zoomTarget(svg: SVGSVGElement, duration: number) {
 }
 
 export default function WorldMap({ visited, onToggle, focus, view, onViewChange }: WorldMapProps) {
+  const t = useTranslations("worldMap");
   const svgRef = useRef<SVGSVGElement | null>(null);
   const gRef = useRef<SVGGElement | null>(null);
   const zoomRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null);
@@ -219,13 +222,13 @@ export default function WorldMap({ visited, onToggle, focus, view, onViewChange 
   if (error) {
     return (
       <div className="flex h-full min-h-70 flex-col items-center justify-center gap-3 px-6 text-center">
-        <p className="text-sm text-text-dim">No pudimos cargar el mapa.</p>
+        <p className="text-sm text-text-dim">{t("loadFailed")}</p>
         <button
           type="button"
           onClick={() => window.location.reload()}
           className="rounded-full border border-ink-line px-4 py-2 text-sm font-medium transition-colors hover:border-accent hover:text-accent-ink"
         >
-          Reintentar
+          {t("retry")}
         </button>
       </div>
     );
@@ -233,7 +236,7 @@ export default function WorldMap({ visited, onToggle, focus, view, onViewChange 
 
   if (!map) {
     return (
-      <div className="h-full min-h-70 w-full p-2" aria-busy="true" aria-label="Cargando el mapa">
+      <div className="h-full min-h-70 w-full p-2" aria-busy="true" aria-label={t("loading")}>
         <div className="skeleton h-full w-full rounded-[14px]" />
       </div>
     );
@@ -256,7 +259,7 @@ export default function WorldMap({ visited, onToggle, focus, view, onViewChange 
         onMouseMove={handleMouseMove}
         onPointerLeave={() => setHovered(null)}
         role="group"
-        aria-label="Mapa mundial. Tocá un país para marcarlo como visitado."
+        aria-label={t("mapAriaLabel")}
       >
         <rect
           width={map.width}
@@ -281,7 +284,7 @@ export default function WorldMap({ visited, onToggle, focus, view, onViewChange 
 
       <div className="absolute top-3 left-3">
         <MapButton
-          label={view === "globe" ? "Ver el planisferio" : "Ver el globo"}
+          label={view === "globe" ? t("viewFlatMap") : t("viewGlobe")}
           onClick={() => onViewChange(view === "globe" ? "flat" : "globe")}
         >
           {view === "globe" ? (
@@ -294,13 +297,13 @@ export default function WorldMap({ visited, onToggle, focus, view, onViewChange 
 
       {view === "flat" && (
         <div className="absolute right-3 bottom-3 flex flex-col gap-2">
-          <MapButton label="Acercar" onClick={() => zoomBy(1.7)}>
+          <MapButton label={t("zoomIn")} onClick={() => zoomBy(1.7)}>
             <MagnifyingGlassPlus size={20} weight="bold" />
           </MapButton>
-          <MapButton label="Alejar" onClick={() => zoomBy(1 / 1.7)}>
+          <MapButton label={t("zoomOut")} onClick={() => zoomBy(1 / 1.7)}>
             <MagnifyingGlassMinus size={20} weight="bold" />
           </MapButton>
-          <MapButton label="Ver todo el mapa" onClick={resetZoom}>
+          <MapButton label={t("zoomReset")} onClick={resetZoom}>
             <ArrowsOut size={20} weight="bold" />
           </MapButton>
         </div>
@@ -347,6 +350,8 @@ function CountryTooltip({
   shape: CountryShape | null;
   isVisited: boolean;
 }) {
+  const locale = useLocale();
+  const t = useTranslations("worldMap");
   return (
     <div
       ref={ref}
@@ -358,9 +363,9 @@ function CountryTooltip({
       {shape?.meta ? (
         <>
           <span>{shape.meta.flag}</span>
-          <span className="font-medium">{shape.meta.name}</span>
+          <span className="font-medium">{countryLabel(shape.meta, locale)}</span>
           <span className={isVisited ? "text-accent-ink" : "text-text-faint"}>
-            {isVisited ? "visitado" : "sin marcar"}
+            {isVisited ? t("visited") : t("notMarked")}
           </span>
         </>
       ) : null}
@@ -370,6 +375,8 @@ function CountryTooltip({
 
 /** Chip fijo arriba del mapa, para teclado y para el aviso del buscador. */
 function MapLegend({ shape, isVisited }: { shape: CountryShape | null; isVisited: boolean }) {
+  const locale = useLocale();
+  const t = useTranslations("worldMap");
   if (!shape?.meta) return null;
   return (
     <div
@@ -378,9 +385,9 @@ function MapLegend({ shape, isVisited }: { shape: CountryShape | null; isVisited
       className="pointer-events-none absolute top-3 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full border border-ink-line bg-ink-raised/95 px-3 py-1.5 text-sm backdrop-blur"
     >
       <span aria-hidden>{shape.meta.flag}</span>
-      <span className="font-medium">{shape.meta.name}</span>
+      <span className="font-medium">{countryLabel(shape.meta, locale)}</span>
       <span className={isVisited ? "text-accent-ink" : "text-text-faint"}>
-        {isVisited ? "visitado" : "sin marcar"}
+        {isVisited ? t("visited") : t("notMarked")}
       </span>
     </div>
   );
@@ -413,6 +420,7 @@ const CountryPath = memo(function CountryPath({
   onHover,
   onFocusChange,
 }: CountryPathProps) {
+  const locale = useLocale();
   // Territorios sin código ISO (Somalilandia, Chipre del Norte, glaciares en
   // disputa): se dibujan como tierra pero no se pueden marcar.
   if (!shape.meta) {
@@ -427,7 +435,7 @@ const CountryPath = memo(function CountryPath({
         d={shape.d}
         role="checkbox"
         aria-checked={isVisited}
-        aria-label={shape.meta.name}
+        aria-label={countryLabel(shape.meta, locale)}
         tabIndex={0}
         fill="transparent"
         stroke="transparent"

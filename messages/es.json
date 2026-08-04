@@ -4,6 +4,8 @@
     "description": "Marca los países que visitaste y descubre qué porcentaje del mundo llevas explorado, y cómo te comparas con el resto de la gente."
   },
   "common": {
+    "close": "Cerrar",
+    "toggleTheme": "Cambiar entre modo claro y oscuro",
     "continents": {
       "africa": "África",
       "america": "América",
@@ -222,5 +224,45 @@
     "countriesVisitedLabel": "países visitados",
     "percentOfWorld": "% del mundo",
     "inviteQuestion": "¿Cuántos llevas tú? "
+  },
+  "countryPicker": {
+    "choosePlaceholder": "Elegir país",
+    "filterPlaceholder": "Escribe para filtrar",
+    "noMatch": "Ningún país coincide.",
+    "chosen": "elegido"
+  },
+  "countrySearch": {
+    "placeholder": "Buscar un país",
+    "ariaLabel": "Buscar un país por nombre",
+    "clear": "Borrar búsqueda",
+    "noMatch": "Ningún país coincide con “{query}”.",
+    "unmark": "quitar",
+    "mark": "marcar"
+  },
+  "accountButton": {
+    "yourAccount": "Tu cuenta"
+  },
+  "savePromptCard": {
+    "notNow": "Ahora no",
+    "headline": "{count, plural, one {Llevas # país marcado} other {Llevas # países marcados}}",
+    "detail": "Si cierras sin cuenta, esto vive solo en este navegador. Guárdalo y compara con tus amigos.",
+    "save": "Guardar mi progreso"
+  },
+  "worldMap": {
+    "loadFailed": "No pudimos cargar el mapa.",
+    "retry": "Reintentar",
+    "loading": "Cargando el mapa",
+    "mapAriaLabel": "Mapa mundial. Toca un país para marcarlo como visitado.",
+    "viewFlatMap": "Ver el planisferio",
+    "viewGlobe": "Ver el globo",
+    "zoomIn": "Acercar",
+    "zoomOut": "Alejar",
+    "zoomReset": "Ver todo el mapa",
+    "visited": "visitado",
+    "notMarked": "sin marcar"
+  },
+  "globeMap": {
+    "ariaLabel": "Globo terráqueo. Arrastra para girarlo y toca un país para marcarlo.",
+    "recenter": "Centrar el globo"
   }
 }
