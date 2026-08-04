@@ -173,5 +173,28 @@
     "privacyNote": "The file is read right here, in your browser. It's never uploaded to a server or kept anywhere — only the resulting countries are saved.",
     "reading": "Reading the file...",
     "chooseFiles": "Choose files"
+  },
+  "authDialog": {
+    "title": "Save your progress",
+    "checkInbox": "We sent an email to <email>{emailAddress}</email> to confirm the account. Open it and you'll come back here with everything saved.",
+    "defaultReason": "With an account your map follows you across devices and you can compare with your friends.",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithFacebook": "Continue with Facebook",
+    "or": "or",
+    "email": "Email",
+    "emailPlaceholder": "you@mail.com",
+    "password": "Password",
+    "passwordPlaceholder": "At least 8 characters",
+    "createAccount": "Create account",
+    "signIn": "Sign in",
+    "haveAccount": "I already have an account",
+    "wantAccount": "I want to create an account",
+    "oauthFailed": "We couldn't open {provider} sign-in.",
+    "errors": {
+      "invalidLogin": "Wrong email or password.",
+      "alreadyRegistered": "That email already has an account. Try signing in.",
+      "passwordTooShort": "The password has to be at least 8 characters.",
+      "generic": "We couldn't complete that step. Try again."
+    }
   }
 }
