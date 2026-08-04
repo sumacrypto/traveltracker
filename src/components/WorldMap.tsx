@@ -11,8 +11,26 @@ import { useWorldShapes } from "@/lib/worldShapes";
 
 const MIN_SCALE = 1;
 const MAX_SCALE = 14;
-/** Un tap con menos de este desplazamiento cuenta como click y no como arrastre. */
-const DRAG_SLOP_PX = 6;
+/**
+ * Cuánto puede moverse el puntero entre el down y el up para que d3 lo siga
+ * considerando un click y no un arrastre.
+ *
+ * d3-zoom trae esto en 0 por defecto: literalmente cualquier temblor de mano
+ * durante un click (imposible de evitar, ni apoyando el mouse con cuidado) hace
+ * que d3 lo tome como el inicio de un arrastre y descarte el click entero antes
+ * de que llegue a React. Es el motivo real de que marcar países se sienta
+ * pegajoso. Con este margen, un click sigue siendo un click aunque el puntero se
+ * corra unos pocos píxeles.
+ */
+const CLICK_DISTANCE = 8;
+/**
+ * Margen invisible alrededor de cada país, en píxeles de pantalla (constante en
+ * cualquier zoom gracias a `vectorEffect="non-scaling-stroke"`). Sin esto, tocar
+ * un país es tocar exactamente su costa: países chicos como Luxemburgo o las
+ * islas del Caribe terminan siendo casi imposibles de marcar, sobre todo con el
+ * dedo. Es el mismo truco que usa cualquier mapa táctil serio.
+ */
+const HIT_BUFFER_PX = 11;
 
 /**
  * Qué quiere destacar la interfaz. El nonce permite repetir el mismo objetivo
@@ -53,7 +71,6 @@ export default function WorldMap({ visited, onToggle, focus, view, onViewChange 
   const svgRef = useRef<SVGSVGElement | null>(null);
   const gRef = useRef<SVGGElement | null>(null);
   const zoomRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null);
-  const pointerStart = useRef<{ x: number; y: number } | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -86,6 +103,7 @@ export default function WorldMap({ visited, onToggle, focus, view, onViewChange 
       .scaleExtent([MIN_SCALE, MAX_SCALE])
       .extent(viewBox)
       .translateExtent(viewBox)
+      .clickDistance(CLICK_DISTANCE)
       .on("zoom", (event: { transform: ZoomTransform }) => {
         g.setAttribute("transform", event.transform.toString());
       });
@@ -155,10 +173,6 @@ export default function WorldMap({ visited, onToggle, focus, view, onViewChange 
   // El chip centrado queda para teclado y buscador; el mouse usa el tooltip.
   const spotlighted = focused ?? flashed;
 
-  const handlePointerDown = useCallback((event: React.PointerEvent) => {
-    pointerStart.current = { x: event.clientX, y: event.clientY };
-  }, []);
-
   // La posición del tooltip se escribe directo en el DOM: en un mousemove no
   // puede pasar por el estado de React.
   const handleMouseMove = useCallback((event: React.MouseEvent) => {
@@ -180,19 +194,10 @@ export default function WorldMap({ visited, onToggle, focus, view, onViewChange 
     }px, ${flipY ? y + 18 : y - tooltip.offsetHeight - 10}px)`;
   }, []);
 
-  const handleCountryClick = useCallback(
-    (event: React.MouseEvent, shape: CountryShape) => {
-      const start = pointerStart.current;
-      if (start) {
-        const moved = Math.hypot(event.clientX - start.x, event.clientY - start.y);
-        if (moved > DRAG_SLOP_PX) return; // fue un arrastre del mapa, no un tap
-      }
-      onToggle(shape.key);
-    },
-    [onToggle],
-  );
-
-  const handleCountryKey = useCallback(
+  // d3 ya se encarga de no dejar pasar el click de un arrastre real (ver
+  // CLICK_DISTANCE arriba), así que acá no hace falta volver a medir nada: si
+  // esto se ejecuta, es porque fue un tap.
+  const handleToggleShape = useCallback(
     (shape: CountryShape) => onToggle(shape.key),
     [onToggle],
   );
@@ -204,13 +209,12 @@ export default function WorldMap({ visited, onToggle, focus, view, onViewChange 
         key={shape.key}
         shape={shape}
         isVisited={Boolean(visited[shape.key])}
-        onClick={handleCountryClick}
-        onActivateByKey={handleCountryKey}
+        onToggle={handleToggleShape}
         onHover={setHovered}
         onFocusChange={setFocused}
       />
     ));
-  }, [shapes, visited, handleCountryClick, handleCountryKey]);
+  }, [shapes, visited, handleToggleShape]);
 
   if (error) {
     return (
@@ -249,7 +253,6 @@ export default function WorldMap({ visited, onToggle, focus, view, onViewChange 
         viewBox={`0 0 ${map.width} ${map.height}`}
         preserveAspectRatio="xMidYMid meet"
         className="h-full w-full touch-none select-none"
-        onPointerDown={handlePointerDown}
         onMouseMove={handleMouseMove}
         onPointerLeave={() => setHovered(null)}
         role="group"
@@ -282,23 +285,23 @@ export default function WorldMap({ visited, onToggle, focus, view, onViewChange 
           onClick={() => onViewChange(view === "globe" ? "flat" : "globe")}
         >
           {view === "globe" ? (
-            <MapTrifold size={18} weight="bold" />
+            <MapTrifold size={20} weight="bold" />
           ) : (
-            <Globe size={18} weight="bold" />
+            <Globe size={20} weight="bold" />
           )}
         </MapButton>
       </div>
 
       {view === "flat" && (
-        <div className="absolute right-3 bottom-3 flex flex-col gap-1.5">
+        <div className="absolute right-3 bottom-3 flex flex-col gap-2">
           <MapButton label="Acercar" onClick={() => zoomBy(1.7)}>
-            <MagnifyingGlassPlus size={18} weight="bold" />
+            <MagnifyingGlassPlus size={20} weight="bold" />
           </MapButton>
           <MapButton label="Alejar" onClick={() => zoomBy(1 / 1.7)}>
-            <MagnifyingGlassMinus size={18} weight="bold" />
+            <MagnifyingGlassMinus size={20} weight="bold" />
           </MapButton>
           <MapButton label="Ver todo el mapa" onClick={resetZoom}>
-            <ArrowsOut size={18} weight="bold" />
+            <ArrowsOut size={20} weight="bold" />
           </MapButton>
         </div>
       )}
@@ -316,12 +319,15 @@ function MapButton({
   children: React.ReactNode;
 }) {
   return (
+    // 44px y no los 36px de antes: por debajo del mínimo que recomiendan Apple
+    // y Google para un blanco táctil, un dedo real pasa cerca del botón sin
+    // acertarle. Eso explica buena parte de "los botones no funcionan" en mobile.
     <button
       type="button"
       onClick={onClick}
       aria-label={label}
       title={label}
-      className="grid size-9 place-items-center rounded-full border border-ink-line bg-ink-raised/90 text-text-dim backdrop-blur transition-colors hover:border-accent hover:text-accent-ink active:scale-[0.94]"
+      className="grid size-11 shrink-0 touch-manipulation place-items-center rounded-full border border-ink-line bg-ink-raised/90 text-text-dim backdrop-blur transition-colors hover:border-accent hover:text-accent-ink active:scale-[0.94]"
     >
       {children}
     </button>
@@ -383,17 +389,27 @@ function MapLegend({ shape, isVisited }: { shape: CountryShape | null; isVisited
 interface CountryPathProps {
   shape: CountryShape;
   isVisited: boolean;
-  onClick: (event: React.MouseEvent, shape: CountryShape) => void;
-  onActivateByKey: (shape: CountryShape) => void;
+  onToggle: (shape: CountryShape) => void;
   onHover: (shape: CountryShape | null) => void;
   onFocusChange: (shape: CountryShape | null) => void;
 }
 
+/**
+ * Cada país countable se dibuja con DOS paths superpuestos, misma `d`:
+ *
+ *  1. Uno invisible, con un stroke ancho (`HIT_BUFFER_PX`) y
+ *     `pointerEvents="all"`: es el que de verdad recibe el click y el foco, y
+ *     su área tocable se extiende más allá de la costa real.
+ *  2. Uno visible, `pointerEvents="none"`, puramente decorativo.
+ *
+ * Sin esto, tocar un país es tocar exactamente su silueta: para Luxemburgo o
+ * una isla del Caribe en el mapa completo, eso son un puñado de píxeles. El
+ * hover y el foco del path visible siguen al invisible vía `peer`.
+ */
 const CountryPath = memo(function CountryPath({
   shape,
   isVisited,
-  onClick,
-  onActivateByKey,
+  onToggle,
   onHover,
   onFocusChange,
 }: CountryPathProps) {
@@ -403,34 +419,50 @@ const CountryPath = memo(function CountryPath({
     return <path d={shape.d} fill="var(--land-inert)" stroke="var(--sea)" strokeWidth={0.3} />;
   }
 
+  const activate = () => onToggle(shape);
+
   return (
-    <path
-      d={shape.d}
-      role="checkbox"
-      aria-checked={isVisited}
-      aria-label={shape.meta.name}
-      tabIndex={0}
-      fill={isVisited ? "var(--accent)" : "var(--land)"}
-      stroke="var(--sea)"
-      strokeWidth={0.4}
-      vectorEffect="non-scaling-stroke"
-      // Dos detalles acá:
-      // - el hover aclara en oscuro y oscurece en claro; aclarar sobre el gris
-      //   claro llevaría al país casi a blanco y perdería el borde con el mar.
-      // - el foco se marca con el contorno del propio país: un outline rodearía
-      //   el bounding box, que en Estados Unidos o Rusia cruza medio mapa.
-      className="cursor-pointer outline-none transition-[fill,filter] duration-150 focus-visible:stroke-accent focus-visible:[stroke-width:2] theme-light:hover:brightness-90 theme-dark:hover:brightness-125"
-      onClick={(event) => onClick(event, shape)}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          onActivateByKey(shape);
-        }
-      }}
-      onMouseEnter={() => onHover(shape)}
-      onMouseLeave={() => onHover(null)}
-      onFocus={() => onFocusChange(shape)}
-      onBlur={() => onFocusChange(null)}
-    />
+    <>
+      <path
+        d={shape.d}
+        role="checkbox"
+        aria-checked={isVisited}
+        aria-label={shape.meta.name}
+        tabIndex={0}
+        fill="transparent"
+        stroke="transparent"
+        strokeWidth={HIT_BUFFER_PX}
+        vectorEffect="non-scaling-stroke"
+        pointerEvents="all"
+        className="peer cursor-pointer outline-none"
+        onClick={activate}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            activate();
+          }
+        }}
+        onMouseEnter={() => onHover(shape)}
+        onMouseLeave={() => onHover(null)}
+        onFocus={() => onFocusChange(shape)}
+        onBlur={() => onFocusChange(null)}
+      />
+      <path
+        d={shape.d}
+        aria-hidden
+        pointerEvents="none"
+        fill={isVisited ? "var(--accent)" : "var(--land)"}
+        stroke="var(--sea)"
+        strokeWidth={0.4}
+        vectorEffect="non-scaling-stroke"
+        // Dos detalles acá:
+        // - el hover aclara en oscuro y oscurece en claro; aclarar sobre el gris
+        //   claro llevaría al país casi a blanco y perdería el borde con el mar.
+        // - el foco se marca con el contorno del propio país: un outline
+        //   rodearía el bounding box, que en Estados Unidos o Rusia cruza medio
+        //   mapa.
+        className="transition-[fill,filter] duration-150 peer-focus-visible:[stroke:var(--accent)] peer-focus-visible:[stroke-width:2] theme-light:peer-hover:brightness-90 theme-dark:peer-hover:brightness-125"
+      />
+    </>
   );
 });

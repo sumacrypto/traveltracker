@@ -7,8 +7,13 @@ import "d3-transition";
 
 export const MIN_SCALE = 1;
 export const MAX_SCALE = 14;
-/** Un tap con menos de este desplazamiento cuenta como click y no como arrastre. */
-export const DRAG_SLOP_PX = 6;
+/**
+ * Cuánto puede moverse el puntero entre el down y el up para que d3 lo siga
+ * considerando un click. Por defecto d3-zoom trae esto en 0: cualquier temblor
+ * de mano durante un click hace que lo tome como un arrastre y lo descarte
+ * antes de que llegue a React. Con este margen, un click sigue siendo un click.
+ */
+export const CLICK_DISTANCE = 8;
 
 interface Options {
   /** Medidas del viewBox. El zoom trabaja en esas unidades, no en píxeles. */
@@ -17,11 +22,6 @@ interface Options {
   /** Se pasa a false mientras la geometría todavía no está lista. */
   enabled?: boolean;
 }
-
-/**
- * Zoom y paneo para un SVG con viewBox. El transform se escribe directo en el
- * `<g>`: meterlo en el estado de React re-renderizaría todos los paths por frame.
- */
 
 /**
  * Con la pestaña oculta el navegador congela los frames y una transición de d3
@@ -34,11 +34,14 @@ function zoomTarget(svg: SVGSVGElement, duration: number) {
     : selection.transition().duration(duration);
 }
 
+/**
+ * Zoom y paneo para un SVG con viewBox. El transform se escribe directo en el
+ * `<g>`: meterlo en el estado de React re-renderizaría todos los paths por frame.
+ */
 export function useMapZoom({ width, height, enabled = true }: Options) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const groupRef = useRef<SVGGElement | null>(null);
   const behaviourRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null);
-  const pointerStart = useRef<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     const svg = svgRef.current;
@@ -57,6 +60,7 @@ export function useMapZoom({ width, height, enabled = true }: Options) {
       .scaleExtent([MIN_SCALE, MAX_SCALE])
       .extent(box)
       .translateExtent(box)
+      .clickDistance(CLICK_DISTANCE)
       .on("zoom", (event: { transform: ZoomTransform }) => {
         group.setAttribute("transform", event.transform.toString());
       });
@@ -85,16 +89,5 @@ export function useMapZoom({ width, height, enabled = true }: Options) {
     behaviour.transform(zoomTarget(svg, 320), zoomIdentity);
   }, []);
 
-  const handlePointerDown = useCallback((event: React.PointerEvent) => {
-    pointerStart.current = { x: event.clientX, y: event.clientY };
-  }, []);
-
-  /** true si el gesto fue un tap y no un arrastre del mapa. */
-  const wasTap = useCallback((event: { clientX: number; clientY: number }) => {
-    const start = pointerStart.current;
-    if (!start) return true;
-    return Math.hypot(event.clientX - start.x, event.clientY - start.y) <= DRAG_SLOP_PX;
-  }, []);
-
-  return { svgRef, groupRef, zoomBy, resetZoom, handlePointerDown, wasTap };
+  return { svgRef, groupRef, zoomBy, resetZoom };
 }

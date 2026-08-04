@@ -14,6 +14,9 @@ import {
 } from "@/lib/subdivisionGeo";
 import { useMapZoom } from "@/lib/useMapZoom";
 
+/** Mismo margen invisible que el mapa mundial: ver WorldMap.tsx. */
+const HIT_BUFFER_PX = 11;
+
 interface SubdivisionDialogProps {
   /** ISO alpha-2 del país, o null cuando el diálogo está cerrado. */
   countryCode: string | null;
@@ -51,7 +54,7 @@ function SubdivisionBody({ countryCode }: { countryCode: string }) {
   // Países con territorios lejos del continente (España con Canarias, Chile con
   // la Polinesia) quedan diminutos en el encuadre completo: sin zoom no se pueden
   // marcar las divisiones chicas.
-  const { svgRef, groupRef, zoomBy, resetZoom, handlePointerDown, wasTap } = useMapZoom({
+  const { svgRef, groupRef, zoomBy, resetZoom } = useMapZoom({
     width: map?.width ?? 0,
     height: map?.height ?? 0,
     enabled: Boolean(map),
@@ -78,9 +81,10 @@ function SubdivisionBody({ countryCode }: { countryCode: string }) {
     : 0;
   const percent = set.total ? (visitedCount / set.total) * 100 : 0;
 
-  // Sin evento se asume teclado: ahí no hay arrastre que descartar.
-  const handleToggle = (shape: SubdivisionShape, event?: React.MouseEvent) => {
-    if (!shape.unit || (event && !wasTap(event))) return;
+  // d3 ya descarta el click de un arrastre real (clickDistance en useMapZoom),
+  // así que acá no hace falta volver a medir nada.
+  const handleToggle = (shape: SubdivisionShape) => {
+    if (!shape.unit) return;
     const key = subdivisionKey(countryCode, shape.unit.code);
     const wasVisited = Boolean(subdivisions[key]);
     toggleSubdivision(countryCode, shape.unit.code);
@@ -117,7 +121,6 @@ function SubdivisionBody({ countryCode }: { countryCode: string }) {
             viewBox={`0 0 ${map.width} ${map.height}`}
             style={{ aspectRatio: `${map.width} / ${map.height}` }}
             className="mx-auto max-h-[46vh] w-auto max-w-full touch-none rounded-[10px] bg-sea select-none"
-            onPointerDown={handlePointerDown}
             onMouseLeave={() => setHovered(null)}
             role="group"
             aria-label={`Mapa de ${set.label}. Tocá uno para marcarlo.`}
@@ -137,15 +140,15 @@ function SubdivisionBody({ countryCode }: { countryCode: string }) {
             </g>
           </svg>
 
-          <div className="absolute right-2 bottom-2 flex flex-col gap-1.5">
+          <div className="absolute right-2 bottom-2 flex flex-col gap-2">
             <ZoomButton label="Acercar" onClick={() => zoomBy(1.7)}>
-              <MagnifyingGlassPlus size={15} weight="bold" />
+              <MagnifyingGlassPlus size={18} weight="bold" />
             </ZoomButton>
             <ZoomButton label="Alejar" onClick={() => zoomBy(1 / 1.7)}>
-              <MagnifyingGlassMinus size={15} weight="bold" />
+              <MagnifyingGlassMinus size={18} weight="bold" />
             </ZoomButton>
             <ZoomButton label="Ver el país entero" onClick={resetZoom}>
-              <ArrowsOut size={15} weight="bold" />
+              <ArrowsOut size={18} weight="bold" />
             </ZoomButton>
           </div>
 
@@ -178,18 +181,25 @@ function ZoomButton({
   children: React.ReactNode;
 }) {
   return (
+    // 44px: por debajo de eso un dedo real falla el botón con facilidad.
     <button
       type="button"
       onClick={onClick}
       aria-label={label}
       title={label}
-      className="grid size-8 place-items-center rounded-full border border-ink-line bg-ink-raised/90 text-text-dim backdrop-blur transition-colors hover:border-accent hover:text-accent-ink active:scale-[0.94]"
+      className="grid size-11 shrink-0 touch-manipulation place-items-center rounded-full border border-ink-line bg-ink-raised/90 text-text-dim backdrop-blur transition-colors hover:border-accent hover:text-accent-ink active:scale-[0.94]"
     >
       {children}
     </button>
   );
 }
 
+/**
+ * Mismo patrón que WorldMap.tsx: un path invisible con margen de toque más
+ * ancho hace de control interactivo, y uno visible puramente decorativo lo seguí
+ * vía `peer`. Las provincias chicas (San Marino, un microestado, una isla) sufren
+ * el problema todavía más que los países grandes.
+ */
 const UnitPath = memo(function UnitPath({
   shape,
   isVisited,
@@ -198,7 +208,7 @@ const UnitPath = memo(function UnitPath({
 }: {
   shape: SubdivisionShape;
   isVisited: boolean;
-  onToggle: (shape: SubdivisionShape, event?: React.MouseEvent) => void;
+  onToggle: (shape: SubdivisionShape) => void;
   onHover: (shape: SubdivisionShape | null) => void;
 }) {
   if (!shape.unit) {
@@ -206,28 +216,41 @@ const UnitPath = memo(function UnitPath({
   }
 
   return (
-    <path
-      d={shape.d}
-      role="checkbox"
-      aria-checked={isVisited}
-      aria-label={shape.unit.name}
-      tabIndex={0}
-      fill={isVisited ? "var(--accent)" : "var(--land)"}
-      stroke="var(--sea)"
-      strokeWidth={0.6}
-      vectorEffect="non-scaling-stroke"
-      className="cursor-pointer outline-none transition-[fill,filter] duration-150 focus-visible:stroke-accent focus-visible:[stroke-width:2] theme-light:hover:brightness-90 theme-dark:hover:brightness-125"
-      onClick={(event) => onToggle(shape, event)}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          onToggle(shape);
-        }
-      }}
-      onMouseEnter={() => onHover(shape)}
-      onMouseLeave={() => onHover(null)}
-      onFocus={() => onHover(shape)}
-      onBlur={() => onHover(null)}
-    />
+    <>
+      <path
+        d={shape.d}
+        role="checkbox"
+        aria-checked={isVisited}
+        aria-label={shape.unit.name}
+        tabIndex={0}
+        fill="transparent"
+        stroke="transparent"
+        strokeWidth={HIT_BUFFER_PX}
+        vectorEffect="non-scaling-stroke"
+        pointerEvents="all"
+        className="peer cursor-pointer outline-none"
+        onClick={() => onToggle(shape)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            onToggle(shape);
+          }
+        }}
+        onMouseEnter={() => onHover(shape)}
+        onMouseLeave={() => onHover(null)}
+        onFocus={() => onHover(shape)}
+        onBlur={() => onHover(null)}
+      />
+      <path
+        d={shape.d}
+        aria-hidden
+        pointerEvents="none"
+        fill={isVisited ? "var(--accent)" : "var(--land)"}
+        stroke="var(--sea)"
+        strokeWidth={0.6}
+        vectorEffect="non-scaling-stroke"
+        className="transition-[fill,filter] duration-150 peer-focus-visible:[stroke:var(--accent)] peer-focus-visible:[stroke-width:2] theme-light:peer-hover:brightness-90 theme-dark:peer-hover:brightness-125"
+      />
+    </>
   );
 });

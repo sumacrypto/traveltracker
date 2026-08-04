@@ -180,7 +180,18 @@ export function buildShapes(topology: WorldTopology): WorldMapData {
     if (bounds) continentBounds[continent] = bounds;
   }
 
-  return { shapes: [...byKey.values()], width: MAP_WIDTH, height, continentBounds };
+  // Los buffers invisibles de países vecinos se superponen (ver CountryPath):
+  // en un cluster denso como los Balcanes o el Benelux, sin este orden el país
+  // más chico queda tapado por el de al lado y su click nunca le llega. Pintando
+  // los países grandes primero y los chicos al final, el buffer del chico gana
+  // el empate en su propio centro.
+  const shapes = [...byKey.values()].sort((a, b) => boundsArea(b.bounds) - boundsArea(a.bounds));
+
+  return { shapes, width: MAP_WIDTH, height, continentBounds };
+}
+
+function boundsArea([[x0, y0], [x1, y1]]: Bounds): number {
+  return (x1 - x0) * (y1 - y0);
 }
 
 export type { Feature };

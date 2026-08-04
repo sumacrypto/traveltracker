@@ -62,7 +62,7 @@ export function buildSubdivisionShapes(
   projection.translate([tx - x0 + PADDING, ty - y0 + PADDING]);
 
   const path = geoPath(projection);
-  const shapes: SubdivisionShape[] = [];
+  const shapes: (SubdivisionShape & { area: number })[] = [];
 
   for (const f of collection.features) {
     const d = path(f as GeoPermissibleObjects);
@@ -70,10 +70,18 @@ export function buildSubdivisionShapes(
     // y esas unidades simplemente no se dibujan.
     if (!d) continue;
     const key = String(f.id);
-    shapes.push({ key, d, unit: units[key] ?? null });
+    const [[bx0, by0], [bx1, by1]] = path.bounds(f as GeoPermissibleObjects);
+    shapes.push({ key, d, unit: units[key] ?? null, area: (bx1 - bx0) * (by1 - by0) });
   }
 
+  // Mismo problema que en el mapa mundial (ver CountryPath en WorldMap.tsx): los
+  // buffers de dos provincias vecinas se superponen, y sin este orden la más
+  // chica queda tapada por la de al lado. Grandes primero, chicas al final.
+  shapes.sort((a, b) => b.area - a.area);
+
   return {
+    // El `area` de más no molesta: SubdivisionShape es estructural, así que un
+    // objeto con una propiedad extra sigue encajando en el tipo.
     shapes,
     units,
     width: Math.round(x1 - x0 + PADDING * 2),
