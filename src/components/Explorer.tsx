@@ -2,7 +2,6 @@
 
 import { useCallback, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { useTranslations } from "next-intl";
 import CountrySearch from "./CountrySearch";
 import StatsRail from "./StatsRail";
 import ShareCardDialog from "./ShareCardDialog";
@@ -10,7 +9,8 @@ import SubdivisionDialog from "./SubdivisionDialog";
 import ImportDialog from "./ImportDialog";
 import { useTrip } from "@/lib/store";
 import { useUiDialogs } from "@/lib/uiState";
-import { buildHook, computeStats, type Hook } from "@/lib/stats";
+import { computeStats } from "@/lib/stats";
+import { useEgoHook } from "@/lib/useEgoHook";
 import { track } from "@/lib/analytics";
 import { getCountry } from "@/lib/stats";
 import type { MapFocus, MapView } from "./WorldMap";
@@ -27,8 +27,6 @@ const WorldMap = dynamic(() => import("./WorldMap"), {
 });
 
 export default function Explorer() {
-  const th = useTranslations("statsRail.hook");
-  const tc = useTranslations("common.continents");
   const openAuth = useUiDialogs((state) => state.openAuth);
 
   const visited = useTrip((state) => state.visited);
@@ -43,36 +41,7 @@ export default function Explorer() {
   const focusNonce = useRef(0);
 
   const stats = useMemo(() => computeStats(Object.keys(visited)), [visited]);
-  const hookData = useMemo(() => buildHook(stats), [stats]);
-
-  // buildHook() no tiene locale (no es un componente), así que devuelve datos
-  // crudos y acá se arma el texto final. "aboveAverage" es el único tramo con
-  // dos mensajes de detalle posibles (con o sin continente destacado), el
-  // resto interpola directo.
-  const hook = useMemo<Hook | null>(() => {
-    if (!hookData) return null;
-    const { tier, values } = hookData;
-
-    if (tier === "aboveAverage") {
-      const detail = values.continentId
-        ? th("aboveAverage.detailWithContinent", {
-            continent: tc(values.continentId),
-            coveragePercent: values.coveragePercent ?? 0,
-          })
-        : th("aboveAverage.detailWithoutContinent");
-      return {
-        id: tier,
-        headline: th("aboveAverage.headline", { topPercent: values.topPercent ?? 0 }),
-        detail,
-      };
-    }
-
-    return {
-      id: tier,
-      headline: th(`${tier}.headline`, values),
-      detail: th(`${tier}.detail`, values),
-    };
-  }, [hookData, th, tc]);
+  const hook = useEgoHook(stats);
 
   const handleToggle = useCallback(
     (key: string) => {

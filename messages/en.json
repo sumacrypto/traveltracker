@@ -23,6 +23,20 @@
     "map": "Map",
     "stats": "Statistics"
   },
+  "statsPage": {
+    "metadata": {
+      "title": "Statistics · Where I've been",
+      "description": "See how you compare to the rest of the world, your friends, and people like you."
+    },
+    "heading": "Statistics",
+    "subheading": "How you compare to the rest of the world.",
+    "of": "of",
+    "visitedLabel": "countries visited",
+    "percentSuffix": "% of the world",
+    "emptyHeadline": "You haven't marked anything yet",
+    "emptyDetail": "Go to the map and tap the countries where you've been. At three we'll show you your world percentile.",
+    "continentsHeading": "By continent"
+  },
   "statsRail": {
     "of": "of",
     "visitedLabel": "countries visited",

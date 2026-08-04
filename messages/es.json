@@ -23,6 +23,20 @@
     "map": "Mapa",
     "stats": "Estadísticas"
   },
+  "statsPage": {
+    "metadata": {
+      "title": "Estadísticas · Dónde estuve",
+      "description": "Mira cómo te comparas con el resto del mundo, tus amigos y gente como vos."
+    },
+    "heading": "Estadísticas",
+    "subheading": "Cómo te comparas con el resto del mundo.",
+    "of": "de",
+    "visitedLabel": "países visitados",
+    "percentSuffix": "% del mundo",
+    "emptyHeadline": "Todavía no marcaste nada",
+    "emptyDetail": "Ve al mapa y toca los países donde estuviste. A los tres te decimos en qué percentil mundial caes.",
+    "continentsHeading": "Por continente"
+  },
   "statsRail": {
     "of": "de",
     "visitedLabel": "países visitados",
