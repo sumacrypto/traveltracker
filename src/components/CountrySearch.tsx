@@ -1,8 +1,10 @@
 "use client";
 
 import { useDeferredValue, useId, useMemo, useRef, useState } from "react";
+import { useLocale } from "next-intl";
 import { MagnifyingGlass, X } from "@phosphor-icons/react";
 import { COUNTRIES, type CountryMeta } from "@/data/countries";
+import { countryLabel } from "@/lib/countryLabel";
 
 const MAX_RESULTS = 6;
 
@@ -20,6 +22,8 @@ interface Entry {
   haystack: string;
 }
 
+// Por código y no por nombre: el nombre a mostrar depende del idioma activo,
+// el orden alfabético final se arma en el useMemo de abajo con ese idioma.
 const ENTRIES: Entry[] = Object.entries(COUNTRIES)
   .filter(([, meta]) => meta.countable)
   .map(([key, meta]) => ({
@@ -27,7 +31,7 @@ const ENTRIES: Entry[] = Object.entries(COUNTRIES)
     meta,
     haystack: normalize(`${meta.name} ${meta.nameEn} ${meta.code}`),
   }))
-  .sort((a, b) => a.meta.name.localeCompare(b.meta.name, "es"));
+  .sort((a, b) => a.meta.code.localeCompare(b.meta.code));
 
 interface CountrySearchProps {
   visited: Record<string, true>;
@@ -39,6 +43,7 @@ interface CountrySearchProps {
  * teléfono. Además encuadra el mapa en el país elegido.
  */
 export default function CountrySearch({ visited, onPick }: CountrySearchProps) {
+  const locale = useLocale();
   const [query, setQuery] = useState("");
   const deferred = useDeferredValue(query);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -47,15 +52,18 @@ export default function CountrySearch({ visited, onPick }: CountrySearchProps) {
   const results = useMemo(() => {
     const q = normalize(deferred);
     if (q.length < 2) return [];
+    const sorted = [...ENTRIES].sort((a, b) =>
+      countryLabel(a.meta, locale).localeCompare(countryLabel(b.meta, locale), locale),
+    );
     const starts: Entry[] = [];
     const contains: Entry[] = [];
-    for (const entry of ENTRIES) {
+    for (const entry of sorted) {
       if (entry.haystack.startsWith(q)) starts.push(entry);
       else if (entry.haystack.includes(q)) contains.push(entry);
       if (starts.length >= MAX_RESULTS) break;
     }
     return [...starts, ...contains].slice(0, MAX_RESULTS);
-  }, [deferred]);
+  }, [deferred, locale]);
 
   const showEmpty = normalize(deferred).length >= 2 && results.length === 0;
 
@@ -117,7 +125,9 @@ export default function CountrySearch({ visited, onPick }: CountrySearchProps) {
                   className="flex w-full items-center gap-2.5 rounded-[10px] px-3 py-2.5 text-left transition-colors hover:bg-ink-line"
                 >
                   <span aria-hidden>{entry.meta.flag}</span>
-                  <span className="flex-1 truncate text-sm">{entry.meta.name}</span>
+                  <span className="flex-1 truncate text-sm">
+                    {countryLabel(entry.meta, locale)}
+                  </span>
                   <span
                     className={`text-xs ${isVisited ? "text-accent-ink" : "text-text-faint"}`}
                   >

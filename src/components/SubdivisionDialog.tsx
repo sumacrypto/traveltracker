@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useEffect, useState } from "react";
+import { useLocale } from "next-intl";
 import { ArrowsOut, MagnifyingGlassMinus, MagnifyingGlassPlus } from "@phosphor-icons/react";
 import Dialog from "./Dialog";
 import AnimatedNumber from "./AnimatedNumber";
@@ -43,6 +44,7 @@ export default function SubdivisionDialog({
 }
 
 function SubdivisionBody({ countryCode }: { countryCode: string }) {
+  const locale = useLocale();
   const set = getSubdivisionSet(countryCode)!;
   const subdivisions = useTrip((state) => state.subdivisions);
   const toggleSubdivision = useTrip((state) => state.toggleSubdivision);
@@ -102,7 +104,7 @@ function SubdivisionBody({ countryCode }: { countryCode: string }) {
           de <span className="font-mono tabular-nums">{set.total}</span>
         </span>
         <span className="ml-auto font-mono text-sm tabular-nums text-text-dim">
-          {percent.toLocaleString("es-AR", { maximumFractionDigits: 0 })}%
+          {percent.toLocaleString(locale, { maximumFractionDigits: 0 })}%
         </span>
       </div>
 

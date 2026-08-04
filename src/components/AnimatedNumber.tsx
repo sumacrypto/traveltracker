@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useLocale } from "next-intl";
 import { animate, useReducedMotion } from "motion/react";
 
 interface AnimatedNumberProps {
@@ -9,8 +10,8 @@ interface AnimatedNumberProps {
   className?: string;
 }
 
-function format(value: number, decimals: number) {
-  return value.toLocaleString("es-AR", {
+function format(value: number, decimals: number, locale: string) {
+  return value.toLocaleString(locale, {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });
@@ -25,6 +26,7 @@ export default function AnimatedNumber({ value, decimals = 0, className }: Anima
   const ref = useRef<HTMLSpanElement>(null);
   const previous = useRef(value);
   const reduce = useReducedMotion();
+  const locale = useLocale();
 
   useEffect(() => {
     const node = ref.current;
@@ -34,7 +36,7 @@ export default function AnimatedNumber({ value, decimals = 0, className }: Anima
     previous.current = value;
 
     if (reduce || from === value) {
-      node.textContent = format(value, decimals);
+      node.textContent = format(value, decimals, locale);
       return;
     }
 
@@ -42,7 +44,7 @@ export default function AnimatedNumber({ value, decimals = 0, className }: Anima
       duration: 0.55,
       ease: [0.16, 1, 0.3, 1],
       onUpdate: (latest) => {
-        node.textContent = format(latest, decimals);
+        node.textContent = format(latest, decimals, locale);
       },
     });
 
@@ -50,13 +52,13 @@ export default function AnimatedNumber({ value, decimals = 0, className }: Anima
     // deja siempre el valor exacto, se haya completado la animación o no.
     return () => {
       controls.stop();
-      node.textContent = format(value, decimals);
+      node.textContent = format(value, decimals, locale);
     };
-  }, [value, decimals, reduce]);
+  }, [value, decimals, reduce, locale]);
 
   return (
     <span ref={ref} className={className}>
-      {format(value, decimals)}
+      {format(value, decimals, locale)}
     </span>
   );
 }

@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useLocale } from "next-intl";
 import { CaretDown, MagnifyingGlass } from "@phosphor-icons/react";
 import { COUNTRIES, GEOMETRY_ID_BY_CODE } from "@/data/countries";
 import { searchCountries } from "@/lib/countrySearch";
+import { countryLabel } from "@/lib/countryLabel";
 
 interface CountryPickerProps {
   /** ISO alpha-2 del país elegido */
@@ -34,6 +36,7 @@ export default function CountryPicker({
   label,
   className = "",
 }: CountryPickerProps) {
+  const locale = useLocale();
   const [open, setOpen] = useState(autoOpen);
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
@@ -44,9 +47,9 @@ export default function CountryPicker({
   const listId = useId();
 
   const results = useMemo(() => {
-    const found = searchCountries(query);
+    const found = searchCountries(query, locale);
     return onlyCodes ? found.filter((entry) => onlyCodes.has(entry.meta.code)) : found;
-  }, [query, onlyCodes]);
+  }, [query, onlyCodes, locale]);
   const selected = value ? COUNTRIES[GEOMETRY_ID_BY_CODE[value]] : null;
 
   // Cerrar al hacer click afuera o con Escape.
@@ -113,7 +116,9 @@ export default function CountryPicker({
         {selected ? (
           <>
             <span aria-hidden>{selected.flag}</span>
-            <span className="flex-1 truncate text-left text-text">{selected.name}</span>
+            <span className="flex-1 truncate text-left text-text">
+              {countryLabel(selected, locale)}
+            </span>
           </>
         ) : (
           <span className="flex-1 truncate text-left text-text-faint">{placeholder}</span>
@@ -179,7 +184,7 @@ export default function CountryPicker({
                   }`}
                 >
                   <span aria-hidden>{entry.meta.flag}</span>
-                  <span className="flex-1 truncate">{entry.meta.name}</span>
+                  <span className="flex-1 truncate">{countryLabel(entry.meta, locale)}</span>
                   {entry.meta.code === value && (
                     <span className="shrink-0 text-[11px] text-accent-ink">elegido</span>
                   )}

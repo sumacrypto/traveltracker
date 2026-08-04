@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useLocale } from "next-intl";
 import CountryPicker from "./CountryPicker";
 import { COUNTRIES, GEOMETRY_ID_BY_CODE } from "@/data/countries";
 import { COUNTRY_TRAVEL_FACTS, PEW_SOURCE, WORLD_TRAVEL_FACT } from "@/data/benchmarks";
@@ -21,6 +22,7 @@ interface PeerComparisonProps {
  * perfil y habilita el promedio real de usuarios.
  */
 export default function PeerComparison({ visited, onSignIn }: PeerComparisonProps) {
+  const locale = useLocale();
   const homeCountry = useTrip((state) => state.homeCountry);
   const setHomeCountry = useTrip((state) => state.setHomeCountry);
   const user = useAccount((state) => state.user);
@@ -73,7 +75,7 @@ export default function PeerComparison({ visited, onSignIn }: PeerComparisonProp
           diff >= 0
             ? `Le llevás ${rounded} ${rounded === 1 ? "país" : "países"} al promedio de ${countryName}`
             : `Te faltan ${rounded} para el promedio de ${countryName}`,
-        detail: `El promedio ahí es ${peerAverage.average.toLocaleString("es-AR", {
+        detail: `El promedio ahí es ${peerAverage.average.toLocaleString(locale, {
           maximumFractionDigits: 1,
         })} países, sobre ${peerAverage.sampleSize} personas registradas.`,
       };
@@ -133,7 +135,7 @@ export default function PeerComparison({ visited, onSignIn }: PeerComparisonProp
           : ""
       }`.trim(),
     };
-  }, [country, countryName, peerAverage, visited]);
+  }, [country, countryName, peerAverage, visited, locale]);
 
   return (
     <section className="surface p-4">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useLocale } from "next-intl";
 import { Check, LockSimple, UploadSimple } from "@phosphor-icons/react";
 import Dialog from "./Dialog";
 import { loadWorldShapes } from "@/lib/worldShapes";
@@ -23,6 +24,7 @@ type Status =
 export default function ImportDialog({ open, onClose }: ImportDialogProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
+  const locale = useLocale();
 
   const handleFiles = async (files: FileList | null) => {
     if (!files?.length) return;
@@ -82,7 +84,7 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
               : `Sumamos ${status.added.length} ${status.added.length === 1 ? "país" : "países"}`}
           </p>
           <p className="mt-1.5 text-[13px] leading-relaxed text-text-dim">
-            Leímos {status.points.toLocaleString("es-AR")} ubicaciones
+            Leímos {status.points.toLocaleString(locale)} ubicaciones
             {status.already > 0 && ` y ${status.already} de los países ya los tenías marcados`}.
           </p>
 
