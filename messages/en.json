@@ -114,5 +114,42 @@
     "addPlaceholder": "Search for a country",
     "cancel": "Cancel",
     "add": "Add a country"
+  },
+  "accountDialog": {
+    "title": "Your account",
+    "displayName": "What's your name",
+    "displayNamePlaceholder": "Your name",
+    "username": "Username",
+    "usernameHint": "It's how your friends find you.",
+    "usernamePattern": "Between 3 and 20 characters: letters, numbers, or underscore.",
+    "usernamePlaceholder": "alex",
+    "homeCountry": "Country you live in",
+    "preferNotToSay": "I'd rather not say",
+    "homeCountryHint": "Used to compare you with your peers.",
+    "city": "City",
+    "cityPlaceholder": "Paris",
+    "birthYear": "Birth year",
+    "publicHint": "Anyone with the link can see my map. Turn this off and only your accepted friends can see it.",
+    "saved": "Saved",
+    "save": "Save changes",
+    "errors": {
+      "usernameTaken": "That username is already taken.",
+      "saveFailed": "We couldn't save the changes.",
+      "copyFailed": "We couldn't copy the link. Copy it by hand.",
+      "acceptFailed": "We couldn't accept the invitation."
+    },
+    "inviteHeading": "Invite your friends",
+    "inviteDetail": "Everyone who joins through your link gets connected with you and shows up on the leaderboard.",
+    "inviteLinkAriaLabel": "Your invite link",
+    "copyLink": "Copy link",
+    "requestsHeading": "Want to connect",
+    "someone": "Someone",
+    "accept": "Accept",
+    "friendsHeading": "Friends",
+    "rankingByAriaLabel": "Rank by",
+    "general": "Overall",
+    "you": "You",
+    "noName": "No name",
+    "signOut": "Sign out"
   }
 }

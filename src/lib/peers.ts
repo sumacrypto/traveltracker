@@ -72,11 +72,16 @@ export interface RankedFriend {
  * continente no viaja armado desde SQL: la tabla país→continente ya vive en
  * `src/data/countries.ts`, así que duplicarla en la base sería mantener la
  * misma verdad en dos lugares.
+ *
+ * El label ("Vos"/"you", "Sin nombre"/"No name") no se arma acá: esto no es un
+ * componente, no tiene locale. Lo resuelve labelFor(), que le pasa
+ * AccountDialog.tsx con useTranslations().
  */
 export function rankLeaderboard(
   rows: LeaderboardRow[],
   continent: Continent | "general",
-  currentUserId?: string,
+  labelFor: (row: LeaderboardRow) => string,
+  locale: string,
 ): RankedFriend[] {
   const countFor = (row: LeaderboardRow) => {
     if (continent === "general") return row.countries;
@@ -91,13 +96,10 @@ export function rankLeaderboard(
   return rows
     .map((row) => ({
       userId: row.user_id,
-      label:
-        row.user_id === currentUserId
-          ? "Vos"
-          : (row.display_name ?? row.username ?? "Sin nombre"),
+      label: labelFor(row),
       countries: countFor(row),
     }))
-    .sort((a, b) => b.countries - a.countries || a.label.localeCompare(b.label, "es"));
+    .sort((a, b) => b.countries - a.countries || a.label.localeCompare(b.label, locale));
 }
 
 export const LEADERBOARD_TABS: Array<Continent | "general"> = ["general", ...CONTINENTS];

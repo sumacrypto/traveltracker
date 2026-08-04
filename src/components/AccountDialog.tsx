@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { Check, Copy, SignOut, Trophy } from "@phosphor-icons/react";
 import Dialog from "./Dialog";
 import CountryPicker from "./CountryPicker";
@@ -26,8 +27,9 @@ interface AccountDialogProps {
 const CURRENT_YEAR = new Date().getFullYear();
 
 export default function AccountDialog({ open, onClose }: AccountDialogProps) {
+  const t = useTranslations("accountDialog");
   return (
-    <Dialog open={open} onClose={onClose} title="Tu cuenta">
+    <Dialog open={open} onClose={onClose} title={t("title")}>
       {/* El cuerpo se monta recién al abrir, así el formulario nace ya cargado
           con el perfil en vez de tener que sincronizarse desde un efecto. */}
       <AccountDialogBody onClose={onClose} />
@@ -36,6 +38,9 @@ export default function AccountDialog({ open, onClose }: AccountDialogProps) {
 }
 
 function AccountDialogBody({ onClose }: { onClose: () => void }) {
+  const t = useTranslations("accountDialog");
+  const tc = useTranslations("common.continents");
+  const locale = useLocale();
   const user = useAccount((state) => state.user);
   const profile = useAccount((state) => state.profile);
   const setAccount = useAccount((state) => state.set);
@@ -96,11 +101,7 @@ function AccountDialogBody({ onClose }: { onClose: () => void }) {
       .single();
 
     if (updateError) {
-      setError(
-        updateError.code === "23505"
-          ? "Ese nombre de usuario ya está tomado."
-          : "No pudimos guardar los cambios.",
-      );
+      setError(updateError.code === "23505" ? t("errors.usernameTaken") : t("errors.saveFailed"));
       setSaving(false);
       return;
     }
@@ -120,7 +121,7 @@ function AccountDialogBody({ onClose }: { onClose: () => void }) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2200);
     } catch {
-      setError("No pudimos copiar el link. Copialo a mano.");
+      setError(t("errors.copyFailed"));
     }
   };
 
@@ -130,7 +131,7 @@ function AccountDialogBody({ onClose }: { onClose: () => void }) {
       track("friend_connected", {});
       loadSocial();
     } catch {
-      setError("No pudimos aceptar la invitación.");
+      setError(t("errors.acceptFailed"));
     }
   };
 
@@ -142,53 +143,53 @@ function AccountDialogBody({ onClose }: { onClose: () => void }) {
   return (
     <>
       <form onSubmit={handleSave} className="flex flex-col gap-3.5">
-        <Field label="Cómo te llamás">
+        <Field label={t("displayName")}>
           <input
             type="text"
             value={form.display_name}
             onChange={(event) => setForm({ ...form, display_name: event.target.value })}
             className={inputClass}
-            placeholder="Tu nombre"
+            placeholder={t("displayNamePlaceholder")}
           />
         </Field>
 
-        <Field label="Usuario" hint="Es cómo te encuentran tus amigos.">
+        <Field label={t("username")} hint={t("usernameHint")}>
           <input
             type="text"
             value={form.username}
             onChange={(event) => setForm({ ...form, username: event.target.value })}
             pattern="[a-zA-Z0-9_]{3,20}"
-            title="Entre 3 y 20 caracteres: letras, números o guion bajo."
+            title={t("usernamePattern")}
             className={inputClass}
-            placeholder="fede"
+            placeholder={t("usernamePlaceholder")}
           />
         </Field>
 
         <div className="flex flex-col gap-2">
-          <span className="text-[13px] font-medium">País donde vivís</span>
+          <span className="text-[13px] font-medium">{t("homeCountry")}</span>
           <CountryPicker
             value={form.home_country || null}
             onChange={(code) => setForm({ ...form, home_country: code ?? "" })}
-            label="País donde vivís"
-            clearLabel="Prefiero no decirlo"
+            label={t("homeCountry")}
+            clearLabel={t("preferNotToSay")}
           />
           <span className="text-[12px] leading-relaxed text-text-faint">
-            Sirve para compararte con tus pares.
+            {t("homeCountryHint")}
           </span>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Ciudad">
+          <Field label={t("city")}>
             <input
               type="text"
               value={form.home_city}
               onChange={(event) => setForm({ ...form, home_city: event.target.value })}
               className={inputClass}
-              placeholder="Buenos Aires"
+              placeholder={t("cityPlaceholder")}
             />
           </Field>
 
-          <Field label="Año de nacimiento">
+          <Field label={t("birthYear")}>
             <input
               type="number"
               min={1900}
@@ -208,10 +209,7 @@ function AccountDialogBody({ onClose }: { onClose: () => void }) {
             onChange={(event) => setForm({ ...form, is_public: event.target.checked })}
             className="mt-0.5 size-4 accent-[var(--accent)]"
           />
-          <span className="text-[13px] leading-relaxed text-text-dim">
-            Cualquiera con el link puede ver mi mapa. Si lo desactivás, solo lo ven tus amigos
-            aceptados.
-          </span>
+          <span className="text-[13px] leading-relaxed text-text-dim">{t("publicHint")}</span>
         </label>
 
         {error && <p className="text-[13px] leading-relaxed text-accent-ink">{error}</p>}
@@ -222,16 +220,14 @@ function AccountDialogBody({ onClose }: { onClose: () => void }) {
           className="mt-1 flex items-center justify-center gap-2 rounded-full bg-accent px-4 py-2.5 text-sm font-semibold text-white transition-opacity active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
         >
           {saved && <Check size={15} weight="bold" />}
-          {saved ? "Guardado" : "Guardar cambios"}
+          {saved ? t("saved") : t("save")}
         </button>
       </form>
 
       {/* --- Invitar ---------------------------------------------------------- */}
       <section className="mt-7 border-t border-ink-line pt-6">
-        <h3 className="text-[15px] font-semibold">Invitá a tus amigos</h3>
-        <p className="mt-1.5 text-[13px] leading-relaxed text-text-dim">
-          Cada persona que entre con tu link queda conectada con vos y aparece en el ranking.
-        </p>
+        <h3 className="text-[15px] font-semibold">{t("inviteHeading")}</h3>
+        <p className="mt-1.5 text-[13px] leading-relaxed text-text-dim">{t("inviteDetail")}</p>
 
         <div className="mt-3 flex items-center gap-2">
           <input
@@ -239,12 +235,12 @@ function AccountDialogBody({ onClose }: { onClose: () => void }) {
             value={referralLink}
             onFocus={(event) => event.currentTarget.select()}
             className={`${inputClass} font-mono text-xs`}
-            aria-label="Tu link de invitación"
+            aria-label={t("inviteLinkAriaLabel")}
           />
           <button
             type="button"
             onClick={copyLink}
-            aria-label="Copiar link"
+            aria-label={t("copyLink")}
             className="grid size-10 shrink-0 place-items-center rounded-full border border-ink-line text-text-dim transition-colors hover:border-accent hover:text-accent-ink"
           >
             {copied ? <Check size={16} weight="bold" /> : <Copy size={16} weight="bold" />}
@@ -255,19 +251,19 @@ function AccountDialogBody({ onClose }: { onClose: () => void }) {
       {/* --- Invitaciones recibidas ------------------------------------------- */}
       {requests.length > 0 && (
         <section className="mt-7 border-t border-ink-line pt-6">
-          <h3 className="text-[15px] font-semibold">Te quieren agregar</h3>
+          <h3 className="text-[15px] font-semibold">{t("requestsHeading")}</h3>
           <ul className="mt-3 flex flex-col gap-2">
             {requests.map((request) => (
               <li key={request.id} className="flex items-center gap-3">
                 <span className="flex-1 truncate text-sm">
-                  {request.display_name ?? request.username ?? "Alguien"}
+                  {request.display_name ?? request.username ?? t("someone")}
                 </span>
                 <button
                   type="button"
                   onClick={() => handleAccept(request)}
                   className="rounded-full border border-ink-line px-3 py-1.5 text-xs font-medium transition-colors hover:border-accent hover:text-accent-ink"
                 >
-                  Aceptar
+                  {t("accept")}
                 </button>
               </li>
             ))}
@@ -283,12 +279,12 @@ function AccountDialogBody({ onClose }: { onClose: () => void }) {
         <section className="mt-7 border-t border-ink-line pt-6">
           <h3 className="flex items-center gap-2 text-[15px] font-semibold">
             <Trophy size={16} weight="fill" className="text-accent" />
-            Amigos
+            {t("friendsHeading")}
           </h3>
 
           <div
             role="tablist"
-            aria-label="Ranking por"
+            aria-label={t("rankingByAriaLabel")}
             className="mt-3 flex gap-1 overflow-x-auto pb-1"
           >
             {LEADERBOARD_TABS.map((option) => (
@@ -304,19 +300,27 @@ function AccountDialogBody({ onClose }: { onClose: () => void }) {
                     : "border border-ink-line text-text-dim hover:border-accent"
                 }`}
               >
-                {option === "general" ? "General" : option}
+                {option === "general" ? t("general") : tc(option)}
               </button>
             ))}
           </div>
 
           <ol className="mt-3.5 flex flex-col gap-2.5">
-            {rankLeaderboard(leaderboard, tab, user?.id).map((row, index) => (
+            {rankLeaderboard(
+              leaderboard,
+              tab,
+              (row) =>
+                row.user_id === user?.id
+                  ? t("you")
+                  : (row.display_name ?? row.username ?? t("noName")),
+              locale,
+            ).map((row, index) => (
               <li key={row.userId} className="flex items-baseline gap-3">
                 <span className="w-5 font-mono text-xs tabular-nums text-text-faint">
                   {index + 1}
                 </span>
                 <span
-                  className={`flex-1 truncate text-sm ${row.label === "Vos" ? "font-semibold" : ""}`}
+                  className={`flex-1 truncate text-sm ${row.userId === user?.id ? "font-semibold" : ""}`}
                 >
                   {row.label}
                 </span>
@@ -335,7 +339,7 @@ function AccountDialogBody({ onClose }: { onClose: () => void }) {
         className="mt-7 flex w-full items-center justify-center gap-2 rounded-full border border-ink-line px-4 py-2.5 text-sm font-medium text-text-dim transition-colors hover:border-accent hover:text-accent-ink"
       >
         <SignOut size={15} weight="bold" />
-        Cerrar sesión
+        {t("signOut")}
       </button>
     </>
   );

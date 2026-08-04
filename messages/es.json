@@ -114,5 +114,42 @@
     "addPlaceholder": "Buscar un país",
     "cancel": "Cancelar",
     "add": "Agregar un país"
+  },
+  "accountDialog": {
+    "title": "Tu cuenta",
+    "displayName": "Cómo te llamas",
+    "displayNamePlaceholder": "Tu nombre",
+    "username": "Usuario",
+    "usernameHint": "Es cómo te encuentran tus amigos.",
+    "usernamePattern": "Entre 3 y 20 caracteres: letras, números o guion bajo.",
+    "usernamePlaceholder": "fede",
+    "homeCountry": "País donde vives",
+    "preferNotToSay": "Prefiero no decirlo",
+    "homeCountryHint": "Sirve para compararte con tus pares.",
+    "city": "Ciudad",
+    "cityPlaceholder": "Buenos Aires",
+    "birthYear": "Año de nacimiento",
+    "publicHint": "Cualquiera con el link puede ver mi mapa. Si lo desactivas, solo lo ven tus amigos aceptados.",
+    "saved": "Guardado",
+    "save": "Guardar cambios",
+    "errors": {
+      "usernameTaken": "Ese nombre de usuario ya está tomado.",
+      "saveFailed": "No pudimos guardar los cambios.",
+      "copyFailed": "No pudimos copiar el link. Cópialo a mano.",
+      "acceptFailed": "No pudimos aceptar la invitación."
+    },
+    "inviteHeading": "Invita a tus amigos",
+    "inviteDetail": "Cada persona que entre con tu link queda conectada contigo y aparece en el ranking.",
+    "inviteLinkAriaLabel": "Tu link de invitación",
+    "copyLink": "Copiar link",
+    "requestsHeading": "Te quieren agregar",
+    "someone": "Alguien",
+    "accept": "Aceptar",
+    "friendsHeading": "Amigos",
+    "rankingByAriaLabel": "Ranking por",
+    "general": "General",
+    "you": "Tú",
+    "noName": "Sin nombre",
+    "signOut": "Cerrar sesión"
   }
 }
