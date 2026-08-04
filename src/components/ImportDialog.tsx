@@ -1,12 +1,13 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Check, LockSimple, UploadSimple } from "@phosphor-icons/react";
 import Dialog from "./Dialog";
 import { loadWorldShapes } from "@/lib/worldShapes";
 import { extractPoints, matchCountries } from "@/lib/takeout";
 import { COUNTRIES } from "@/data/countries";
+import { countryLabel } from "@/lib/countryLabel";
 import { useTrip } from "@/lib/store";
 import { track } from "@/lib/analytics";
 
@@ -25,6 +26,7 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const locale = useLocale();
+  const t = useTranslations("importDialog");
 
   const handleFiles = async (files: FileList | null) => {
     if (!files?.length) return;
@@ -40,10 +42,7 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
       }
 
       if (points.length === 0) {
-        setStatus({
-          kind: "error",
-          message: "No encontramos ubicaciones en ese archivo. Fijate que sea el del Timeline.",
-        });
+        setStatus({ kind: "error", message: t("errors.noLocations") });
         return;
       }
 
@@ -66,26 +65,27 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
         points: result.points,
       });
     } catch {
-      setStatus({
-        kind: "error",
-        message: "No pudimos leer el archivo. Tiene que ser un .json del export de Google.",
-      });
+      setStatus({ kind: "error", message: t("errors.readFailed") });
     }
   };
 
   return (
-    <Dialog open={open} onClose={onClose} title="Importar de Google Maps">
+    <Dialog open={open} onClose={onClose} title={t("title")}>
       {status.kind === "done" ? (
         <>
           <p className="flex items-center gap-2 text-[15px] font-semibold text-accent-ink">
             <Check size={17} weight="bold" />
             {status.added.length === 0
-              ? "No había países nuevos"
-              : `Sumamos ${status.added.length} ${status.added.length === 1 ? "país" : "países"}`}
+              ? t("noNewCountries")
+              : t("addedCountries", { count: status.added.length })}
           </p>
           <p className="mt-1.5 text-[13px] leading-relaxed text-text-dim">
-            Leímos {status.points.toLocaleString(locale)} ubicaciones
-            {status.already > 0 && ` y ${status.already} de los países ya los tenías marcados`}.
+            {status.already > 0
+              ? t("readSummaryWithAlready", {
+                  points: status.points.toLocaleString(locale),
+                  already: status.already,
+                })
+              : t("readSummaryOnly", { points: status.points.toLocaleString(locale) })}
           </p>
 
           {status.added.length > 0 && (
@@ -95,7 +95,7 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
                   key={id}
                   className="rounded-full border border-ink-line px-2.5 py-1 text-[12px]"
                 >
-                  {COUNTRIES[id]?.flag} {COUNTRIES[id]?.name ?? id}
+                  {COUNTRIES[id]?.flag} {COUNTRIES[id] ? countryLabel(COUNTRIES[id], locale) : id}
                 </li>
               ))}
             </ul>
@@ -106,30 +106,19 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
             onClick={onClose}
             className="mt-6 w-full rounded-full bg-accent px-4 py-3 text-sm font-semibold text-white transition-opacity active:scale-[0.98]"
           >
-            Listo
+            {t("done")}
           </button>
         </>
       ) : (
         <>
-          <p className="text-[13px] leading-relaxed text-text-dim">
-            Google no deja que otras apps lean tu historial de ubicación, así que hay que traerlo a
-            mano. Es un rato, pero después el mapa se llena solo.
-          </p>
+          <p className="text-[13px] leading-relaxed text-text-dim">{t("intro")}</p>
 
           <ol className="mt-4 flex flex-col gap-2.5 text-[13px] leading-relaxed text-text-dim">
             {[
-              <>
-                Entrá a <span className="text-text">takeout.google.com</span> y deseleccioná todo.
-              </>,
-              <>
-                Marcá solo <span className="text-text">Ubicaciones (Timeline)</span> y pedí el
-                export.
-              </>,
-              <>
-                Cuando llegue el mail, descomprimí el ZIP y buscá los archivos{" "}
-                <span className="text-text">.json</span>.
-              </>,
-              <>Subilos acá. Podés seleccionar varios a la vez.</>,
+              t.rich("steps.first", { b: (chunks) => <span className="text-text">{chunks}</span> }),
+              t.rich("steps.second", { b: (chunks) => <span className="text-text">{chunks}</span> }),
+              t.rich("steps.third", { b: (chunks) => <span className="text-text">{chunks}</span> }),
+              t("steps.fourth"),
             ].map((step, index) => (
               <li key={index} className="flex gap-2.5">
                 <span className="font-mono text-text-faint tabular-nums">{index + 1}</span>
@@ -140,8 +129,7 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
 
           <p className="mt-4 flex items-start gap-2 rounded-[10px] border border-ink-line bg-ink p-3 text-[12px] leading-relaxed text-text-dim">
             <LockSimple size={14} weight="bold" className="mt-0.5 shrink-0 text-accent-ink" />
-            El archivo se lee acá adentro, en tu navegador. No se sube a ningún servidor ni queda
-            guardado: lo único que se conserva son los países que resultaron.
+            {t("privacyNote")}
           </p>
 
           {status.kind === "error" && (
@@ -164,7 +152,7 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
             className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-accent px-4 py-3 text-sm font-semibold text-white transition-opacity active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
           >
             <UploadSimple size={16} weight="bold" />
-            {status.kind === "working" ? "Leyendo el archivo..." : "Elegir archivos"}
+            {status.kind === "working" ? t("reading") : t("chooseFiles")}
           </button>
         </>
       )}

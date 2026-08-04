@@ -151,5 +151,27 @@
     "you": "Tú",
     "noName": "Sin nombre",
     "signOut": "Cerrar sesión"
+  },
+  "importDialog": {
+    "title": "Importar de Google Maps",
+    "errors": {
+      "noLocations": "No encontramos ubicaciones en ese archivo. Fíjate que sea el del Timeline.",
+      "readFailed": "No pudimos leer el archivo. Tiene que ser un .json del export de Google."
+    },
+    "noNewCountries": "No había países nuevos",
+    "addedCountries": "{count, plural, one {Sumamos # país} other {Sumamos # países}}",
+    "readSummaryOnly": "Leímos {points} ubicaciones.",
+    "readSummaryWithAlready": "Leímos {points} ubicaciones, y {already} de los países ya estaban marcados.",
+    "done": "Listo",
+    "intro": "Google no deja que otras apps lean tu historial de ubicación, así que hay que traerlo a mano. Es un rato, pero después el mapa se llena solo.",
+    "steps": {
+      "first": "Entra a <b>takeout.google.com</b> y deselecciona todo.",
+      "second": "Marca solo <b>Ubicaciones (Timeline)</b> y pide el export.",
+      "third": "Cuando llegue el mail, descomprime el ZIP y busca los archivos <b>.json</b>.",
+      "fourth": "Súbelos aquí. Puedes seleccionar varios a la vez."
+    },
+    "privacyNote": "El archivo se lee aquí adentro, en tu navegador. No se sube a ningún servidor ni queda guardado: lo único que se conserva son los países que resultaron.",
+    "reading": "Leyendo el archivo...",
+    "chooseFiles": "Elegir archivos"
   }
 }

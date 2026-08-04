@@ -151,5 +151,27 @@
     "you": "You",
     "noName": "No name",
     "signOut": "Sign out"
+  },
+  "importDialog": {
+    "title": "Import from Google Maps",
+    "errors": {
+      "noLocations": "We couldn't find any locations in that file. Make sure it's the Timeline one.",
+      "readFailed": "We couldn't read the file. It has to be a .json from the Google export."
+    },
+    "noNewCountries": "No new countries",
+    "addedCountries": "{count, plural, one {We added # country} other {We added # countries}}",
+    "readSummaryOnly": "We read {points} locations.",
+    "readSummaryWithAlready": "We read {points} locations, and {already} of the countries were already marked.",
+    "done": "Done",
+    "intro": "Google doesn't let other apps read your location history, so you have to bring it over by hand. It takes a minute, but after that the map fills itself in.",
+    "steps": {
+      "first": "Go to <b>takeout.google.com</b> and deselect everything.",
+      "second": "Check only <b>Location History (Timeline)</b> and request the export.",
+      "third": "When the email arrives, unzip it and look for the <b>.json</b> files.",
+      "fourth": "Upload them here. You can select several at once."
+    },
+    "privacyNote": "The file is read right here, in your browser. It's never uploaded to a server or kept anywhere — only the resulting countries are saved.",
+    "reading": "Reading the file...",
+    "chooseFiles": "Choose files"
   }
 }
