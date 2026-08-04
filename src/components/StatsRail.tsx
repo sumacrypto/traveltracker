@@ -60,8 +60,15 @@ export default function StatsRail({
     <div className="flex h-full flex-col gap-6 overflow-y-auto p-5 lg:p-6">
       {/* La métrica principal es la cantidad de países: es el número del que la
           gente se acuerda y el que dice en voz alta. El porcentaje del mundo pasa
-          a ser el contexto. */}
-      <section>
+          a ser el contexto.
+
+          Fija arriba del panel (sticky, no fixed: solo pisa este panel, no el
+          mapa) porque el resto de la barra lateral es larga y de otro modo el
+          número desaparece apenas se scrollea un poco, justo la parte que
+          confirma cuántos países llevás marcados. El fondo y el borde de abajo
+          son necesarios porque, al quedar pisado, el contenido de más abajo
+          pasa por debajo suyo. */}
+      <section className="sticky top-0 z-10 -mx-5 -mt-5 border-b border-ink-line bg-ink px-5 pt-5 pb-4 lg:-mx-6 lg:-mt-6 lg:px-6 lg:pt-6">
         <div className="flex items-baseline gap-2">
           <AnimatedNumber
             value={stats.visited}

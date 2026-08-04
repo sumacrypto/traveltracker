@@ -3,9 +3,11 @@ import type { TripStats } from "./stats";
 
 export type CardFormat = "story" | "square";
 
+// "9:16"/"1:1" no le dice nada a la mayoría: la gente reconoce la red social,
+// no la relación de aspecto de su historia o su feed.
 export const CARD_SIZES: Record<CardFormat, { width: number; height: number; label: string }> = {
-  story: { width: 1080, height: 1920, label: "Historia 9:16" },
-  square: { width: 1080, height: 1080, label: "Post 1:1" },
+  story: { width: 1080, height: 1920, label: "Instagram / Stories" },
+  square: { width: 1080, height: 1080, label: "Twitter / Facebook" },
 };
 
 /** Dominio que va al pie de la tarjeta. Es el único canal de vuelta a la app. */
@@ -169,6 +171,10 @@ export function drawShareCard({
   ctx.restore();
 
   // --- Número principal -----------------------------------------------------
+  // El "de 195" quedaba afuera: para presumir importa cuántos países visitaste,
+  // no cuántos le faltan. "países visitados" pegado al número dice lo mismo con
+  // más gancho, y el achique automático evita que se salga de la tarjeta en el
+  // cuadrado, donde hay bastante menos ancho que en la historia.
   let y = mapPanelY + mapPanelHeight + (isStory ? 190 : 130);
 
   ctx.textAlign = "left";
@@ -179,15 +185,22 @@ export function drawShareCard({
   ctx.fillText(bigText, pad, y);
 
   const bigWidth = ctx.measureText(bigText).width;
+  const labelX = pad + bigWidth + 26;
+  const labelMaxWidth = width - pad - labelX;
+  let labelSize = Math.round(bigSize * 0.36);
+  ctx.font = `600 ${labelSize}px ${fonts.sans}`;
+  while (labelSize > 22 && ctx.measureText("países visitados").width > labelMaxWidth) {
+    labelSize -= 2;
+    ctx.font = `600 ${labelSize}px ${fonts.sans}`;
+  }
   ctx.fillStyle = palette.accent;
-  ctx.font = `600 ${Math.round(bigSize * 0.36)}px ${fonts.sans}`;
-  ctx.fillText(`de ${stats.total}`, pad + bigWidth + 26, y);
+  ctx.fillText("países visitados", labelX, y);
 
   y += isStory ? 66 : 52;
   ctx.fillStyle = palette.textDim;
   ctx.font = `400 ${isStory ? 42 : 33}px ${fonts.sans}`;
   ctx.fillText(
-    `países visitados · ${stats.worldPercent.toLocaleString("es-AR", {
+    `${stats.worldPercent.toLocaleString("es-AR", {
       minimumFractionDigits: 1,
       maximumFractionDigits: 1,
     })}% del mundo`,
@@ -210,9 +223,16 @@ export function drawShareCard({
   // --- Desglose por continente ---------------------------------------------
   // Solo en 9:16: es lo que llena la mitad de abajo, que si no queda vacía. En
   // el cuadrado no entra sin apretar todo.
+  //
+  // El gancho no siempre mide lo mismo: con un mensaje de una sola línea
+  // "rowGap" fijo dejaba de sobra, pero con dos líneas (el caso más común) las
+  // cinco filas de continentes llegaban a pisar el pie de página, literalmente
+  // superpuesto con el link de vuelta a la app. El espacio entre filas ahora se
+  // calcula con lo que quedó libre hasta el pie, así siempre entra completo.
   if (isStory) {
     y += 96;
-    const rowGap = 92;
+    const footerTop = height - (isStory ? 90 : 68) - 40;
+    const rowGap = Math.max(60, Math.min(92, (footerTop - y) / stats.continents.length));
     const barY = 26;
 
     for (const row of stats.continents) {
@@ -245,7 +265,9 @@ export function drawShareCard({
     ctx.fillStyle = palette.accent;
     ctx.font = `600 ${footSize}px ${fonts.sans}`;
     ctx.textAlign = "left";
-    const cta = "Armá el tuyo: ";
+    // Pregunta y no orden: quien ve la historia ya está mirando un número, la
+    // curiosidad de compararse invita más que un imperativo.
+    const cta = "¿Vos cuántos llevás? ";
     ctx.fillText(cta, pad, footY);
     const ctaWidth = ctx.measureText(cta).width;
     ctx.fillStyle = palette.textDim;

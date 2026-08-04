@@ -76,7 +76,14 @@ export default function Explorer() {
   }, [stats.visited]);
 
   return (
-    <div className="flex min-h-[100dvh] flex-col">
+    // min-h en mobile a propósito: ahí la idea es que la página entera scrollee
+    // de un tirón (ver el comentario en el mapa, más abajo). Pero sin un h fijo
+    // en desktop, min-height nunca frena: el contenedor crece con el contenido
+    // y termina siendo TODA la página la que scrollea, incluido el mapa, en vez
+    // de que el panel lateral scrollee solo dentro de su propio recuadro. Por
+    // eso el número de países arriba del panel desaparecía al bajar: nunca
+    // hubo un scroll interno donde pudiera quedar fijo.
+    <div className="flex min-h-[100dvh] flex-col lg:h-[100dvh]">
       <header className="flex h-16 shrink-0 items-center gap-3 border-b border-ink-line px-4 lg:gap-6 lg:px-6">
         <div className="flex shrink-0 items-center gap-2">
           <GlobeHemisphereWest size={22} weight="fill" className="text-accent" />
@@ -94,7 +101,7 @@ export default function Explorer() {
         />
       </header>
 
-      <div className="flex flex-1 flex-col lg:grid lg:grid-cols-[1fr_380px] lg:overflow-hidden">
+      <div className="flex flex-1 flex-col lg:grid lg:min-h-0 lg:grid-cols-[1fr_380px] lg:overflow-hidden">
         {/* En mobile el mapa tiene alto fijo para que el porcentaje y el gancho
             queden arriba del pliegue. El hijo va absoluto porque un height en
             porcentaje no resuelve contra un flex item de alto automático. */}
@@ -110,7 +117,7 @@ export default function Explorer() {
           </div>
         </main>
 
-        <aside className="lg:overflow-y-auto">
+        <aside className="lg:min-h-0 lg:overflow-y-auto">
           <StatsRail
             stats={stats}
             hook={hook}
