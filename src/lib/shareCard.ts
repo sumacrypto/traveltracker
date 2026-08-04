@@ -32,6 +32,22 @@ interface CardPalette {
   textDim: string;
 }
 
+/**
+ * El canvas no es un componente: no puede llamar useTranslations(). Todo el
+ * texto que dibuja llega ya resuelto desde ShareCardDialog.tsx, que sí tiene
+ * locale.
+ */
+export interface ShareCardCopy {
+  brandWordmark: string;
+  countriesVisitedLabel: string;
+  percentOfWorld: string;
+  inviteQuestion: string;
+  /** "es" | "en", para toLocaleString del porcentaje. */
+  numberLocale: string;
+  /** id de continente -> nombre a mostrar. */
+  continentLabels: Record<string, string>;
+}
+
 interface DrawOptions {
   canvas: HTMLCanvasElement;
   format: CardFormat;
@@ -43,6 +59,7 @@ interface DrawOptions {
   referralCode?: string | null;
   palette: CardPalette;
   fonts: { sans: string; mono: string };
+  copy: ShareCardCopy;
 }
 
 /** Lee los tokens del tema activo para que la tarjeta salga igual que la pantalla. */
@@ -118,6 +135,7 @@ export function drawShareCard({
   referralCode,
   palette,
   fonts,
+  copy,
 }: DrawOptions) {
   const { width, height } = CARD_SIZES[format];
   canvas.width = width;
@@ -138,7 +156,7 @@ export function drawShareCard({
   ctx.font = `500 30px ${fonts.sans}`;
   ctx.textAlign = "left";
   ctx.textBaseline = "alphabetic";
-  ctx.fillText("DÓNDE ESTUVE", pad, headerY);
+  ctx.fillText(copy.brandWordmark, pad, headerY);
 
   // --- Mapa -----------------------------------------------------------------
   // Mantiene la relación de aspecto del mapa y se centra en su panel.
@@ -189,21 +207,24 @@ export function drawShareCard({
   const labelMaxWidth = width - pad - labelX;
   let labelSize = Math.round(bigSize * 0.36);
   ctx.font = `600 ${labelSize}px ${fonts.sans}`;
-  while (labelSize > 22 && ctx.measureText("países visitados").width > labelMaxWidth) {
+  while (
+    labelSize > 22 &&
+    ctx.measureText(copy.countriesVisitedLabel).width > labelMaxWidth
+  ) {
     labelSize -= 2;
     ctx.font = `600 ${labelSize}px ${fonts.sans}`;
   }
   ctx.fillStyle = palette.accent;
-  ctx.fillText("países visitados", labelX, y);
+  ctx.fillText(copy.countriesVisitedLabel, labelX, y);
 
   y += isStory ? 66 : 52;
   ctx.fillStyle = palette.textDim;
   ctx.font = `400 ${isStory ? 42 : 33}px ${fonts.sans}`;
   ctx.fillText(
-    `${stats.worldPercent.toLocaleString("es-AR", {
+    `${stats.worldPercent.toLocaleString(copy.numberLocale, {
       minimumFractionDigits: 1,
       maximumFractionDigits: 1,
-    })}% del mundo`,
+    })}${copy.percentOfWorld}`,
     pad,
     y,
   );
@@ -239,7 +260,7 @@ export function drawShareCard({
       ctx.fillStyle = palette.text;
       ctx.font = `500 40px ${fonts.sans}`;
       ctx.textAlign = "left";
-      ctx.fillText(row.continent, pad, y);
+      ctx.fillText(copy.continentLabels[row.continent] ?? row.continent, pad, y);
 
       ctx.fillStyle = palette.textDim;
       ctx.font = `500 36px ${fonts.mono}`;
@@ -267,7 +288,7 @@ export function drawShareCard({
     ctx.textAlign = "left";
     // Pregunta y no orden: quien ve la historia ya está mirando un número, la
     // curiosidad de compararse invita más que un imperativo.
-    const cta = "¿Vos cuántos llevás? ";
+    const cta = copy.inviteQuestion;
     ctx.fillText(cta, pad, footY);
     const ctaWidth = ctx.measureText(cta).width;
     ctx.fillStyle = palette.textDim;

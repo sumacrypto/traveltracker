@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { DownloadSimple, ShareNetwork } from "@phosphor-icons/react";
 import Dialog from "./Dialog";
 import {
@@ -10,11 +11,13 @@ import {
   readFonts,
   readPalette,
   type CardFormat,
+  type ShareCardCopy,
 } from "@/lib/shareCard";
 import { loadWorldShapes } from "@/lib/worldShapes";
 import { track } from "@/lib/analytics";
 import { useAccount } from "@/lib/account";
 import type { TripStats } from "@/lib/stats";
+import { CONTINENTS } from "@/data/countries";
 
 interface ShareCardDialogProps {
   open: boolean;
@@ -35,14 +38,32 @@ export default function ShareCardDialog({
 }: ShareCardDialogProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const referralCode = useAccount((state) => state.profile?.referral_code ?? null);
+  const locale = useLocale();
+  const t = useTranslations("shareCardDialog");
+  const tCard = useTranslations("shareCard");
+  const tc = useTranslations("common.continents");
 
   const [format, setFormat] = useState<CardFormat>("story");
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
 
+  // El canvas no tiene locale propio (ver ShareCardCopy en shareCard.ts): se
+  // arma acá una sola vez por locale, no en cada país que la persona marca.
+  const copy = useMemo<ShareCardCopy>(
+    () => ({
+      brandWordmark: tCard("brandWordmark"),
+      countriesVisitedLabel: tCard("countriesVisitedLabel"),
+      percentOfWorld: tCard("percentOfWorld"),
+      inviteQuestion: tCard("inviteQuestion"),
+      numberLocale: locale,
+      continentLabels: Object.fromEntries(CONTINENTS.map((id) => [id, tc(id)])),
+    }),
+    [tCard, tc, locale],
+  );
+
   // El estado del dibujo se deriva comparando qué versión quedó pintada contra
   // la que corresponde ahora, en vez de setear "dibujando" dentro del efecto.
-  const drawKey = `${format}|${stats.visited}|${headline}|${referralCode ?? ""}`;
+  const drawKey = `${format}|${stats.visited}|${headline}|${referralCode ?? ""}|${locale}`;
   const [drawn, setDrawn] = useState<string | null>(null);
   const [failed, setFailed] = useState<string | null>(null);
   const status = failed === drawKey ? "error" : drawn === drawKey ? "ready" : "drawing";
@@ -67,6 +88,7 @@ export default function ShareCardDialog({
           referralCode,
           palette: readPalette(),
           fonts: readFonts(),
+          copy,
         });
         setDrawn(drawKey);
       })
@@ -77,7 +99,7 @@ export default function ShareCardDialog({
     return () => {
       active = false;
     };
-  }, [open, drawKey, drawn, format, visited, stats, headline, referralCode]);
+  }, [open, drawKey, drawn, format, visited, stats, headline, referralCode, copy]);
 
   const withCanvas = useCallback(async (action: (blob: Blob) => Promise<void> | void) => {
     const canvas = canvasRef.current;
@@ -89,25 +111,25 @@ export default function ShareCardDialog({
     } catch (error) {
       // Cancelar el diálogo nativo de compartir tira AbortError: no es un fallo.
       if (!(error instanceof DOMException && error.name === "AbortError")) {
-        setNotice("No pudimos generar la imagen. Probá de nuevo.");
+        setNotice(t("generateFailed"));
       }
     } finally {
       setBusy(false);
     }
-  }, []);
+  }, [t]);
 
   const handleShare = () =>
     withCanvas(async (blob) => {
       const file = new File([blob], FILE_NAME, { type: "image/png" });
       if (navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file], title: "Mi mapa del mundo" });
+        await navigator.share({ files: [file], title: t("nativeShareTitle") });
         track("share_completed", { format, countries: stats.visited });
         return;
       }
       // Sin Web Share API (escritorio, sobre todo) descargar es el equivalente.
       downloadBlob(blob);
       track("share_downloaded", { format, countries: stats.visited, fallback: true });
-      setNotice("Tu navegador no permite compartir archivos, así que la descargamos.");
+      setNotice(t("noWebShare"));
     });
 
   const handleDownload = () =>
@@ -120,7 +142,7 @@ export default function ShareCardDialog({
     <Dialog
       open={open}
       onClose={onClose}
-      title="Compartir tu mapa"
+      title={t("title")}
       footer={
         <>
           {notice && <p className="mb-3 text-[13px] leading-relaxed text-text-dim">{notice}</p>}
@@ -132,13 +154,13 @@ export default function ShareCardDialog({
               className="flex flex-1 items-center justify-center gap-2 rounded-full bg-accent px-4 py-3 text-sm font-semibold text-white transition-opacity active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40"
             >
               <ShareNetwork size={16} weight="bold" />
-              Compartir
+              {t("share")}
             </button>
             <button
               type="button"
               onClick={handleDownload}
               disabled={status !== "ready" || busy}
-              aria-label="Descargar la imagen"
+              aria-label={t("downloadAriaLabel")}
               className="grid size-12 shrink-0 place-items-center rounded-full border border-ink-line text-text-dim transition-colors hover:border-accent hover:text-accent-ink disabled:pointer-events-none disabled:opacity-40"
             >
               <DownloadSimple size={17} weight="bold" />
@@ -147,7 +169,7 @@ export default function ShareCardDialog({
         </>
       }
     >
-      <div role="radiogroup" aria-label="Formato" className="mb-4 flex gap-2">
+      <div role="radiogroup" aria-label={t("formatAriaLabel")} className="mb-4 flex gap-2">
         {(Object.keys(CARD_SIZES) as CardFormat[]).map((option) => (
           <button
             key={option}
@@ -171,7 +193,7 @@ export default function ShareCardDialog({
 
       <div className="relative mx-auto max-w-64">
         {status === "error" ? (
-          <p className="py-12 text-center text-sm text-text-dim">No pudimos armar la imagen.</p>
+          <p className="py-12 text-center text-sm text-text-dim">{t("buildFailed")}</p>
         ) : (
           <>
             <canvas
@@ -179,7 +201,7 @@ export default function ShareCardDialog({
               className={`w-full rounded-[10px] border border-ink-line transition-opacity ${
                 status === "ready" ? "opacity-100" : "opacity-0"
               }`}
-              aria-label="Vista previa de la tarjeta"
+              aria-label={t("previewAriaLabel")}
             />
             {status !== "ready" && (
               <div

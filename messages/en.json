@@ -205,5 +205,22 @@
     "connect": "Connect and compare",
     "signInAndConnect": "Sign in and connect",
     "keepPrivate": "I'd rather keep it private"
+  },
+  "shareCardDialog": {
+    "title": "Share your map",
+    "share": "Share",
+    "downloadAriaLabel": "Download the image",
+    "formatAriaLabel": "Format",
+    "buildFailed": "We couldn't build the image.",
+    "previewAriaLabel": "Card preview",
+    "generateFailed": "We couldn't generate the image. Try again.",
+    "nativeShareTitle": "My world map",
+    "noWebShare": "Your browser can't share files, so we downloaded it instead."
+  },
+  "shareCard": {
+    "brandWordmark": "WHERE I'VE BEEN",
+    "countriesVisitedLabel": "countries visited",
+    "percentOfWorld": "% of the world",
+    "inviteQuestion": "How many have you got? "
   }
 }
