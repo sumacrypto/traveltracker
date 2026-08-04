@@ -22,43 +22,46 @@ const SOURCE_URL =
   "https://raw.githubusercontent.com/martynafford/natural-earth-geojson/master/10m/cultural/ne_10m_admin_1_states_provinces.json";
 
 /**
- * Cómo se llaman las divisiones en español, según el tipo que declara Natural
- * Earth. Se usa el tipo dominante de cada país.
+ * Cómo se llaman las divisiones según el tipo que declara Natural Earth. Se
+ * usa el tipo dominante de cada país. Tupla: [plural es, singular es,
+ * artículo es, plural en, singular en]. El inglés no necesita artículo (no
+ * tiene género gramatical), así que el mismo template no le sirve a los dos
+ * idiomas — ver subdivisionLabel() y la nota en SubdivisionDialog.tsx.
  */
 const TYPE_LABELS = {
-  Province: ["provincias", "provincia", "Las"],
-  "Autonomous Province": ["provincias", "provincia", "Las"],
-  State: ["estados", "estado", "Los"],
-  District: ["distritos", "distrito", "Los"],
-  "Metropolitan Borough": ["distritos", "distrito", "Los"],
-  "London Borough": ["distritos", "distrito", "Los"],
-  Region: ["regiones", "región", "Las"],
-  "Statistical Region": ["regiones", "región", "Las"],
-  "Autonomous Region": ["regiones", "región", "Las"],
-  County: ["condados", "condado", "Los"],
-  "Administrative County": ["condados", "condado", "Los"],
-  "Urban county": ["condados", "condado", "Los"],
-  Department: ["departamentos", "departamento", "Los"],
-  "Metropolitan department": ["departamentos", "departamento", "Los"],
-  Municipality: ["municipios", "municipio", "Los"],
-  "Commune|Municipality": ["municipios", "municipio", "Los"],
-  Prefecture: ["prefecturas", "prefectura", "Las"],
-  Governorate: ["gobernaciones", "gobernación", "Las"],
-  "Municipality|Governarate": ["gobernaciones", "gobernación", "Las"],
-  Parish: ["parroquias", "parroquia", "Las"],
-  "Autonomous Community": ["comunidades", "comunidad", "Las"],
-  Canton: ["cantones", "cantón", "Los"],
-  City: ["ciudades", "ciudad", "Las"],
-  "Highly Urbanized City": ["ciudades", "ciudad", "Las"],
-  Republic: ["repúblicas", "república", "Las"],
-  Emirate: ["emiratos", "emirato", "Los"],
-  Territory: ["territorios", "territorio", "Los"],
-  Oblast: ["óblast", "óblast", "Los"],
-  Atoll: ["atolones", "atolón", "Los"],
-  Division: ["divisiones", "división", "Las"],
+  Province: ["provincias", "provincia", "Las", "provinces", "province"],
+  "Autonomous Province": ["provincias", "provincia", "Las", "provinces", "province"],
+  State: ["estados", "estado", "Los", "states", "state"],
+  District: ["distritos", "distrito", "Los", "districts", "district"],
+  "Metropolitan Borough": ["distritos", "distrito", "Los", "districts", "district"],
+  "London Borough": ["distritos", "distrito", "Los", "districts", "district"],
+  Region: ["regiones", "región", "Las", "regions", "region"],
+  "Statistical Region": ["regiones", "región", "Las", "regions", "region"],
+  "Autonomous Region": ["regiones", "región", "Las", "regions", "region"],
+  County: ["condados", "condado", "Los", "counties", "county"],
+  "Administrative County": ["condados", "condado", "Los", "counties", "county"],
+  "Urban county": ["condados", "condado", "Los", "counties", "county"],
+  Department: ["departamentos", "departamento", "Los", "departments", "department"],
+  "Metropolitan department": ["departamentos", "departamento", "Los", "departments", "department"],
+  Municipality: ["municipios", "municipio", "Los", "municipalities", "municipality"],
+  "Commune|Municipality": ["municipios", "municipio", "Los", "municipalities", "municipality"],
+  Prefecture: ["prefecturas", "prefectura", "Las", "prefectures", "prefecture"],
+  Governorate: ["gobernaciones", "gobernación", "Las", "governorates", "governorate"],
+  "Municipality|Governarate": ["gobernaciones", "gobernación", "Las", "governorates", "governorate"],
+  Parish: ["parroquias", "parroquia", "Las", "parishes", "parish"],
+  "Autonomous Community": ["comunidades", "comunidad", "Las", "communities", "community"],
+  Canton: ["cantones", "cantón", "Los", "cantons", "canton"],
+  City: ["ciudades", "ciudad", "Las", "cities", "city"],
+  "Highly Urbanized City": ["ciudades", "ciudad", "Las", "cities", "city"],
+  Republic: ["repúblicas", "república", "Las", "republics", "republic"],
+  Emirate: ["emiratos", "emirato", "Los", "emirates", "emirate"],
+  Territory: ["territorios", "territorio", "Los", "territories", "territory"],
+  Oblast: ["óblast", "óblast", "Los", "oblasts", "oblast"],
+  Atoll: ["atolones", "atolón", "Los", "atolls", "atoll"],
+  Division: ["divisiones", "división", "Las", "divisions", "division"],
 };
 
-const FALLBACK_LABEL = ["divisiones", "división", "Las"];
+const FALLBACK_LABEL = ["divisiones", "división", "Las", "divisions", "division"];
 
 /**
  * Ajustes por país. Solo hace falta cuando la proyección por defecto no sirve o
@@ -140,7 +143,7 @@ for (const [code, features] of [...byCountry.entries()].sort()) {
     if (type) typeCount.set(type, (typeCount.get(type) ?? 0) + 1);
   }
   const dominant = [...typeCount.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
-  const [label, singular, article] = TYPE_LABELS[dominant] ?? FALLBACK_LABEL;
+  const [label, singular, article, labelEn, singularEn] = TYPE_LABELS[dominant] ?? FALLBACK_LABEL;
 
   const units = {};
   const cleaned = [];
@@ -183,6 +186,8 @@ for (const [code, features] of [...byCountry.entries()].sort()) {
     label,
     singular,
     article,
+    labelEn,
+    singularEn,
     projection: override.projection ?? "mercator",
     objectKey: "units",
     file: `/geo/subdivisions/${fileName}`,
@@ -210,11 +215,14 @@ export interface SubdivisionUnit {
 export interface SubdivisionSet {
   /** ISO 3166-1 alpha-2 del país */
   countryCode: string;
-  /** Plural para la copy: "estados", "provincias" */
+  /** Plural en español para la copy: "estados", "provincias" */
   label: string;
   singular: string;
-  /** "Los" o "Las", según el género del plural */
+  /** "Los" o "Las", según el género del plural. Solo tiene sentido en español. */
   article: string;
+  /** Plural/singular en inglés: "states"/"state", "provinces"/"province" */
+  labelEn: string;
+  singularEn: string;
   projection: SubdivisionProjection;
   objectKey: string;
   /** Ruta del TopoJSON dentro de public/ */
