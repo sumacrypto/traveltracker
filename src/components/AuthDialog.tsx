@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { GoogleLogo } from "@phosphor-icons/react";
+import { FacebookLogo, GoogleLogo } from "@phosphor-icons/react";
 import Dialog from "./Dialog";
 import { getSupabase } from "@/lib/supabase/client";
 import { track } from "@/lib/analytics";
@@ -23,20 +23,20 @@ export default function AuthDialog({ open, onClose, reason }: AuthDialogProps) {
   const [error, setError] = useState<string | null>(null);
   const [checkInbox, setCheckInbox] = useState(false);
 
-  const handleGoogle = async () => {
+  const handleOAuth = async (provider: "google" | "facebook") => {
     const supabase = getSupabase();
     if (!supabase) return;
     setBusy(true);
     setError(null);
-    track("signup_started", { method: "google" });
+    track("signup_started", { method: provider });
 
     const { error: oauthError } = await supabase.auth.signInWithOAuth({
-      provider: "google",
+      provider,
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
 
     if (oauthError) {
-      setError("No pudimos abrir el login de Google.");
+      setError(`No pudimos abrir el login de ${provider === "google" ? "Google" : "Facebook"}.`);
       setBusy(false);
     }
   };
@@ -90,15 +90,27 @@ export default function AuthDialog({ open, onClose, reason }: AuthDialogProps) {
               "Con una cuenta tu mapa te sigue entre dispositivos y podés comparar con tus amigos."}
           </p>
 
-          <button
-            type="button"
-            onClick={handleGoogle}
-            disabled={busy}
-            className="flex w-full items-center justify-center gap-2.5 rounded-full border border-ink-line px-4 py-3 text-sm font-medium transition-colors hover:border-accent disabled:pointer-events-none disabled:opacity-50"
-          >
-            <GoogleLogo size={17} weight="bold" />
-            Continuar con Google
-          </button>
+          <div className="flex flex-col gap-2.5">
+            <button
+              type="button"
+              onClick={() => handleOAuth("google")}
+              disabled={busy}
+              className="flex w-full items-center justify-center gap-2.5 rounded-full border border-ink-line px-4 py-3 text-sm font-medium transition-colors hover:border-accent disabled:pointer-events-none disabled:opacity-50"
+            >
+              <GoogleLogo size={17} weight="bold" />
+              Continuar con Google
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleOAuth("facebook")}
+              disabled={busy}
+              className="flex w-full items-center justify-center gap-2.5 rounded-full border border-ink-line px-4 py-3 text-sm font-medium transition-colors hover:border-accent disabled:pointer-events-none disabled:opacity-50"
+            >
+              <FacebookLogo size={17} weight="bold" />
+              Continuar con Facebook
+            </button>
+          </div>
 
           <div className="my-5 flex items-center gap-3 text-[11px] tracking-wide text-text-faint uppercase">
             <span className="h-px flex-1 bg-ink-line" />o<span className="h-px flex-1 bg-ink-line" />
