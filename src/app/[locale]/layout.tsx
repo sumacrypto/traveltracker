@@ -1,8 +1,12 @@
 import type { Metadata, Viewport } from "next";
+import { notFound } from "next/navigation";
+import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
-import "./globals.css";
+import { routing } from "@/i18n/routing";
+import "../globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,11 +18,19 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Dónde estuve · tu mapa del mundo",
-  description:
-    "Marcá los países que visitaste y mirá qué porcentaje del mundo llevás explorado y cómo te comparás con el resto de la gente.",
-};
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "metadata" });
+  return { title: t("title"), description: t("description") };
+}
 
 export const viewport: Viewport = {
   themeColor: [
@@ -27,16 +39,22 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function LocaleLayout({
   children,
-}: Readonly<{
+  params,
+}: {
   children: React.ReactNode;
-}>) {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
+  setRequestLocale(locale);
+
   return (
     // El script del tema escribe data-theme antes de hidratar, así que el HTML
     // del servidor y el del cliente no coinciden a propósito.
     <html
-      lang="es"
+      lang={locale}
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
@@ -54,7 +72,7 @@ export default function RootLayout({
         <Script id="theme-init" strategy="beforeInteractive">
           {THEME_INIT_SCRIPT}
         </Script>
-        {children}
+        <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>
   );
