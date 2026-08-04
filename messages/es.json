@@ -17,6 +17,18 @@
     "authReason": "{count, plural, one {Guarda el país que marcaste y compáralo con tus amigos.} other {Guarda los # países que marcaste y compáralos con tus amigos.}}"
   },
   "statsRail": {
+    "of": "de",
+    "visitedLabel": "países visitados",
+    "percentSuffix": "% del mundo",
+    "emptyHeadline": "Todavía no marcaste nada",
+    "emptyDetail": "Toca los países del mapa donde estuviste. A los tres te decimos en qué percentil mundial caes.",
+    "continentsHeading": "Por continente",
+    "viewOnMap": "Ver {continent} en el mapa",
+    "share": "Compartir mi mapa",
+    "import": "Importar de Google Maps",
+    "confirmReset": "{count, plural, one {Borrar el que marcaste, ¿seguro?} other {Borrar los #, ¿seguro?}}",
+    "reset": "Empezar de cero",
+    "benchmarkNote": "Comparación contra datos públicos precargados ({sources}). Se reemplazan por promedios reales de usuarios cuando haya cuentas.",
     "hook": {
       "start": {
         "headline": "{count, plural, one {# país marcado} other {# países marcados}}",
@@ -43,6 +55,41 @@
         "headline": "{count} países. {remaining, plural, one {Te falta #} other {Te faltan #}}",
         "detail": "A esta altura eres más fácil de encontrar por escala que por país."
       }
+    }
+  },
+  "peerComparison": {
+    "originLabel": "¿De dónde eres?",
+    "originPickerLabel": "Tu país de origen",
+    "originClear": "Prefiero no decirlo",
+    "compareCta": "Compara con gente de tu ciudad y tu edad",
+    "source": "Fuente: {source}.",
+    "tail": {
+      "underTenth": "dentro del 0,1%",
+      "top": "en el {value}%"
+    },
+    "usersAverage": {
+      "ahead": "Le llevas {count, plural, one {# país} other {# países}} al promedio de {country}",
+      "behind": "Te {count, plural, one {falta # país} other {faltan # países}} para el promedio de {country}",
+      "detail": "El promedio ahí es {average} países, sobre {sampleSize} personas registradas."
+    },
+    "countryTail": {
+      "headline": "Estás {tail} más viajado de {country}",
+      "detail": "Estimado: en {country} solo el {share}% llegó a {threshold} países, y llevas {count}. {source}"
+    },
+    "neverTraveled": {
+      "headline": "En {country}, {share}% nunca salió del país",
+      "detailWithCount": "Ya llevas {count}. {source}",
+      "detailWithoutCount": "{source}"
+    },
+    "thresholdOnly": {
+      "headline": "En {country}, solo {share}% llegó a {threshold} países",
+      "detailWithCount": "Llevas {count}. {remaining, plural, one {Te falta #} other {Te faltan #}} para entrar en ese grupo. {source}",
+      "detailWithoutCount": "{source}"
+    },
+    "noData": {
+      "headline": "Todavía no tenemos el dato de {country}",
+      "detail": "En el mundo, {neverTraveled}% nunca salió de su país y solo {tenOrMore}% llegó a diez o más. {supabaseNote}",
+      "supabaseNote": "Cuando haya suficiente gente registrada ahí, lo reemplazamos por el promedio real."
     }
   }
 }

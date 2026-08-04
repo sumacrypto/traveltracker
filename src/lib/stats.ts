@@ -89,15 +89,22 @@ export function estimateCountryTail(
   return Math.min(100, worldTailShare(visited) * ratio);
 }
 
+export interface TailDescriptor {
+  tier: "underTenth" | "top";
+  /** Solo se usa cuando tier es "top". */
+  value?: number;
+}
+
 /**
- * Arma la frase de la porción, sin fingir precisión que no tiene. Por debajo del
- * 0,1% se cambia "en el" por "dentro del": el número es un techo, no una medida.
+ * Describe la porción sin fingir precisión que no tiene. Por debajo del 0,1%
+ * no hay número que mostrar: el dato real es un techo, no una medida. Devuelve
+ * datos crudos y no texto armado: esto no es un componente, no tiene locale
+ * para elegir "en el" vs "in the top" (ver PeerComparison.tsx).
  */
-export function describeTail(percent: number): string {
-  if (percent < 0.1) return "dentro del 0,1%";
-  if (percent < 1)
-    return `en el ${percent.toLocaleString("es-AR", { maximumFractionDigits: 1 })}%`;
-  return `en el ${Math.round(percent)}%`;
+export function describeTail(percent: number): TailDescriptor {
+  if (percent < 0.1) return { tier: "underTenth" };
+  if (percent < 1) return { tier: "top", value: Math.round(percent * 10) / 10 };
+  return { tier: "top", value: Math.round(percent) };
 }
 
 export function computeStats(visitedIds: Iterable<string>): TripStats {

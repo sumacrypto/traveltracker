@@ -17,6 +17,18 @@
     "authReason": "{count, plural, one {Save the country you marked and compare it with your friends.} other {Save the # countries you marked and compare them with your friends.}}"
   },
   "statsRail": {
+    "of": "of",
+    "visitedLabel": "countries visited",
+    "percentSuffix": "% of the world",
+    "emptyHeadline": "You haven't marked anything yet",
+    "emptyDetail": "Tap the countries on the map where you've been. At three we'll show you your world percentile.",
+    "continentsHeading": "By continent",
+    "viewOnMap": "View {continent} on the map",
+    "share": "Share my map",
+    "import": "Import from Google Maps",
+    "confirmReset": "{count, plural, one {Delete it, are you sure?} other {Delete all #, are you sure?}}",
+    "reset": "Start from scratch",
+    "benchmarkNote": "Compared against preloaded public data ({sources}). Replaced with real user averages once there's enough of them.",
     "hook": {
       "start": {
         "headline": "{count, plural, one {# country marked} other {# countries marked}}",
@@ -43,6 +55,41 @@
         "headline": "{count} countries. {remaining} to go",
         "detail": "At this point you're easier to find by scale than by country."
       }
+    }
+  },
+  "peerComparison": {
+    "originLabel": "Where are you from?",
+    "originPickerLabel": "Your home country",
+    "originClear": "I'd rather not say",
+    "compareCta": "Compare with people from your city and your age",
+    "source": "Source: {source}.",
+    "tail": {
+      "underTenth": "within the top 0.1%",
+      "top": "in the top {value}%"
+    },
+    "usersAverage": {
+      "ahead": "You're {count, plural, one {# country} other {# countries}} ahead of {country}'s average",
+      "behind": "You're {count, plural, one {# country} other {# countries}} short of {country}'s average",
+      "detail": "The average there is {average} countries, based on {sampleSize} registered people."
+    },
+    "countryTail": {
+      "headline": "You're {tail} most traveled in {country}",
+      "detail": "Estimated: in {country} only {share}% reached {threshold} countries, and you're at {count}. {source}"
+    },
+    "neverTraveled": {
+      "headline": "In {country}, {share}% never left the country",
+      "detailWithCount": "You're already at {count}. {source}",
+      "detailWithoutCount": "{source}"
+    },
+    "thresholdOnly": {
+      "headline": "In {country}, only {share}% reached {threshold} countries",
+      "detailWithCount": "You're at {count}. {remaining, plural, one {You need # more} other {You need # more}} to join that group. {source}",
+      "detailWithoutCount": "{source}"
+    },
+    "noData": {
+      "headline": "We don't have data for {country} yet",
+      "detail": "Worldwide, {neverTraveled}% never left their country and only {tenOrMore}% reached ten or more. {supabaseNote}",
+      "supabaseNote": "Once enough people there are registered, we'll swap this for the real average."
     }
   }
 }

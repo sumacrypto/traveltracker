@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowCounterClockwise, ShareNetwork, UploadSimple } from "@phosphor-icons/react";
 import AnimatedNumber from "./AnimatedNumber";
@@ -32,6 +33,8 @@ export default function StatsRail({
   onFocusContinent,
   onImport,
 }: StatsRailProps) {
+  const t = useTranslations("statsRail");
+  const tc = useTranslations("common.continents");
   const reduce = useReducedMotion();
   // Borrar el progreso no se puede deshacer, así que el botón pide confirmación
   // en dos toques en vez de abrir un modal.
@@ -77,17 +80,17 @@ export default function StatsRail({
           {/* El "de" va en la sans: en monoespaciada el espacio es tan ancho que
               parece un doble espacio. */}
           <span className="text-2xl leading-none font-semibold text-accent-ink lg:text-3xl">
-            de <span className="font-mono tabular-nums">{stats.total}</span>
+            {t("of")} <span className="font-mono tabular-nums">{stats.total}</span>
           </span>
         </div>
         <p className="mt-2.5 text-sm text-text-dim">
-          países visitados ·{" "}
+          {t("visitedLabel")} ·{" "}
           <AnimatedNumber
             value={stats.worldPercent}
             decimals={1}
             className="font-mono tabular-nums text-text"
           />
-          % del mundo
+          {t("percentSuffix")}
         </p>
       </section>
 
@@ -108,11 +111,8 @@ export default function StatsRail({
           </>
         ) : (
           <>
-            <p className="text-[15px] leading-snug font-semibold">Todavía no marcaste nada</p>
-            <p className="mt-1.5 text-[13px] leading-relaxed text-text-dim">
-              Tocá los países del mapa donde estuviste. A los tres te decimos en qué percentil
-              mundial caés.
-            </p>
+            <p className="text-[15px] leading-snug font-semibold">{t("emptyHeadline")}</p>
+            <p className="mt-1.5 text-[13px] leading-relaxed text-text-dim">{t("emptyDetail")}</p>
           </>
         )}
       </motion.section>
@@ -123,7 +123,7 @@ export default function StatsRail({
 
       <section>
         <h2 className="text-xs font-semibold tracking-[0.14em] text-text-faint uppercase">
-          Por continente
+          {t("continentsHeading")}
         </h2>
         <ul className="mt-3.5 flex flex-col gap-3.5">
           {stats.continents.map((row) => (
@@ -135,12 +135,12 @@ export default function StatsRail({
               <button
                 type="button"
                 onClick={() => onFocusContinent(row.continent)}
-                title={`Ver ${row.continent} en el mapa`}
+                title={t("viewOnMap", { continent: tc(row.continent) })}
                 className="group w-full text-left"
               >
                 <div className="flex items-baseline justify-between gap-3">
                   <span className="text-sm transition-colors group-hover:text-accent-ink">
-                    {row.continent}
+                    {tc(row.continent)}
                   </span>
                   <span className="font-mono text-xs tabular-nums text-text-dim">
                     <span className={row.visited > 0 ? "text-text" : undefined}>{row.visited}</span>/
@@ -174,7 +174,7 @@ export default function StatsRail({
           className="flex items-center justify-center gap-2 rounded-full bg-accent px-4 py-3 text-sm font-semibold text-white transition-opacity active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40"
         >
           <ShareNetwork size={16} weight="bold" />
-          Compartir mi mapa
+          {t("share")}
         </button>
 
         <button
@@ -183,7 +183,7 @@ export default function StatsRail({
           className="flex items-center justify-center gap-2 rounded-full border border-ink-line px-4 py-2.5 text-sm font-medium text-text-dim transition-colors hover:border-accent hover:text-accent-ink active:scale-[0.98]"
         >
           <UploadSimple size={15} weight="bold" />
-          Importar de Google Maps
+          {t("import")}
         </button>
 
         <button
@@ -204,12 +204,13 @@ export default function StatsRail({
           }`}
         >
           <ArrowCounterClockwise size={15} weight="bold" />
-          {confirmingReset ? `Borrar los ${stats.visited}, ¿seguro?` : "Empezar de cero"}
+          {confirmingReset ? t("confirmReset", { count: stats.visited }) : t("reset")}
         </button>
 
         <p className="mt-1 text-[11px] leading-relaxed text-text-faint">
-          Comparación contra datos públicos precargados ({BENCHMARK_SOURCES.map((s) => s.label).join(", ")}).
-          Se reemplazan por promedios reales de usuarios cuando haya cuentas.
+          {t("benchmarkNote", {
+            sources: BENCHMARK_SOURCES.map((s) => s.label).join(", "),
+          })}
         </p>
       </div>
     </div>

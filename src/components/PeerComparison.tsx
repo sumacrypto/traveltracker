@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import CountryPicker from "./CountryPicker";
 import { COUNTRIES, GEOMETRY_ID_BY_CODE } from "@/data/countries";
 import { COUNTRY_TRAVEL_FACTS, PEW_SOURCE, WORLD_TRAVEL_FACT } from "@/data/benchmarks";
@@ -9,7 +9,8 @@ import { useTrip } from "@/lib/store";
 import { useAccount } from "@/lib/account";
 import { SUPABASE_ENABLED, getSupabase } from "@/lib/supabase/client";
 import { fetchPeerAverage, type PeerAverage } from "@/lib/peers";
-import { describeTail, estimateCountryTail } from "@/lib/stats";
+import { describeTail, estimateCountryTail, type TailDescriptor } from "@/lib/stats";
+import { countryLabel } from "@/lib/countryLabel";
 
 interface PeerComparisonProps {
   visited: number;
@@ -23,6 +24,7 @@ interface PeerComparisonProps {
  */
 export default function PeerComparison({ visited, onSignIn }: PeerComparisonProps) {
   const locale = useLocale();
+  const t = useTranslations("peerComparison");
   const homeCountry = useTrip((state) => state.homeCountry);
   const setHomeCountry = useTrip((state) => state.setHomeCountry);
   const user = useAccount((state) => state.user);
@@ -57,14 +59,20 @@ export default function PeerComparison({ visited, onSignIn }: PeerComparisonProp
     }
   };
 
-  const countryName = country
-    ? (COUNTRIES[GEOMETRY_ID_BY_CODE[country]]?.name ?? country)
-    : null;
+  const countryMeta = country ? COUNTRIES[GEOMETRY_ID_BY_CODE[country]] : null;
+  const countryName = countryMeta ? countryLabel(countryMeta, locale) : (country ?? null);
 
   const peerAverage = loaded?.country === country ? loaded.data : null;
+  const source = t("source", { source: PEW_SOURCE });
 
   const line = useMemo(() => {
     if (!country || !countryName) return null;
+
+    // "en el 3%" / "in the top 3%" es una frase entera armada por idioma, no
+    // un fragmento pegado a mano: cada idioma la interpola completa dentro de
+    // la oración más grande ("Estás {tail} más viajado de X").
+    const tailPhrase = (tail: TailDescriptor) =>
+      tail.tier === "underTenth" ? t("tail.underTenth") : t("tail.top", { value: tail.value ?? 0 });
 
     // 1. Lo mejor que puede haber: el promedio real de usuarios del mismo país.
     if (peerAverage?.origin === "usuarios") {
@@ -73,11 +81,12 @@ export default function PeerComparison({ visited, onSignIn }: PeerComparisonProp
       return {
         headline:
           diff >= 0
-            ? `Le llevás ${rounded} ${rounded === 1 ? "país" : "países"} al promedio de ${countryName}`
-            : `Te faltan ${rounded} para el promedio de ${countryName}`,
-        detail: `El promedio ahí es ${peerAverage.average.toLocaleString(locale, {
-          maximumFractionDigits: 1,
-        })} países, sobre ${peerAverage.sampleSize} personas registradas.`,
+            ? t("usersAverage.ahead", { count: rounded, country: countryName })
+            : t("usersAverage.behind", { count: rounded, country: countryName }),
+        detail: t("usersAverage.detail", {
+          average: peerAverage.average.toLocaleString(locale, { maximumFractionDigits: 1 }),
+          sampleSize: peerAverage.sampleSize,
+        }),
       };
     }
 
@@ -86,7 +95,6 @@ export default function PeerComparison({ visited, onSignIn }: PeerComparisonProp
     // visitó 49 países no está "en el 3%" que llegó a cinco, está mucho más lejos.
     const fact = COUNTRY_TRAVEL_FACTS[country];
     if (fact) {
-      const source = `Fuente: ${PEW_SOURCE}.`;
       const anchor =
         fact.tenOrMore !== undefined
           ? { countries: 10, share: fact.tenOrMore }
@@ -98,54 +106,66 @@ export default function PeerComparison({ visited, onSignIn }: PeerComparisonProp
         const tail = estimateCountryTail(visited, anchor);
         if (tail !== null) {
           return {
-            headline: `Estás ${describeTail(tail)} más viajado de ${countryName}`,
-            detail: `Estimado: en ${countryName} solo el ${anchor.share}% llegó a ${
-              anchor.countries === 10 ? "diez" : "cinco"
-            } países, y vos llevás ${visited}. ${source}`,
+            headline: t("countryTail.headline", {
+              tail: tailPhrase(describeTail(tail)),
+              country: countryName,
+            }),
+            detail: t("countryTail.detail", {
+              country: countryName,
+              share: anchor.share,
+              threshold: anchor.countries,
+              count: visited,
+              source,
+            }),
           };
         }
       }
 
       if (fact.neverTraveled !== undefined) {
         return {
-          headline: `En ${countryName}, ${fact.neverTraveled}% nunca salió del país`,
-          detail: visited > 0 ? `Vos ya llevás ${visited}. ${source}` : source,
+          headline: t("neverTraveled.headline", { country: countryName, share: fact.neverTraveled }),
+          detail:
+            visited > 0
+              ? t("neverTraveled.detailWithCount", { count: visited, source })
+              : t("neverTraveled.detailWithoutCount", { source }),
         };
       }
       if (anchor) {
-        const faltan = anchor.countries - visited;
+        const remaining = anchor.countries - visited;
         return {
-          headline: `En ${countryName}, solo ${anchor.share}% llegó a ${
-            anchor.countries === 10 ? "diez" : "cinco"
-          } países`,
+          headline: t("thresholdOnly.headline", {
+            country: countryName,
+            share: anchor.share,
+            threshold: anchor.countries,
+          }),
           detail:
             visited > 0
-              ? `Vos llevás ${visited}. Te ${faltan === 1 ? "falta" : "faltan"} ${faltan} para entrar en ese grupo. ${source}`
-              : source,
+              ? t("thresholdOnly.detailWithCount", { count: visited, remaining, source })
+              : t("thresholdOnly.detailWithoutCount", { source }),
         };
       }
     }
 
     // 3. Sin dato del país: se dice que la referencia es mundial, no se finge.
     return {
-      headline: `Todavía no tenemos el dato de ${countryName}`,
-      detail: `En el mundo, ${WORLD_TRAVEL_FACT.neverTraveled}% nunca salió de su país y solo ${WORLD_TRAVEL_FACT.tenOrMore}% llegó a diez o más. ${
-        SUPABASE_ENABLED
-          ? "Cuando haya suficiente gente registrada ahí, lo reemplazamos por el promedio real."
-          : ""
-      }`.trim(),
+      headline: t("noData.headline", { country: countryName }),
+      detail: t("noData.detail", {
+        neverTraveled: WORLD_TRAVEL_FACT.neverTraveled ?? 0,
+        tenOrMore: WORLD_TRAVEL_FACT.tenOrMore ?? 0,
+        supabaseNote: SUPABASE_ENABLED ? t("noData.supabaseNote") : "",
+      }).trim(),
     };
-  }, [country, countryName, peerAverage, visited, locale]);
+  }, [country, countryName, peerAverage, visited, locale, source, t]);
 
   return (
     <section className="surface p-4">
       <div className="flex items-center justify-between gap-3">
-        <span className="shrink-0 text-[13px] font-medium text-text-dim">¿De dónde sos?</span>
+        <span className="shrink-0 text-[13px] font-medium text-text-dim">{t("originLabel")}</span>
         <CountryPicker
           value={country}
           onChange={handlePick}
-          label="Tu país de origen"
-          clearLabel="Prefiero no decirlo"
+          label={t("originPickerLabel")}
+          clearLabel={t("originClear")}
           className="w-44"
         />
       </div>
@@ -161,7 +181,7 @@ export default function PeerComparison({ visited, onSignIn }: PeerComparisonProp
               onClick={onSignIn}
               className="mt-3 text-[13px] font-medium text-accent-ink underline underline-offset-4 transition-opacity hover:opacity-70"
             >
-              Compará con gente de tu ciudad y tu edad
+              {t("compareCta")}
             </button>
           )}
         </div>
