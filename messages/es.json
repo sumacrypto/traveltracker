@@ -217,13 +217,15 @@
     "previewAriaLabel": "Vista previa de la tarjeta",
     "generateFailed": "No pudimos generar la imagen. Prueba de nuevo.",
     "nativeShareTitle": "Mi mapa del mundo",
-    "noWebShare": "Tu navegador no permite compartir archivos, así que la descargamos."
+    "noWebShare": "Tu navegador no permite compartir archivos, así que la descargamos — el texto con tu link quedó copiado, listo para pegar.",
+    "downloadedWithCopy": "Imagen descargada. El texto con tu link quedó copiado, listo para pegar."
   },
   "shareCard": {
     "brandWordmark": "DÓNDE ESTUVE",
     "countriesVisitedLabel": "países visitados",
     "percentOfWorld": "% del mundo",
-    "inviteQuestion": "¿Cuántos llevas tú? "
+    "inviteQuestion": "¿Cuántos llevas tú? ",
+    "inviteQuestionNamed": "{name} visitó {count} países. ¿Y tú? ¡Entra y descúbrelo! "
   },
   "countryPicker": {
     "choosePlaceholder": "Elegir país",

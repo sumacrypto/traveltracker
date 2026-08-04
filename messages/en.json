@@ -217,13 +217,15 @@
     "previewAriaLabel": "Card preview",
     "generateFailed": "We couldn't generate the image. Try again.",
     "nativeShareTitle": "My world map",
-    "noWebShare": "Your browser can't share files, so we downloaded it instead."
+    "noWebShare": "Your browser can't share files, so we downloaded it instead — the caption with your link is copied, ready to paste.",
+    "downloadedWithCopy": "Image downloaded. The caption with your link is copied, ready to paste."
   },
   "shareCard": {
     "brandWordmark": "WHERE I'VE BEEN",
     "countriesVisitedLabel": "countries visited",
     "percentOfWorld": "% of the world",
-    "inviteQuestion": "How many have you got? "
+    "inviteQuestion": "How many have you got? ",
+    "inviteQuestionNamed": "{name} has visited {count} countries. What about you? Come find out! "
   },
   "countryPicker": {
     "choosePlaceholder": "Choose a country",

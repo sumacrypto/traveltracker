@@ -6,6 +6,7 @@ import { DownloadSimple, ShareNetwork } from "@phosphor-icons/react";
 import Dialog from "./Dialog";
 import {
   CARD_SIZES,
+  buildInviteLine,
   canvasToBlob,
   drawShareCard,
   readFonts,
@@ -38,6 +39,12 @@ export default function ShareCardDialog({
 }: ShareCardDialogProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const referralCode = useAccount((state) => state.profile?.referral_code ?? null);
+  // Con nombre, la invitación pega más fuerte: "Federico visitó 51 países,
+  // ¿y tú?" da curiosidad de un modo que "¿cuántos llevas?" genérico no da.
+  // Sin sesión (o sin nombre cargado) se cae a la pregunta genérica.
+  const displayName = useAccount(
+    (state) => state.profile?.display_name ?? state.profile?.username ?? null,
+  );
   const locale = useLocale();
   const t = useTranslations("shareCardDialog");
   const tCard = useTranslations("shareCard");
@@ -47,6 +54,8 @@ export default function ShareCardDialog({
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
 
+  const inviteLink = buildInviteLine(referralCode);
+
   // El canvas no tiene locale propio (ver ShareCardCopy en shareCard.ts): se
   // arma acá una sola vez por locale, no en cada país que la persona marca.
   const copy = useMemo<ShareCardCopy>(
@@ -54,16 +63,18 @@ export default function ShareCardDialog({
       brandWordmark: tCard("brandWordmark"),
       countriesVisitedLabel: tCard("countriesVisitedLabel"),
       percentOfWorld: tCard("percentOfWorld"),
-      inviteQuestion: tCard("inviteQuestion"),
+      inviteQuestion: displayName
+        ? tCard("inviteQuestionNamed", { name: displayName, count: stats.visited })
+        : tCard("inviteQuestion"),
       numberLocale: locale,
       continentLabels: Object.fromEntries(CONTINENTS.map((id) => [id, tc(id)])),
     }),
-    [tCard, tc, locale],
+    [tCard, tc, locale, displayName, stats.visited],
   );
 
   // El estado del dibujo se deriva comparando qué versión quedó pintada contra
   // la que corresponde ahora, en vez de setear "dibujando" dentro del efecto.
-  const drawKey = `${format}|${stats.visited}|${headline}|${referralCode ?? ""}|${locale}`;
+  const drawKey = `${format}|${stats.visited}|${headline}|${referralCode ?? ""}|${locale}|${displayName ?? ""}`;
   const [drawn, setDrawn] = useState<string | null>(null);
   const [failed, setFailed] = useState<string | null>(null);
   const status = failed === drawKey ? "error" : drawn === drawKey ? "ready" : "drawing";
@@ -121,21 +132,37 @@ export default function ShareCardDialog({
   const handleShare = () =>
     withCanvas(async (blob) => {
       const file = new File([blob], FILE_NAME, { type: "image/png" });
+      // La imagen sola nunca es clickeable (ni acá ni en Instagram Stories: eso
+      // Instagram solo lo permite agregando a mano un sticker de link después de
+      // publicar, no hay forma de lograrlo desde afuera). Lo que sí está en
+      // nuestras manos es que el link viaje como link de verdad, no solo como
+      // píxeles: `text`/`url` van aparte de `files` para que la app que reciba
+      // el compartir (WhatsApp, X, Mensajes...) arme un link tocable de verdad.
       if (navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file], title: t("nativeShareTitle") });
+        await navigator.share({
+          files: [file],
+          title: t("nativeShareTitle"),
+          text: copy.inviteQuestion,
+          url: inviteLink,
+        });
         track("share_completed", { format, countries: stats.visited });
         return;
       }
-      // Sin Web Share API (escritorio, sobre todo) descargar es el equivalente.
+      // Sin Web Share API (escritorio, sobre todo) descargar es el equivalente;
+      // el texto con el link se copia al portapapeles para que se pueda pegar
+      // donde se termine posteando la imagen.
       downloadBlob(blob);
+      await copyInviteText(`${copy.inviteQuestion}${inviteLink}`);
       track("share_downloaded", { format, countries: stats.visited, fallback: true });
       setNotice(t("noWebShare"));
     });
 
   const handleDownload = () =>
-    withCanvas((blob) => {
+    withCanvas(async (blob) => {
       downloadBlob(blob);
+      await copyInviteText(`${copy.inviteQuestion}${inviteLink}`);
       track("share_downloaded", { format, countries: stats.visited });
+      setNotice(t("downloadedWithCopy"));
     });
 
   return (
@@ -224,4 +251,18 @@ function downloadBlob(blob: Blob) {
   link.download = FILE_NAME;
   link.click();
   URL.revokeObjectURL(url);
+}
+
+/**
+ * Sin Web Share, la imagen se descarga sola: sin esto la persona tiene que
+ * volver a escribir el link a mano en el pie de la foto. Falla en silencio a
+ * propósito: la descarga ya fue exitosa, esto es un extra, no vale la pena
+ * mostrar un error si el portapapeles no está disponible.
+ */
+async function copyInviteText(text: string) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    // sin portapapeles disponible, no hay nada más para hacer acá
+  }
 }
