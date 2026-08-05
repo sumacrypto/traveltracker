@@ -24,6 +24,8 @@ export type AnalyticsEvent =
   | "signup_completed"
   | "referral_visited"
   | "friend_connected"
+  | "group_created"
+  | "group_joined"
   | "subdivision_marked"
   | "takeout_imported";
 

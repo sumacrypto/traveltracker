@@ -71,6 +71,55 @@
       "sourceLine": "{source} ({year}).",
       "prev": "Curiosidad anterior",
       "next": "Curiosidad siguiente"
+    },
+    "groups": {
+      "heading": "Tus grupos",
+      "intro": "Un grupo es la gente con la que de verdad te mides: las amigas de la infancia, la clase de baile, los del trabajo.",
+      "signedOut": {
+        "detail": "Crea una cuenta para armar un grupo e invitarlos por link.",
+        "cta": "Crear una cuenta"
+      },
+      "invite": {
+        "headline": "Te invitaron a un grupo",
+        "detail": "Súmate para ver cómo quedas adentro.",
+        "join": "Sumarme al grupo",
+        "signInAndJoin": "Crear una cuenta y sumarme",
+        "dismiss": "Ahora no",
+        "failed": "Ese link de invitación ya no sirve."
+      },
+      "joined": "Te sumaste a {name}",
+      "empty": {
+        "headline": "Todavía no tienes grupos",
+        "detail": "Crea uno y comparte su link. Quien lo abra se suma: no hace falta que sea amigo tuyo aquí antes."
+      },
+      "create": {
+        "ariaLabel": "Nombre del grupo",
+        "placeholder": "Amigas de la infancia",
+        "submit": "Crear grupo"
+      },
+      "members": "{count, plural, one {# persona} other {# personas}}",
+      "inviteHeading": "Link de invitación",
+      "inviteDetail": "Quien lo abra se suma a {name}.",
+      "inviteLinkAriaLabel": "Link de invitación de {name}",
+      "copyLink": "Copiar link",
+      "percentile": "Estás {tail} de este grupo",
+      "tail": {
+        "underTenth": "dentro del 0,1%",
+        "top": "en el {value}%"
+      },
+      "you": "Tú",
+      "noName": "Sin nombre",
+      "alone": "Por ahora no hay nadie más. Comparte el link y el ranking empieza a tener sentido.",
+      "leave": "Salir del grupo",
+      "confirmLeave": "Salir, ¿seguro?",
+      "remove": "Eliminar grupo",
+      "confirmRemove": "Eliminarlo, ¿seguro?",
+      "errors": {
+        "createFailed": "No pudimos crear el grupo.",
+        "loadFailed": "No pudimos cargar tus grupos.",
+        "copyFailed": "No pudimos copiar el link. Cópialo a mano.",
+        "leaveFailed": "No pudimos hacerlo."
+      }
     }
   },
   "statsRail": {
