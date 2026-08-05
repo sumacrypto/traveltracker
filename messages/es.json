@@ -59,6 +59,18 @@
         "tie": "Estás justo en el promedio de tu edad",
         "detail": "Quienes nacieron entre {from} y {to} llevan {average} países en promedio, sobre {sampleSize} personas registradas."
       }
+    },
+    "countryFacts": {
+      "heading": "Sabías que",
+      "originPickerLabel": "Tu país de origen",
+      "originClear": "Prefiero no decirlo",
+      "noCountry": "Elegí tu país de origen para ver curiosidades de viaje.",
+      "noFacts": "Todavía no tenemos curiosidades de viaje para {country}.",
+      "outboundShare": "El {percent}% de los viajes de {origin} al exterior fueron a {destination}.",
+      "arrivalsShare": "{origin} representa el {percent}% de los turistas extranjeros que recibe {destination}.",
+      "sourceLine": "{source} ({year}).",
+      "prev": "Curiosidad anterior",
+      "next": "Curiosidad siguiente"
     }
   },
   "statsRail": {

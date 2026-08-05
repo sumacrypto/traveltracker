@@ -59,6 +59,18 @@
         "tie": "You're right at the average for your age",
         "detail": "People born between {from} and {to} average {average} countries, across {sampleSize} registered."
       }
+    },
+    "countryFacts": {
+      "heading": "Did you know",
+      "originPickerLabel": "Your home country",
+      "originClear": "I'd rather not say",
+      "noCountry": "Pick your home country to see travel facts about it.",
+      "noFacts": "We don't have travel facts for {country} yet.",
+      "outboundShare": "{percent}% of {origin}'s trips abroad went to {destination}.",
+      "arrivalsShare": "{origin} makes up {percent}% of the foreign visitors {destination} receives.",
+      "sourceLine": "{source} ({year}).",
+      "prev": "Previous fact",
+      "next": "Next fact"
     }
   },
   "statsRail": {
