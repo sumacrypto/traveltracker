@@ -9,7 +9,6 @@ import type { Hook, TripStats } from "@/lib/stats";
 import { BENCHMARK_SOURCES } from "@/data/benchmarks";
 import { track } from "@/lib/analytics";
 import SavePromptCard from "./SavePromptCard";
-import PeerComparison from "./PeerComparison";
 import SubdivisionEntries from "./SubdivisionEntries";
 
 interface StatsRailProps {
@@ -116,8 +115,6 @@ export default function StatsRail({
           </>
         )}
       </motion.section>
-
-      <PeerComparison visited={stats.visited} onSignIn={onSignIn} />
 
       <SavePromptCard visited={stats.visited} onSignIn={onSignIn} />
 
