@@ -35,7 +35,31 @@
     "percentSuffix": "% del mundo",
     "emptyHeadline": "Todavía no marcaste nada",
     "emptyDetail": "Ve al mapa y toca los países donde estuviste. A los tres te decimos en qué percentil mundial caes.",
-    "continentsHeading": "Por continente"
+    "continentsHeading": "Por continente",
+    "age": {
+      "heading": "Gente de tu edad",
+      "signedOut": {
+        "headline": "¿Cómo estás contra la gente de tu edad?",
+        "detail": "Crea una cuenta y pon tu año de nacimiento. Te comparamos con toda la gente que nació hasta cinco años antes o después que tú.",
+        "cta": "Crear una cuenta"
+      },
+      "noBirthYear": {
+        "headline": "Nos falta tu año de nacimiento",
+        "detail": "Queda privado: solo mostramos el promedio del grupo, nunca el año de nadie.",
+        "cta": "Editar perfil"
+      },
+      "notEnough": {
+        "headline": "Todavía no hay suficiente gente de tu edad",
+        "detail": "{sampleSize, plural, one {Por ahora hay # persona nacida entre {from} y {to}} other {Por ahora hay # personas nacidas entre {from} y {to}}}. Te mostramos el promedio real cuando lleguemos a {min}.",
+        "cta": "Invita a tus amigos"
+      },
+      "average": {
+        "ahead": "Le llevas {count, plural, one {# país} other {# países}} a la gente de tu edad",
+        "behind": "Te {count, plural, one {falta # país} other {faltan # países}} para el promedio de tu edad",
+        "tie": "Estás justo en el promedio de tu edad",
+        "detail": "Quienes nacieron entre {from} y {to} llevan {average} países en promedio, sobre {sampleSize} personas registradas."
+      }
+    }
   },
   "statsRail": {
     "of": "de",

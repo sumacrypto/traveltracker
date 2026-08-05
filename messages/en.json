@@ -35,7 +35,31 @@
     "percentSuffix": "% of the world",
     "emptyHeadline": "You haven't marked anything yet",
     "emptyDetail": "Go to the map and tap the countries where you've been. At three we'll show you your world percentile.",
-    "continentsHeading": "By continent"
+    "continentsHeading": "By continent",
+    "age": {
+      "heading": "People your age",
+      "signedOut": {
+        "headline": "How do you compare to people your age?",
+        "detail": "Create an account and add your birth year. We'll compare you to everyone born within five years of you.",
+        "cta": "Create an account"
+      },
+      "noBirthYear": {
+        "headline": "We're missing your birth year",
+        "detail": "It stays private: we only ever show the group average, never anyone's year.",
+        "cta": "Edit profile"
+      },
+      "notEnough": {
+        "headline": "Not enough people your age yet",
+        "detail": "{sampleSize, plural, one {So far only # person born between {from} and {to} has registered} other {So far only # people born between {from} and {to} have registered}}. We'll show the real average once there are {min}.",
+        "cta": "Invite your friends"
+      },
+      "average": {
+        "ahead": "You're {count, plural, one {# country} other {# countries}} ahead of people your age",
+        "behind": "You're {count, plural, one {# country} other {# countries}} short of people your age",
+        "tie": "You're right at the average for your age",
+        "detail": "People born between {from} and {to} average {average} countries, across {sampleSize} registered."
+      }
+    }
   },
   "statsRail": {
     "of": "of",

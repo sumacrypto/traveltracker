@@ -2,7 +2,13 @@
 
 import { getSupabase } from "./supabase/client";
 import { COUNTRIES, GEOMETRY_ID_BY_CODE, CONTINENTS, type Continent } from "@/data/countries";
-import type { CountryAverage, HomeCountryAverage, LeaderboardRow, Profile } from "./supabase/types";
+import type {
+  AgeCohortAverage,
+  CountryAverage,
+  HomeCountryAverage,
+  LeaderboardRow,
+  Profile,
+} from "./supabase/types";
 
 /**
  * Debajo de esta muestra el promedio propio dice más del ruido que del país, así
@@ -51,6 +57,53 @@ export async function fetchPeerAverage(countryCode: string): Promise<PeerAverage
   }
 
   return null;
+}
+
+/**
+ * Media banda de la cohorte de edad: ±5 años alrededor del año de nacimiento,
+ * o sea una franja de 11 años. Suficientemente ancha para juntar muestra desde
+ * el principio y suficientemente angosta para que "gente de tu edad" siga
+ * queriendo decir algo (alguien de 30 no se compara con alguien de 50).
+ */
+export const AGE_BAND = 5;
+
+export interface AgeAverage {
+  /** La franja consultada viaja de vuelta para poder nombrarla en la copy. */
+  fromYear: number;
+  toYear: number;
+  average: number;
+  sampleSize: number;
+  /**
+   * Si la muestra alcanza para mostrar el promedio. A diferencia del país, acá
+   * no hay dato publicado al que caer: cuando esto es `false` lo único honesto
+   * es decir que todavía falta gente, y eso lo dice el componente.
+   */
+  enough: boolean;
+}
+
+export async function fetchAgeCohortAverage(birthYear: number): Promise<AgeAverage | null> {
+  const supabase = getSupabase();
+  if (!supabase) return null;
+
+  const fromYear = birthYear - AGE_BAND;
+  const toYear = birthYear + AGE_BAND;
+
+  const { data, error } = await supabase
+    .rpc("age_cohort_average", { p_birth_year_from: fromYear, p_birth_year_to: toYear })
+    .maybeSingle();
+  if (error) throw error;
+
+  const row = data as AgeCohortAverage | null;
+  if (!row) return null;
+
+  const sampleSize = Number(row.sample_size);
+  return {
+    fromYear,
+    toYear,
+    average: Number(row.avg_countries),
+    sampleSize,
+    enough: sampleSize >= MIN_SAMPLE,
+  };
 }
 
 export async function fetchLeaderboard(): Promise<LeaderboardRow[]> {

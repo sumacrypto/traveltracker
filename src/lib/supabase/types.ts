@@ -66,3 +66,9 @@ export interface HomeCountryAverage {
   avg_countries: number;
   sample_size: number;
 }
+
+/** Mismo shape que HomeCountryAverage, pero agregando por franja de `birth_year`. */
+export interface AgeCohortAverage {
+  avg_countries: number;
+  sample_size: number;
+}

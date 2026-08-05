@@ -4,17 +4,18 @@ import { useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { motion, useReducedMotion } from "motion/react";
 import AnimatedNumber from "./AnimatedNumber";
+import AgeComparison from "./AgeComparison";
 import { useTrip } from "@/lib/store";
 import { computeStats } from "@/lib/stats";
 import { useEgoHook } from "@/lib/useEgoHook";
 
 /**
- * Pantalla de /stats. Fase 1: arranca solo con el panel hero (mismo dato que
- * ya arma StatsRail vía computeStats/useEgoHook, ahora de tamaño protagonista
- * en su propia ruta en vez de encajado en la barra lateral). Las fases
- * siguientes le agregan más secciones abajo (amigos, edad, país-a-país,
- * grupos) — por eso ya está armada como una pila vertical de `.surface`, no
- * como un layout de una sola tarjeta.
+ * Pantalla de /stats. Arrancó con el panel hero (mismo dato que ya arma
+ * StatsRail vía computeStats/useEgoHook, ahora de tamaño protagonista en su
+ * propia ruta en vez de encajado en la barra lateral) y va sumando secciones
+ * abajo: la comparación por edad (fase 3) ya está, faltan país-a-país y
+ * grupos — por eso está armada como una pila vertical de `.surface`, no como
+ * un layout de una sola tarjeta.
  */
 export default function StatisticsScreen() {
   const t = useTranslations("statsPage");
@@ -72,6 +73,8 @@ export default function StatisticsScreen() {
           </>
         )}
       </motion.section>
+
+      <AgeComparison visited={stats.visited} />
 
       <section>
         <h2 className="text-xs font-semibold tracking-[0.14em] text-text-faint uppercase">
