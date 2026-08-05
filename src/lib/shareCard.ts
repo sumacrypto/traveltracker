@@ -188,23 +188,6 @@ export function drawShareCard({
   }
   ctx.restore();
 
-  // --- Pie: métricas primero --------------------------------------------------
-  // Se calcula acá arriba, antes de dibujar nada más, porque el gancho de más
-  // abajo necesita saber cuánto lugar le deja el pie, no al revés.
-  //
-  // La pregunta y el link van en líneas separadas a propósito: antes
-  // compartían una sola línea, y con una pregunta larga (la que lleva el
-  // nombre, "Fede visitó 51 países...") el link se corría del ancho de la
-  // tarjeta y quedaba cortado a la mitad — justo lo único que sobrevive al
-  // compartir a Instagram, que descarta cualquier texto pegado a la imagen.
-  const footSize = isStory ? 36 : 28;
-  const footLineGap = Math.round(footSize * 1.35);
-  ctx.font = `600 ${footSize}px ${fonts.sans}`;
-  const ctaLines = referralCode ? wrap(ctx, copy.inviteQuestion.trim(), width - pad * 2) : [];
-  const footLines = referralCode ? ctaLines.length + 1 : 1;
-  const footY = height - (isStory ? 90 : 68);
-  const footTopY = footY - (footLines - 1) * footLineGap;
-
   // --- Número principal -----------------------------------------------------
   // El "de 195" quedaba afuera: para presumir importa cuántos países visitaste,
   // no cuántos le faltan. "países visitados" pegado al número dice lo mismo con
@@ -246,6 +229,48 @@ export function drawShareCard({
     y,
   );
 
+  // --- Pie: métricas ---------------------------------------------------------
+  // Se calcula acá, antes de dibujar el gancho, porque el gancho de más abajo
+  // necesita saber cuánto lugar le deja el pie, no al revés — y para eso hace
+  // falta ya conocer el `y` real (map + número + porcentaje), no uno estimado.
+  //
+  // La pregunta y el link van en líneas separadas a propósito: antes
+  // compartían una sola línea, y con una pregunta larga (la que lleva el
+  // nombre, "Fede visitó 51 países...") el link se corría del ancho de la
+  // tarjeta y quedaba cortado a la mitad — justo lo único que sobrevive al
+  // compartir a Instagram, que descarta cualquier texto pegado a la imagen.
+  //
+  // Con un nombre muy largo la pregunta puede necesitar dos líneas, y el pie
+  // (pregunta + link) le gana lugar al gancho de arriba. Achicar el gancho solo
+  // no siempre alcanza, así que si ni al tamaño mínimo del gancho entraría
+  // arriba del pie, se achica también el pie — un pie más chico entero es mejor
+  // que uno legible que tape el gancho.
+  const footSizeDefault = isStory ? 36 : 28;
+  const footSizeFloor = isStory ? 24 : 18;
+  const footY = height - (isStory ? 90 : 68);
+  const hookGap = isStory ? 108 : 56;
+  const minHookSize = isStory ? 40 : 24;
+
+  let footSize = footSizeDefault;
+  let ctaLines: string[] = [];
+  let footLineGap = 0;
+  let footTopY = footY;
+
+  const layoutFooter = () => {
+    ctx.font = `600 ${footSize}px ${fonts.sans}`;
+    ctaLines = referralCode ? wrap(ctx, copy.inviteQuestion.trim(), width - pad * 2) : [];
+    footLineGap = Math.round(footSize * 1.35);
+    const footLines = referralCode ? ctaLines.length + 1 : 1;
+    footTopY = footY - (footLines - 1) * footLineGap;
+  };
+  layoutFooter();
+
+  const hookNeedsAtLeast = headline ? y + hookGap + minHookSize * 1.26 : y;
+  while (footSize > footSizeFloor && footTopY - 24 < hookNeedsAtLeast) {
+    footSize -= 2;
+    layoutFooter();
+  }
+
   // --- Gancho ---------------------------------------------------------------
   // El pie ya tiene su lugar reservado (footTopY, calculado arriba): si el
   // gancho llegara a acercarse — headline larga, o el mapa real (1,5:1) deja
@@ -253,10 +278,9 @@ export function drawShareCard({
   // margen en vez de superponerse. Mismo criterio que la etiqueta de arriba y
   // que las filas de continentes más abajo.
   if (headline) {
-    y += isStory ? 108 : 56;
+    y += hookGap;
     const safeBottom = footTopY - 24;
     let hookSize = isStory ? 58 : 42;
-    const minHookSize = isStory ? 42 : 30;
     ctx.font = `600 ${hookSize}px ${fonts.sans}`;
     let hookLines = wrap(ctx, headline, width - pad * 2);
 
