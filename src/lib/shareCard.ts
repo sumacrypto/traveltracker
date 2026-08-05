@@ -188,16 +188,33 @@ export function drawShareCard({
   }
   ctx.restore();
 
+  // --- Pie: métricas primero --------------------------------------------------
+  // Se calcula acá arriba, antes de dibujar nada más, porque el gancho de más
+  // abajo necesita saber cuánto lugar le deja el pie, no al revés.
+  //
+  // La pregunta y el link van en líneas separadas a propósito: antes
+  // compartían una sola línea, y con una pregunta larga (la que lleva el
+  // nombre, "Fede visitó 51 países...") el link se corría del ancho de la
+  // tarjeta y quedaba cortado a la mitad — justo lo único que sobrevive al
+  // compartir a Instagram, que descarta cualquier texto pegado a la imagen.
+  const footSize = isStory ? 36 : 28;
+  const footLineGap = Math.round(footSize * 1.35);
+  ctx.font = `600 ${footSize}px ${fonts.sans}`;
+  const ctaLines = referralCode ? wrap(ctx, copy.inviteQuestion.trim(), width - pad * 2) : [];
+  const footLines = referralCode ? ctaLines.length + 1 : 1;
+  const footY = height - (isStory ? 90 : 68);
+  const footTopY = footY - (footLines - 1) * footLineGap;
+
   // --- Número principal -----------------------------------------------------
   // El "de 195" quedaba afuera: para presumir importa cuántos países visitaste,
   // no cuántos le faltan. "países visitados" pegado al número dice lo mismo con
   // más gancho, y el achique automático evita que se salga de la tarjeta en el
   // cuadrado, donde hay bastante menos ancho que en la historia.
-  let y = mapPanelY + mapPanelHeight + (isStory ? 190 : 130);
+  let y = mapPanelY + mapPanelHeight + (isStory ? 190 : 70);
 
   ctx.textAlign = "left";
   ctx.fillStyle = palette.text;
-  const bigSize = isStory ? 200 : 140;
+  const bigSize = isStory ? 200 : 120;
   ctx.font = `600 ${bigSize}px ${fonts.mono}`;
   const bigText = String(stats.visited);
   ctx.fillText(bigText, pad, y);
@@ -217,7 +234,7 @@ export function drawShareCard({
   ctx.fillStyle = palette.accent;
   ctx.fillText(copy.countriesVisitedLabel, labelX, y);
 
-  y += isStory ? 66 : 52;
+  y += isStory ? 66 : 44;
   ctx.fillStyle = palette.textDim;
   ctx.font = `400 ${isStory ? 42 : 33}px ${fonts.sans}`;
   ctx.fillText(
@@ -230,12 +247,27 @@ export function drawShareCard({
   );
 
   // --- Gancho ---------------------------------------------------------------
+  // El pie ya tiene su lugar reservado (footTopY, calculado arriba): si el
+  // gancho llegara a acercarse — headline larga, o el mapa real (1,5:1) deja
+  // menos aire del que parece en el cuadrado — se achica hasta entrar con
+  // margen en vez de superponerse. Mismo criterio que la etiqueta de arriba y
+  // que las filas de continentes más abajo.
   if (headline) {
-    y += isStory ? 108 : 84;
-    ctx.fillStyle = palette.accent;
-    const hookSize = isStory ? 58 : 45;
+    y += isStory ? 108 : 56;
+    const safeBottom = footTopY - 24;
+    let hookSize = isStory ? 58 : 42;
+    const minHookSize = isStory ? 42 : 30;
     ctx.font = `600 ${hookSize}px ${fonts.sans}`;
-    for (const line of wrap(ctx, headline, width - pad * 2)) {
+    let hookLines = wrap(ctx, headline, width - pad * 2);
+
+    while (hookSize > minHookSize && y + hookLines.length * hookSize * 1.26 > safeBottom) {
+      hookSize -= 2;
+      ctx.font = `600 ${hookSize}px ${fonts.sans}`;
+      hookLines = wrap(ctx, headline, width - pad * 2);
+    }
+
+    ctx.fillStyle = palette.accent;
+    for (const line of hookLines) {
       ctx.fillText(line, pad, y);
       y += hookSize * 1.26;
     }
@@ -247,13 +279,13 @@ export function drawShareCard({
   //
   // El gancho no siempre mide lo mismo: con un mensaje de una sola línea
   // "rowGap" fijo dejaba de sobra, pero con dos líneas (el caso más común) las
-  // cinco filas de continentes llegaban a pisar el pie de página, literalmente
-  // superpuesto con el link de vuelta a la app. El espacio entre filas ahora se
-  // calcula con lo que quedó libre hasta el pie, así siempre entra completo.
+  // cinco filas de continentes llegaban a pisar el pie de página. El espacio
+  // entre filas se calcula con lo que quedó libre hasta footTopY, así siempre
+  // entra completo — y ahora "hasta footTopY" ya contempla que el pie puede
+  // ocupar más de una línea.
   if (isStory) {
     y += 96;
-    const footerTop = height - (isStory ? 90 : 68) - 40;
-    const rowGap = Math.max(60, Math.min(92, (footerTop - y) / stats.continents.length));
+    const rowGap = Math.max(60, Math.min(92, (footTopY - 24 - y) / stats.continents.length));
     const barY = 26;
 
     for (const row of stats.continents) {
@@ -277,23 +309,23 @@ export function drawShareCard({
     ctx.textAlign = "left";
   }
 
-  // --- Pie ------------------------------------------------------------------
+  // --- Pie: dibujo --------------------------------------------------------
   // El link es el único camino de vuelta a la app desde una captura de pantalla.
-  const footY = height - (isStory ? 90 : 68);
-  const footSize = isStory ? 36 : 28;
-
   if (referralCode) {
     ctx.fillStyle = palette.accent;
     ctx.font = `600 ${footSize}px ${fonts.sans}`;
     ctx.textAlign = "left";
     // Pregunta y no orden: quien ve la historia ya está mirando un número, la
     // curiosidad de compararse invita más que un imperativo.
-    const cta = copy.inviteQuestion;
-    ctx.fillText(cta, pad, footY);
-    const ctaWidth = ctx.measureText(cta).width;
+    let lineY = footTopY;
+    for (const line of ctaLines) {
+      ctx.fillText(line, pad, lineY);
+      lineY += footLineGap;
+    }
+
     ctx.fillStyle = palette.textDim;
     ctx.font = `500 ${footSize}px ${fonts.sans}`;
-    ctx.fillText(buildInviteLine(referralCode), pad + ctaWidth, footY);
+    ctx.fillText(buildInviteLine(referralCode), pad, footY);
   } else {
     ctx.fillStyle = palette.textDim;
     ctx.font = `500 ${footSize}px ${fonts.sans}`;
