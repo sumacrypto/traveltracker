@@ -58,6 +58,13 @@
         "behind": "Te {count, plural, one {falta # país} other {faltan # países}} para el promedio de tu edad",
         "tie": "Estás justo en el promedio de tu edad",
         "detail": "Quienes nacieron entre {from} y {to} llevan {average} países en promedio, sobre {sampleSize} personas registradas."
+      },
+      "worldNote": {
+        "heading": "Mientras tanto",
+        "nontraveler": "Todavía no saliste de tu país — igual que el {share}% de los adultos de EE.UU., según Pew Research.",
+        "casual": "Sos un \"viajero casual\": el {share}% de los adultos de EE.UU. visitó entre 1 y 4 países, según Pew Research.",
+        "globeTrotter": "Sos un \"trotamundos\": solo el {share}% de los adultos de EE.UU. visitó 5 países o más, según Pew Research.",
+        "caveat": "No es un dato por edad: Pew encuestó adultos de EE.UU. en general y encontró que la edad casi no cambia la experiencia de viaje, así que todavía no hay un desglose por edad confiable para mostrar."
       }
     },
     "countryFacts": {

@@ -82,6 +82,36 @@ export const COUNTRY_TRAVEL_FACTS: Record<string, CountryTravelFact> = {
 /** Los mismos números para el mundo, como fallback. */
 export const WORLD_TRAVEL_FACT: CountryTravelFact = { neverTraveled: 21, tenOrMore: 13 };
 
+/**
+ * Las tres categorías que usa el propio informe de Pew (no una que armamos
+ * nosotros): "nontraveler" / "casual traveler" / "globe-trotter". Población:
+ * adultos de EE.UU., no el mundo — es un informe distinto al de 24 países que
+ * alimenta GLOBAL_CDF más arriba.
+ *
+ * Se usa como comparación de respaldo en la sección de edad cuando todavía no
+ * hay bastante gente de la misma edad registrada. No reemplaza un dato por
+ * edad porque no lo hay: el propio informe de Pew dice explícitamente que la
+ * edad casi no cambia la experiencia de viaje ("very few age differences in
+ * travel experience"), así que no existe una curva por edad que ofrecer en su
+ * lugar — investigado a pedido explícito, no es una suposición.
+ */
+export type PewTravelTier = "nontraveler" | "casual" | "globeTrotter";
+
+export function pewTravelTier(visited: number): PewTravelTier {
+  if (visited <= 0) return "nontraveler";
+  if (visited < 5) return "casual";
+  return "globeTrotter";
+}
+
+/** % de adultos de EE.UU. en cada categoría. */
+export const PEW_TIER_SHARE: Record<PewTravelTier, number> = {
+  nontraveler: 23,
+  casual: 50,
+  globeTrotter: 26,
+};
+
+export const PEW_TRAVEL_TIERS_SOURCE = "Pew Research, 2023";
+
 export const PEW_SOURCE = "Pew Research, 2023";
 
 export const BENCHMARK_SOURCES = [

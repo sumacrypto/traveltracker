@@ -6,6 +6,7 @@ import { useAccount } from "@/lib/account";
 import { useUiDialogs } from "@/lib/uiState";
 import { SUPABASE_ENABLED } from "@/lib/supabase/client";
 import { MIN_SAMPLE, fetchAgeCohortAverage, type AgeAverage } from "@/lib/peers";
+import { PEW_TIER_SHARE, pewTravelTier } from "@/data/benchmarks";
 
 interface AgeComparisonProps {
   visited: number;
@@ -55,6 +56,7 @@ export default function AgeComparison({ visited }: AgeComparisonProps) {
         headline: t("signedOut.headline"),
         detail: t("signedOut.detail"),
         cta: { label: t("signedOut.cta"), onClick: openAuth },
+        note: null,
       };
     }
 
@@ -63,6 +65,7 @@ export default function AgeComparison({ visited }: AgeComparisonProps) {
         headline: t("noBirthYear.headline"),
         detail: t("noBirthYear.detail"),
         cta: { label: t("noBirthYear.cta"), onClick: openAccount },
+        note: null,
       };
     }
 
@@ -74,6 +77,13 @@ export default function AgeComparison({ visited }: AgeComparisonProps) {
     const to = String(cohort.toYear);
 
     if (!cohort.enough) {
+      // No hay dato por edad al que caer (investigado a pedido explícito: Pew
+      // mismo dice que la edad casi no cambia la experiencia de viaje, así
+      // que no existe una curva por edad publicada). Mientras se junta
+      // muestra propia, se muestra el dato real que sí existe — las
+      // categorías del informe de Pew, con la salvedad explícita de que no
+      // son por edad. Ver data/benchmarks.ts.
+      const tier = pewTravelTier(visited);
       return {
         headline: t("notEnough.headline"),
         detail: t("notEnough.detail", {
@@ -85,6 +95,11 @@ export default function AgeComparison({ visited }: AgeComparisonProps) {
         // El diálogo de cuenta es donde vive el link de invitación: la forma
         // más directa de que la cohorte junte la muestra que le falta.
         cta: { label: t("notEnough.cta"), onClick: openAccount },
+        note: {
+          heading: t("worldNote.heading"),
+          headline: t(`worldNote.${tier}`, { share: PEW_TIER_SHARE[tier] }),
+          caveat: t("worldNote.caveat"),
+        },
       };
     }
 
@@ -105,6 +120,7 @@ export default function AgeComparison({ visited }: AgeComparisonProps) {
         sampleSize: cohort.sampleSize,
       }),
       cta: null,
+      note: null,
     };
   }, [user, birthYear, cohort, visited, locale, t, openAuth, openAccount]);
 
@@ -131,6 +147,16 @@ export default function AgeComparison({ visited }: AgeComparisonProps) {
         >
           {block.cta.label}
         </button>
+      )}
+
+      {block.note && (
+        <div className="mt-4 border-t border-ink-line pt-3.5">
+          <p className="text-[11px] font-semibold tracking-[0.1em] text-text-faint uppercase">
+            {block.note.heading}
+          </p>
+          <p className="mt-1.5 text-[13px] leading-relaxed text-text-dim">{block.note.headline}</p>
+          <p className="mt-1.5 text-[12px] leading-relaxed text-text-faint">{block.note.caveat}</p>
+        </div>
       )}
     </section>
   );

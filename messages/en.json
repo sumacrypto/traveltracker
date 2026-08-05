@@ -58,6 +58,13 @@
         "behind": "You're {count, plural, one {# country} other {# countries}} short of people your age",
         "tie": "You're right at the average for your age",
         "detail": "People born between {from} and {to} average {average} countries, across {sampleSize} registered."
+      },
+      "worldNote": {
+        "heading": "While we wait",
+        "nontraveler": "You haven't left your country yet — same as {share}% of US adults, per Pew Research.",
+        "casual": "You're a \"casual traveler\": {share}% of US adults have visited 1 to 4 countries, per Pew Research.",
+        "globeTrotter": "You're a \"globe-trotter\": only {share}% of US adults have visited 5 or more countries, per Pew Research.",
+        "caveat": "Not age-specific — Pew surveyed US adults overall and found age barely changes travel experience, so there's no reliable age breakdown to show yet."
       }
     },
     "countryFacts": {
