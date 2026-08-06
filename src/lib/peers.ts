@@ -227,3 +227,117 @@ export async function acceptRequest(connectionId: string) {
     .eq("id", connectionId);
   if (error) throw error;
 }
+
+/**
+ * Perfil por nombre de usuario exacto, para agregar un amigo a mano en vez de
+ * por link. Mismo criterio de visibilidad que fetchProfileByReferral: la RLS
+ * de `profiles` ya limita esto a perfiles públicos (o con los que ya hay
+ * conexión), sin necesidad de una RPC nueva — es la misma policy que ya
+ * protege el resto de las lecturas de perfiles ajenos.
+ */
+export async function findProfileByUsername(username: string): Promise<Profile | null> {
+  const supabase = getSupabase();
+  if (!supabase) return null;
+  const { data } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("username", username.trim().toLowerCase())
+    .maybeSingle();
+  return (data as Profile | null) ?? null;
+}
+
+export type SendRequestResult = "sent" | "connected";
+
+/**
+ * Pide conectar con `targetId`. La policy "invitar" ya permite este insert
+ * directo (user_id = quien llama) sin pasar por una RPC — mismo criterio que
+ * el resto de esta base: RPC solo cuando hace falta sortear RLS, no para todo.
+ *
+ * Si la otra persona ya me había pedido conectar antes (su solicitud está
+ * esperando que la acepte), aceptar esa en vez de crear una segunda en
+ * paralelo: es la misma intención de las dos partes, conviene resolverla al
+ * toque en vez de dejar dos filas "pending" cruzadas.
+ */
+export async function sendFriendRequest(targetId: string): Promise<SendRequestResult> {
+  const supabase = getSupabase();
+  if (!supabase) return "sent";
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return "sent";
+
+  const { data: reverse } = await supabase
+    .from("connections")
+    .select("id")
+    .eq("user_id", targetId)
+    .eq("friend_id", user.id)
+    .eq("status", "pending")
+    .maybeSingle();
+
+  if (reverse) {
+    const { error } = await supabase
+      .from("connections")
+      .update({ status: "accepted" })
+      .eq("id", reverse.id);
+    if (error) throw error;
+    return "connected";
+  }
+
+  const { error } = await supabase
+    .from("connections")
+    .insert({ user_id: user.id, friend_id: targetId, status: "pending" });
+  if (error) throw error;
+  return "sent";
+}
+
+export interface SentRequest {
+  id: string;
+  friendId: string;
+  display_name: string | null;
+  username: string | null;
+  avatar_url: string | null;
+}
+
+/** Solicitudes que mandé yo y todavía no se aceptaron — el reverso de fetchPendingRequests. */
+export async function fetchSentRequests(userId: string): Promise<SentRequest[]> {
+  const supabase = getSupabase();
+  if (!supabase) return [];
+
+  const { data, error } = await supabase
+    .from("connections")
+    .select("id, friend_id, profiles!connections_friend_id_fkey(display_name, username, avatar_url)")
+    .eq("user_id", userId)
+    .eq("status", "pending");
+
+  if (error) throw error;
+
+  type Row = {
+    id: string;
+    friend_id: string;
+    profiles: { display_name: string | null; username: string | null; avatar_url: string | null } | null;
+  };
+
+  return ((data ?? []) as unknown as Row[]).map((row) => ({
+    id: row.id,
+    friendId: row.friend_id,
+    display_name: row.profiles?.display_name ?? null,
+    username: row.profiles?.username ?? null,
+    avatar_url: row.profiles?.avatar_url ?? null,
+  }));
+}
+
+/**
+ * Códigos de país de un amigo puntual, para la comparación 1 a 1. Igual que
+ * findProfileByUsername: la RLS de `visited_countries` ya lo permite (perfil
+ * conectado o público) sin pasar por RPC.
+ */
+export async function fetchFriendCountries(friendId: string): Promise<string[]> {
+  const supabase = getSupabase();
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("visited_countries")
+    .select("country_code")
+    .eq("user_id", friendId);
+  if (error) throw error;
+  return ((data ?? []) as { country_code: string }[]).map((row) => row.country_code);
+}

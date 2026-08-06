@@ -1,24 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
-import { Check, Copy, SignOut, Trophy } from "@phosphor-icons/react";
+import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { Check, Copy, SignOut, UsersThree } from "@phosphor-icons/react";
 import Dialog from "./Dialog";
 import CountryPicker from "./CountryPicker";
+import { Link } from "@/i18n/navigation";
 import { getSupabase } from "@/lib/supabase/client";
 import { useAccount } from "@/lib/account";
-import {
-  acceptRequest,
-  fetchLeaderboard,
-  fetchPendingRequests,
-  rankLeaderboard,
-  LEADERBOARD_TABS,
-  type PendingRequest,
-} from "@/lib/peers";
-import { describeTail, rankPercentile, type TailDescriptor } from "@/lib/stats";
-import { track } from "@/lib/analytics";
-import type { Continent } from "@/data/countries";
-import type { LeaderboardRow, Profile } from "@/lib/supabase/types";
+import type { Profile } from "@/lib/supabase/types";
 
 interface AccountDialogProps {
   open: boolean;
@@ -40,8 +30,6 @@ export default function AccountDialog({ open, onClose }: AccountDialogProps) {
 
 function AccountDialogBody({ onClose }: { onClose: () => void }) {
   const t = useTranslations("accountDialog");
-  const tc = useTranslations("common.continents");
-  const locale = useLocale();
   const user = useAccount((state) => state.user);
   const profile = useAccount((state) => state.profile);
   const setAccount = useAccount((state) => state.set);
@@ -58,24 +46,6 @@ function AccountDialogBody({ onClose }: { onClose: () => void }) {
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-
-  const [leaderboard, setLeaderboard] = useState<LeaderboardRow[]>([]);
-  const [requests, setRequests] = useState<PendingRequest[]>([]);
-  const [tab, setTab] = useState<Continent | "general">("general");
-
-  const loadSocial = useCallback(() => {
-    if (!user) return;
-    Promise.all([fetchLeaderboard(), fetchPendingRequests(user.id)])
-      .then(([rows, pending]) => {
-        setLeaderboard(rows);
-        setRequests(pending);
-      })
-      .catch(() => {
-        // El ranking es accesorio: si falla, el resto del diálogo sigue sirviendo.
-      });
-  }, [user]);
-
-  useEffect(loadSocial, [loadSocial]);
 
   const handleSave = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -123,16 +93,6 @@ function AccountDialogBody({ onClose }: { onClose: () => void }) {
       setTimeout(() => setCopied(false), 2200);
     } catch {
       setError(t("errors.copyFailed"));
-    }
-  };
-
-  const handleAccept = async (request: PendingRequest) => {
-    try {
-      await acceptRequest(request.id);
-      track("friend_connected", {});
-      loadSocial();
-    } catch {
-      setError(t("errors.acceptFailed"));
     }
   };
 
@@ -249,109 +209,18 @@ function AccountDialogBody({ onClose }: { onClose: () => void }) {
         </div>
       </section>
 
-      {/* --- Invitaciones recibidas ------------------------------------------- */}
-      {requests.length > 0 && (
-        <section className="mt-7 border-t border-ink-line pt-6">
-          <h3 className="text-[15px] font-semibold">{t("requestsHeading")}</h3>
-          <ul className="mt-3 flex flex-col gap-2">
-            {requests.map((request) => (
-              <li key={request.id} className="flex items-center gap-3">
-                <span className="flex-1 truncate text-sm">
-                  {request.display_name ?? request.username ?? t("someone")}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => handleAccept(request)}
-                  className="rounded-full border border-ink-line px-3 py-1.5 text-xs font-medium transition-colors hover:border-accent hover:text-accent-ink"
-                >
-                  {t("accept")}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      {/* --- Amigos y ranking --------------------------------------------------
-          El ranking se recalcula en el cliente a partir de country_codes: así
-          "por continente" no depende de que el servidor conozca los continentes,
-          y agregar una pestaña nueva no toca la base. */}
-      {leaderboard.length > 1 &&
-        (() => {
-          const ranked = rankLeaderboard(
-            leaderboard,
-            tab,
-            (row) =>
-              row.user_id === user?.id
-                ? t("you")
-                : (row.display_name ?? row.username ?? t("noName")),
-            locale,
-          );
-          const ownIndex = ranked.findIndex((row) => row.userId === user?.id);
-
-          // "en el X%" es una frase entera armada por idioma (ver
-          // PeerComparison.tsx), no un fragmento pegado a mano.
-          const tailPhrase = (tail: TailDescriptor) =>
-            tail.tier === "underTenth" ? t("tail.underTenth") : t("tail.top", { value: tail.value ?? 0 });
-
-          return (
-            <section className="mt-7 border-t border-ink-line pt-6">
-              <h3 className="flex items-center gap-2 text-[15px] font-semibold">
-                <Trophy size={16} weight="fill" className="text-accent" />
-                {t("friendsHeading")}
-              </h3>
-
-              {ownIndex >= 0 && (
-                <p className="mt-1 text-[13px] text-accent-ink">
-                  {t("friendsPercentile", {
-                    tail: tailPhrase(describeTail(rankPercentile(ownIndex + 1, ranked.length))),
-                  })}
-                </p>
-              )}
-
-              <div
-                role="tablist"
-                aria-label={t("rankingByAriaLabel")}
-                className="mt-3 flex gap-1 overflow-x-auto pb-1"
-              >
-                {LEADERBOARD_TABS.map((option) => (
-                  <button
-                    key={option}
-                    type="button"
-                    role="tab"
-                    aria-selected={tab === option}
-                    onClick={() => setTab(option)}
-                    className={`shrink-0 rounded-full px-3 py-1.5 text-[12px] font-medium whitespace-nowrap transition-colors ${
-                      tab === option
-                        ? "bg-accent text-white"
-                        : "border border-ink-line text-text-dim hover:border-accent"
-                    }`}
-                  >
-                    {option === "general" ? t("general") : tc(option)}
-                  </button>
-                ))}
-              </div>
-
-              <ol className="mt-3.5 flex flex-col gap-2.5">
-                {ranked.map((row, index) => (
-                  <li key={row.userId} className="flex items-baseline gap-3">
-                    <span className="w-5 font-mono text-xs tabular-nums text-text-faint">
-                      {index + 1}
-                    </span>
-                    <span
-                      className={`flex-1 truncate text-sm ${row.userId === user?.id ? "font-semibold" : ""}`}
-                    >
-                      {row.label}
-                    </span>
-                    <span className="font-mono text-xs tabular-nums text-text-dim">
-                      {row.countries}
-                    </span>
-                  </li>
-                ))}
-              </ol>
-            </section>
-          );
-        })()}
+      {/* El ranking de amigos y las solicitudes vivían acá; ahora tienen su
+          propia pestaña (junto con agregar gente por nombre de usuario), así
+          que este diálogo se queda enfocado en el perfil y este es el puente
+          hacia allá. */}
+      <Link
+        href="/friends"
+        onClick={onClose}
+        className="mt-7 flex items-center justify-center gap-2 rounded-full border border-ink-line px-4 py-2.5 text-sm font-medium text-text-dim transition-colors hover:border-accent hover:text-accent-ink"
+      >
+        <UsersThree size={15} weight="bold" />
+        {t("seeFriends")}
+      </Link>
 
       <button
         type="button"

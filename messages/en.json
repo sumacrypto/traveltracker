@@ -21,7 +21,8 @@
     "appName": "Where I've been",
     "navAriaLabel": "Sections",
     "map": "Map",
-    "stats": "Statistics"
+    "stats": "Statistics",
+    "friends": "Friends"
   },
   "statsPage": {
     "metadata": {
@@ -248,27 +249,66 @@
     "errors": {
       "usernameTaken": "That username is already taken.",
       "saveFailed": "We couldn't save the changes.",
-      "copyFailed": "We couldn't copy the link. Copy it by hand.",
-      "acceptFailed": "We couldn't accept the invitation."
+      "copyFailed": "We couldn't copy the link. Copy it by hand."
     },
     "inviteHeading": "Invite your friends",
     "inviteDetail": "Everyone who joins through your link gets connected with you and shows up on the leaderboard.",
     "inviteLinkAriaLabel": "Your invite link",
     "copyLink": "Copy link",
+    "seeFriends": "See your friends",
+    "signOut": "Sign out"
+  },
+  "friendsPage": {
+    "metadata": {
+      "title": "Friends · Where I've been",
+      "description": "See who's connected, add friends by username, and compare your maps."
+    },
+    "heading": "Friends",
+    "subheading": "Add people and compare your maps, one on one or all together.",
+    "signedOut": {
+      "headline": "Sign in to see your friends",
+      "detail": "Add people by username and compare your maps.",
+      "cta": "Create an account"
+    },
+    "add": {
+      "heading": "Add a friend",
+      "placeholder": "Username",
+      "submit": "Search",
+      "notFound": "No one has that username.",
+      "self": "That's you.",
+      "error": "We couldn't send the request.",
+      "requestSent": "Request sent — they'll show up here once they accept.",
+      "connected": "You're connected now!",
+      "alreadyFriends": "Already friends",
+      "alreadyRequested": "Request already sent",
+      "sendRequest": "Send request"
+    },
     "requestsHeading": "Want to connect",
     "someone": "Someone",
     "accept": "Accept",
-    "friendsHeading": "Friends",
-    "friendsPercentile": "You're {tail} of this group",
+    "sentHeading": "Waiting on",
+    "sentPending": "Pending",
+    "listHeading": "Your friends",
+    "emptyHeadline": "No friends yet",
+    "emptyDetail": "Add someone by their username above, or share your invite link from your account.",
+    "percentile": "You're {tail} of your friends",
     "tail": {
       "underTenth": "within the top 0.1%",
       "top": "in the top {value}%"
     },
-    "rankingByAriaLabel": "Rank by",
     "general": "Overall",
     "you": "You",
     "noName": "No name",
-    "signOut": "Sign out"
+    "compare": {
+      "heading": "You vs. {name}",
+      "close": "Close",
+      "ahead": "You're {count, plural, one {# country} other {# countries}} ahead of {name}",
+      "behind": "You're {count, plural, one {# country} other {# countries}} short of {name}",
+      "tie": "You're tied with {name}",
+      "detail": "{name} has visited {count} countries."
+    },
+    "loadFailed": "We couldn't load your friends.",
+    "acceptFailed": "We couldn't accept the request."
   },
   "importDialog": {
     "title": "Import from Google Maps",

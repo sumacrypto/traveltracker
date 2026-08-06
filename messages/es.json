@@ -21,7 +21,8 @@
     "appName": "Dónde estuve",
     "navAriaLabel": "Secciones",
     "map": "Mapa",
-    "stats": "Estadísticas"
+    "stats": "Estadísticas",
+    "friends": "Amigos"
   },
   "statsPage": {
     "metadata": {
@@ -248,27 +249,66 @@
     "errors": {
       "usernameTaken": "Ese nombre de usuario ya está tomado.",
       "saveFailed": "No pudimos guardar los cambios.",
-      "copyFailed": "No pudimos copiar el link. Cópialo a mano.",
-      "acceptFailed": "No pudimos aceptar la invitación."
+      "copyFailed": "No pudimos copiar el link. Cópialo a mano."
     },
     "inviteHeading": "Invita a tus amigos",
     "inviteDetail": "Cada persona que entre con tu link queda conectada contigo y aparece en el ranking.",
     "inviteLinkAriaLabel": "Tu link de invitación",
     "copyLink": "Copiar link",
+    "seeFriends": "Ver tus amigos",
+    "signOut": "Cerrar sesión"
+  },
+  "friendsPage": {
+    "metadata": {
+      "title": "Amigos · Dónde estuve",
+      "description": "Mira quién está conectado, agrega amigos por su nombre de usuario y compara tus mapas."
+    },
+    "heading": "Amigos",
+    "subheading": "Agrega gente y compara tus mapas, uno a uno o todos juntos.",
+    "signedOut": {
+      "headline": "Entra para ver tus amigos",
+      "detail": "Agrega gente por su nombre de usuario y compara tus mapas.",
+      "cta": "Crear una cuenta"
+    },
+    "add": {
+      "heading": "Agregar un amigo",
+      "placeholder": "Nombre de usuario",
+      "submit": "Buscar",
+      "notFound": "Nadie tiene ese nombre de usuario.",
+      "self": "Ese eres tú.",
+      "error": "No pudimos mandar la solicitud.",
+      "requestSent": "Solicitud mandada — va a aparecer acá cuando la acepte.",
+      "connected": "¡Ya están conectados!",
+      "alreadyFriends": "Ya son amigos",
+      "alreadyRequested": "Ya le mandaste una solicitud",
+      "sendRequest": "Mandar solicitud"
+    },
     "requestsHeading": "Te quieren agregar",
     "someone": "Alguien",
     "accept": "Aceptar",
-    "friendsHeading": "Amigos",
-    "friendsPercentile": "Estás {tail} de este grupo",
+    "sentHeading": "Esperando respuesta",
+    "sentPending": "Pendiente",
+    "listHeading": "Tus amigos",
+    "emptyHeadline": "Todavía no tienes amigos",
+    "emptyDetail": "Agrega a alguien por su nombre de usuario arriba, o comparte tu link de invitación desde tu cuenta.",
+    "percentile": "Estás {tail} de tus amigos",
     "tail": {
       "underTenth": "dentro del 0,1%",
       "top": "en el {value}%"
     },
-    "rankingByAriaLabel": "Ranking por",
     "general": "General",
     "you": "Tú",
     "noName": "Sin nombre",
-    "signOut": "Cerrar sesión"
+    "compare": {
+      "heading": "Tú vs. {name}",
+      "close": "Cerrar",
+      "ahead": "Le llevas {count, plural, one {# país} other {# países}} a {name}",
+      "behind": "Te {count, plural, one {falta # país} other {faltan # países}} para alcanzar a {name}",
+      "tie": "Vas empatado con {name}",
+      "detail": "{name} lleva {count} países visitados."
+    },
+    "loadFailed": "No pudimos cargar tus amigos.",
+    "acceptFailed": "No pudimos aceptar la solicitud."
   },
   "importDialog": {
     "title": "Importar de Google Maps",

@@ -10,14 +10,15 @@ import { useUiDialogs } from "@/lib/uiState";
 const TABS = [
   { href: "/", key: "map" },
   { href: "/stats", key: "stats" },
+  { href: "/friends", key: "friends" },
 ] as const;
 
 /**
- * Header compartido entre `/` (el mapa) y `/stats` (Estadísticas): antes vivía
- * adentro de `Explorer.tsx`, pero con Estadísticas como ruta propia, el header
- * y los diálogos de cuenta tienen que estar arriba de las dos, en el layout.
- * Mismo patrón visual de pills que ya usa el tablist de continentes en
- * AccountDialog.tsx, pero acá navega de verdad (Link/usePathname de
+ * Header compartido entre `/` (el mapa), `/stats` (Estadísticas) y `/friends`
+ * (Amigos): antes vivía adentro de `Explorer.tsx`, pero con rutas propias, el
+ * header y los diálogos de cuenta tienen que estar arriba de las tres, en el
+ * layout. Mismo patrón visual de pills que ya usa el tablist de continentes
+ * en AccountDialog.tsx, pero acá navega de verdad (Link/usePathname de
  * src/i18n/navigation.ts, que existía en el repo pero nadie lo usaba todavía).
  */
 export default function AppHeader() {
@@ -39,7 +40,15 @@ export default function AppHeader() {
         </span>
       </div>
 
-      <nav role="tablist" aria-label={t("navAriaLabel")} className="flex min-w-0 gap-1">
+      {/* Con tres pestañas (Mapa/Estadísticas/Amigos) ni el achique de arriba
+          garantiza que entren enteras en un celular angosto — overflow-x-auto
+          es la red de seguridad real, mismo patrón que ya usan las filas de
+          pestañas de continente en AccountDialog/GroupsSection. */}
+      <nav
+        role="tablist"
+        aria-label={t("navAriaLabel")}
+        className="flex min-w-0 gap-1 overflow-x-auto"
+      >
         {TABS.map(({ href, key }) => {
           const active = pathname === href;
           return (
