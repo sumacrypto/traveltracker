@@ -27,13 +27,19 @@ export default function AppHeader() {
   const openAccount = useUiDialogs((state) => state.openAccount);
 
   return (
-    <header className="flex h-16 shrink-0 items-center gap-3 border-b border-ink-line px-4 lg:gap-6 lg:px-6">
+    <header className="flex h-16 shrink-0 items-center gap-2 border-b border-ink-line px-3 sm:gap-3 sm:px-4 lg:gap-6 lg:px-6">
       <div className="flex shrink-0 items-center gap-2">
         <GlobeHemisphereWest size={22} weight="fill" className="text-accent" />
-        <span className="text-[15px] font-semibold tracking-tight">{t("appName")}</span>
+        {/* En un celular angosto, el logo + las dos pestañas + el botón de
+            cuenta no entran todos con nombre completo (shrink-0 en los tres
+            grupos a propósito, para que ninguno se deforme apretándose) — el
+            ícono ya identifica la marca, así que el texto se esconde primero. */}
+        <span className="hidden text-[15px] font-semibold tracking-tight sm:inline">
+          {t("appName")}
+        </span>
       </div>
 
-      <nav role="tablist" aria-label={t("navAriaLabel")} className="flex gap-1">
+      <nav role="tablist" aria-label={t("navAriaLabel")} className="flex min-w-0 gap-1">
         {TABS.map(({ href, key }) => {
           const active = pathname === href;
           return (
@@ -42,7 +48,7 @@ export default function AppHeader() {
               href={href}
               role="tab"
               aria-selected={active}
-              className={`shrink-0 rounded-full px-3.5 py-2 text-[13px] font-medium whitespace-nowrap transition-colors ${
+              className={`shrink-0 rounded-full px-2.5 py-2 text-[13px] font-medium whitespace-nowrap transition-colors sm:px-3.5 ${
                 active
                   ? "bg-accent text-white"
                   : "border border-ink-line text-text-dim hover:border-accent"
@@ -54,7 +60,7 @@ export default function AppHeader() {
         })}
       </nav>
 
-      <div className="ml-auto flex shrink-0 items-center gap-3">
+      <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
         <ThemeToggle />
         <AccountButton onSignIn={openAuth} onOpenAccount={openAccount} />
       </div>
