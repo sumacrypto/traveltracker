@@ -43,7 +43,7 @@ export default function AppHeader() {
       {/* Con tres pestañas (Mapa/Estadísticas/Amigos) ni el achique de arriba
           garantiza que entren enteras en un celular angosto — overflow-x-auto
           es la red de seguridad real, mismo patrón que ya usan las filas de
-          pestañas de continente en AccountDialog/GroupsSection. */}
+          pestañas de continente en AccountDialog/FriendsScreen. */}
       <nav
         role="tablist"
         aria-label={t("navAriaLabel")}

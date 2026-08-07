@@ -79,55 +79,6 @@
       "sourceLine": "{source} ({year}).",
       "prev": "Previous fact",
       "next": "Next fact"
-    },
-    "groups": {
-      "heading": "Your groups",
-      "intro": "A group is the people you actually measure yourself against: childhood friends, your dance class, the work crew.",
-      "signedOut": {
-        "detail": "Create an account to start a group and invite them by link.",
-        "cta": "Create an account"
-      },
-      "invite": {
-        "headline": "You've been invited to a group",
-        "detail": "Join to see where you land inside it.",
-        "join": "Join the group",
-        "signInAndJoin": "Create an account and join",
-        "dismiss": "Not now",
-        "failed": "That invite link doesn't work anymore."
-      },
-      "joined": "You joined {name}",
-      "empty": {
-        "headline": "You don't have any groups yet",
-        "detail": "Create one and share its link. Whoever opens it joins — they don't need to be your friend here first."
-      },
-      "create": {
-        "ariaLabel": "Group name",
-        "placeholder": "Childhood friends",
-        "submit": "Create group"
-      },
-      "members": "{count, plural, one {# person} other {# people}}",
-      "inviteHeading": "Invite link",
-      "inviteDetail": "Whoever opens it joins {name}.",
-      "inviteLinkAriaLabel": "Invite link for {name}",
-      "copyLink": "Copy link",
-      "percentile": "You're {tail} of this group",
-      "tail": {
-        "underTenth": "within the top 0.1%",
-        "top": "in the top {value}%"
-      },
-      "you": "You",
-      "noName": "No name",
-      "alone": "You're the only one here so far. Share the link and the ranking starts making sense.",
-      "leave": "Leave group",
-      "confirmLeave": "Leave, are you sure?",
-      "remove": "Delete group",
-      "confirmRemove": "Delete it, are you sure?",
-      "errors": {
-        "createFailed": "We couldn't create the group.",
-        "loadFailed": "We couldn't load your groups.",
-        "copyFailed": "We couldn't copy the link. Copy it by hand.",
-        "leaveFailed": "We couldn't do that."
-      }
     }
   },
   "statsRail": {
@@ -297,8 +248,17 @@
       "top": "in the top {value}%"
     },
     "general": "Overall",
-    "you": "You",
+    "youLabel": "{name} (you)",
     "noName": "No name",
+    "labels": {
+      "filterAriaLabel": "Filter by label",
+      "all": "All",
+      "emptyFilter": "No one's tagged \"{label}\" yet.",
+      "manage": "Tag this friend",
+      "newPlaceholder": "New label",
+      "add": "Add label",
+      "error": "We couldn't save that."
+    },
     "compare": {
       "heading": "You vs. {name}",
       "close": "Close",

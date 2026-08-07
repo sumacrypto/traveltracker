@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { getSupabase, SUPABASE_ENABLED } from "@/lib/supabase/client";
 import { setRemoteSink, subdivisionKey, useTrip } from "@/lib/store";
-import { takePendingGroupInvite, takePendingReferral, useAccount } from "@/lib/account";
+import { takePendingReferral, useAccount } from "@/lib/account";
 import { codesToGeometryIds, toCountryCode } from "@/lib/countryCodes";
 import { track } from "@/lib/analytics";
 import type { Profile, VisitedCountry, VisitedSubdivision } from "@/lib/supabase/types";
@@ -19,8 +19,7 @@ import type { Profile, VisitedCountry, VisitedSubdivision } from "@/lib/supabase
  * El `?ref=` de la URL lo lee y lo guarda `ReferralWelcome`, no acá: ese
  * componente le muestra a la persona quién la invitó antes de canjear nada.
  * Acá solo se retira el código guardado (`takePendingReferral`) una vez que hay
- * sesión, para completar el canje que `ReferralWelcome` dejó pendiente. El
- * `?g=` de los grupos funciona igual, con `GroupsSection` del otro lado.
+ * sesión, para completar el canje que `ReferralWelcome` dejó pendiente.
  */
 export default function AccountSync() {
   useEffect(() => {
@@ -37,13 +36,6 @@ export default function AccountSync() {
         const pendingReferral = takePendingReferral();
         if (pendingReferral) {
           await supabase.rpc("redeem_referral", { p_code: pendingReferral });
-        }
-
-        // Mismo trato para el `?g=` de un link de grupo: GroupsSection lo
-        // guarda cuando todavía no hay sesión y el canje se completa acá.
-        const pendingGroup = takePendingGroupInvite();
-        if (pendingGroup) {
-          await supabase.rpc("redeem_group_invite", { p_code: pendingGroup });
         }
 
         const [profileRes, countriesRes, subdivisionsRes] = await Promise.all([

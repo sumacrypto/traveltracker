@@ -7,7 +7,6 @@ import AnimatedNumber from "./AnimatedNumber";
 import AgeComparison from "./AgeComparison";
 import PeerComparison from "./PeerComparison";
 import CountryFactsCard from "./CountryFactsCard";
-import GroupsSection from "./GroupsSection";
 import { useTrip } from "@/lib/store";
 import { useUiDialogs } from "@/lib/uiState";
 import { computeStats } from "@/lib/stats";
@@ -17,11 +16,16 @@ import { useEgoHook } from "@/lib/useEgoHook";
  * Pantalla de /stats. Arrancó con el panel hero (mismo dato que ya arma
  * StatsRail vía computeStats/useEgoHook, ahora de tamaño protagonista en su
  * propia ruta en vez de encajado en la barra lateral) y va sumando secciones
- * abajo: comparación por edad (fase 3), grupos con nombre propio (fase 4),
- * comparación contra el país de origen (la misma PeerComparison que ya vive
- * en StatsRail, el panel del mapa) y curiosidades país-a-país (fase 5) — por
- * eso está armada como una pila vertical de `.surface`, no como un layout de
- * una sola tarjeta.
+ * abajo: comparación por edad (fase 3), comparación contra el país de origen
+ * (la misma PeerComparison que ya vive en StatsRail, el panel del mapa) y
+ * curiosidades país-a-país (fase 5) — por eso está armada como una pila
+ * vertical de `.surface`, no como un layout de una sola tarjeta.
+ *
+ * Los grupos con nombre propio (fase 4) se sacaron de acá: pedían un link de
+ * invitación aparte incluso para gente que ya era amiga por el sistema de
+ * conexiones, duplicando ese flujo. Quedan reemplazados por las etiquetas de
+ * /friends, que organizan a los amigos que ya existen en vez de armar una
+ * membresía paralela — ver FriendsScreen.tsx.
  *
  * PeerComparison y CountryFactsCard comparten el mismo país de origen
  * (useTrip.homeCountry / profile.home_country), cada una con su propio
@@ -88,8 +92,6 @@ export default function StatisticsScreen() {
       </motion.section>
 
       <AgeComparison visited={stats.visited} />
-
-      <GroupsSection />
 
       <PeerComparison visited={stats.visited} onSignIn={openAuth} />
 
