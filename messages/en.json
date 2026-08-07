@@ -182,6 +182,7 @@
   },
   "accountDialog": {
     "title": "Your account",
+    "email": "Email",
     "displayName": "What's your name",
     "displayNamePlaceholder": "Your name",
     "username": "Username",

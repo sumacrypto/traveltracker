@@ -104,6 +104,20 @@ function AccountDialogBody({ onClose }: { onClose: () => void }) {
   return (
     <>
       <form onSubmit={handleSave} className="flex flex-col gap-3.5">
+        {/* El mail vive en auth.users, no en profiles — no hay nada que
+            guardar acá, así que va aparte del form y siempre readOnly. */}
+        {user?.email && (
+          <Field label={t("email")}>
+            <input
+              type="email"
+              value={user.email}
+              readOnly
+              disabled
+              className={`${inputClass} cursor-not-allowed opacity-60`}
+            />
+          </Field>
+        )}
+
         <Field label={t("displayName")}>
           <input
             type="text"
